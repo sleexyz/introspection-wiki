@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+import { isoDate, loadWiki, longDate, type Thread } from '../../lib/wiki';
+
+export async function getStaticPaths() {
+  const wiki = await loadWiki();
+  return wiki.threads.map((thread) => ({ params: { id: thread.id }, props: { thread } }));
+}
+
+const { thread } = Astro.props as { thread: Thread };
+const d = thread.data;
+const wiki = await loadWiki();
+const papers = d.papers.map((id) => wiki.paper.get(id)!);
+const jsonld = {
+  '@type': 'SocialMediaPosting',
+  headline: d.title,
+  author: { '@type': 'Person', name: d.author.name, url: `https://x.com/${d.author.handle}` },
+  datePublished: isoDate(d.date),
+  url: d.url,
+  articleBody: d.tweets.map((t) => t.text).join('\n\n'),
+};
+---
+
+<Base title={d.title} description={d.summary} path={`/threads/${thread.id}`} jsonld={jsonld}>
+  <article>
+    <p class="kicker">Thread</p>
+    <h1>{d.title}</h1>
+    <p class="byline">
+      {d.author.name} (<a href={`https://x.com/${d.author.handle}`}>@{d.author.handle}</a>) · {longDate(d.date)} ·
+      {d.tweets.length} posts · <a href={d.url}>original on X</a>
+    </p>
+    {
+      papers.map((p) => (
+        <p class="byline">
+          About: <a href={`/papers/${p.id}`}>{p.data.title}</a>
+        </p>
+      ))
+    }
+    <p class="lede">{d.summary}</p>
+    <p class="note">The posts are embedded from X. The figure notes under them are written by this wiki.</p>
+
+    <ol class="thread">
+      {
+        d.tweets.map((t, i) => (
+          <li id={`post-${i + 1}`} data-of={d.tweets.length}>
+            <Fragment set:html={t.html} />
+            {t.images.map(
+              (img) =>
+                img.alt && (
+                  <p class="figure-note">
+                    <b>Figure.</b> {img.alt}
+                  </p>
+                ),
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </article>
+  <!-- Upgrades the blockquotes above into X's full embeds. The page reads without it. -->
+  <script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</Base>

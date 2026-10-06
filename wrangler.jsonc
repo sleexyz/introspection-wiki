@@ -1,0 +1,19 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "introspection-wiki",
+	"main": "worker/index.ts",
+	"compatibility_date": "2026-10-06",
+	"compatibility_flags": ["nodejs_compat"],
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS",
+		"not_found_handling": "404-page",
+		// The Worker exists to negotiate markdown for page URLs. Hashed build
+		// assets never need it, so they go straight to the asset server.
+		"run_worker_first": ["/*", "!/_astro/*"]
+	},
+	"routes": [{ "pattern": "introspection.infinite.fun", "custom_domain": true }],
+	"observability": {
+		"enabled": true
+	}
+}

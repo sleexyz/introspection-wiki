@@ -1,0 +1,171 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { EVIDENCE_LABELS, bibtex, citeAs, isoDate, loadWiki, paperLinks, primaryLink, statusLine, type Paper } from '../../lib/wiki';
+
+export async function getStaticPaths() {
+  const wiki = await loadWiki();
+  return wiki.papers.map((paper) => ({ params: { id: paper.id }, props: { paper } }));
+}
+
+const { paper } = Astro.props as { paper: Paper };
+const d = paper.data;
+const wiki = await loadWiki();
+const { Content } = await render(paper);
+
+const concepts = d.concepts.map((id) => wiki.concepts.find((c) => c.id === id)!);
+const threads = wiki.threads.filter((t) => d.threads.includes(t.id) || t.data.papers.includes(paper.id));
+const cites = wiki.cites.get(paper.id)!.map((id) => wiki.paper.get(id)!);
+const citedBy = wiki.citedBy.get(paper.id)!.map((id) => wiki.paper.get(id)!);
+
+const jsonld = {
+  '@type': 'ScholarlyArticle',
+  name: d.title,
+  headline: d.title,
+  author: d.authors.map((name) => ({ '@type': 'Person', name })),
+  datePublished: d.date ? isoDate(d.date) : String(d.year),
+  ...(d.venue && { isPartOf: { '@type': 'Periodical', name: d.venue } }),
+  sameAs: paperLinks(paper).map((l) => l.href),
+  url: primaryLink(paper),
+  abstract: d.summary,
+  citation: cites.map((p) => ({ '@type': 'ScholarlyArticle', name: p.data.title, url: primaryLink(p) })),
+};
+---
+
+<Base title={d.title} description={d.summary} path={`/papers/${paper.id}`} jsonld={jsonld}>
+  <article>
+    <p class="kicker">Paper · {d.tier}</p>
+    <h1>{d.title}</h1>
+    <p class="byline">
+      {d.authors.join(', ')} · {d.venue?.includes(String(d.year)) ? d.venue : [d.venue, d.year].filter(Boolean).join(' ')}
+    </p>
+    <p class="links">
+      {
+        paperLinks(paper).map((l, i) => (
+          <Fragment>
+            {i > 0 && ' · '}
+            <a href={l.href}>{l.label}</a>
+          </Fragment>
+        ))
+      }
+    </p>
+    <p class="lede">{d.summary}</p>
+    <p class="draft">
+      {statusLine(paper)}.{d.sources.length > 0 && ` Written from: ${d.sources.join('; ')}.`}
+    </p>
+
+    {
+      d.evidence && (
+        <section>
+          <h2 id="evidence-card">Evidence card</h2>
+          <table class="card">
+            <tbody>
+              <tr>
+                <th scope="row">What the model reports on</th>
+                <td>{d.evidence.reports_on}</td>
+              </tr>
+              <tr>
+                <th scope="row">Methods</th>
+                <td>{d.evidence.methods.join(', ')}</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="/concepts/faithfulness">Faithfulness</a>
+                </th>
+                <td class={d.evidence.faithfulness}>{EVIDENCE_LABELS[d.evidence.faithfulness]}</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="/concepts/grounding">Grounding</a>
+                </th>
+                <td class={d.evidence.grounding}>{EVIDENCE_LABELS[d.evidence.grounding]}</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="/concepts/privileged-access">Privileged access</a>
+                </th>
+                <td class={d.evidence.privileged_access}>{EVIDENCE_LABELS[d.evidence.privileged_access]}</td>
+              </tr>
+              <tr>
+                <th scope="row">Stance</th>
+                <td>{d.evidence.stance}</td>
+              </tr>
+              <tr>
+                <th scope="row">Models</th>
+                <td>{d.evidence.models.join(', ') || 'n/a'}</td>
+              </tr>
+            </tbody>
+          </table>
+          {d.evidence.note && <p class="note">{d.evidence.note}</p>}
+        </section>
+      )
+    }
+
+    <Content />
+
+    {
+      concepts.length > 0 && (
+        <p class="note">
+          Concepts:{' '}
+          {concepts.map((c, i) => (
+            <Fragment>
+              {i > 0 && ', '}
+              <a href={`/concepts/${c.id}`}>{c.data.title}</a>
+            </Fragment>
+          ))}
+        </p>
+      )
+    }
+
+    {
+      threads.length > 0 && (
+        <section>
+          <h2 id="threads">Threads</h2>
+          <ul class="entries">
+            {threads.map((t) => (
+              <li>
+                <a href={`/threads/${t.id}`}>{t.data.title}</a>{' '}
+                <span class="meta">@{t.data.author.handle} · {t.data.tweets.length} posts</span>
+                <span class="desc">{t.data.summary}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      cites.length > 0 && (
+        <section>
+          <h2 id="cites">Cites, within this wiki</h2>
+          <ul class="entries">
+            {cites.map((p) => (
+              <li>
+                <a href={`/papers/${p.id}`}>{citeAs(p)}</a> <span class="meta">{p.data.title}</span>
+                <span class="desc">{p.data.summary}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      citedBy.length > 0 && (
+        <section>
+          <h2 id="cited-by">Cited by, within this wiki</h2>
+          <ul class="entries">
+            {citedBy.map((p) => (
+              <li>
+                <a href={`/papers/${p.id}`}>{citeAs(p)}</a> <span class="meta">{p.data.title}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <h2 id="bibtex">BibTeX</h2>
+    <pre><code>{bibtex(paper)}</code></pre>
+  </article>
+</Base>

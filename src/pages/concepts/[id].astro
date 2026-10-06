@@ -1,0 +1,43 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { citeAs, loadWiki, type Concept } from '../../lib/wiki';
+
+export async function getStaticPaths() {
+  const wiki = await loadWiki();
+  return wiki.concepts.map((concept) => ({ params: { id: concept.id }, props: { concept } }));
+}
+
+const { concept } = Astro.props as { concept: Concept };
+const d = concept.data;
+const wiki = await loadWiki();
+const { Content } = await render(concept);
+const papers = wiki.papers.filter((p) => p.data.concepts.includes(concept.id));
+const jsonld = { '@type': 'DefinedTerm', name: d.title, description: d.summary, alternateName: d.aliases };
+---
+
+<Base title={d.title} description={d.summary} path={`/concepts/${concept.id}`} jsonld={jsonld}>
+  <article>
+    <p class="kicker">Concept</p>
+    <h1>{d.title}</h1>
+    {d.aliases.length > 0 && <p class="byline">Also called: {d.aliases.join(', ')}</p>}
+    <p class="lede">{d.summary}</p>
+    {!d.reviewed && <p class="draft">AI-drafted, not yet reviewed by a person.</p>}
+    <Content />
+    {
+      papers.length > 0 && (
+        <section>
+          <h2 id="papers">Papers tagged with this concept</h2>
+          <ul class="entries">
+            {papers.map((p) => (
+              <li>
+                <a href={`/papers/${p.id}`}>{citeAs(p)}</a> <span class="meta">{p.data.title}</span>
+                <span class="desc">{p.data.summary}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </article>
+</Base>

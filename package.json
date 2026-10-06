@@ -1,0 +1,23 @@
+{
+  "name": "introspection-wiki",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "npm run build && wrangler dev",
+    "generate-types": "wrangler types",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "dependencies": {
+    "astro": "^7.3.6"
+  },
+  "devDependencies": {
+    "wrangler": "^4.83.0",
+    "yaml": "^2.8.0"
+  }
+}

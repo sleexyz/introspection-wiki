@@ -1,0 +1,86 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE, TIERS, citeAs, frontier, loadWiki } from '../lib/wiki';
+
+const wiki = await loadWiki();
+const jsonld = { '@type': 'WebSite', name: SITE.name, url: SITE.url, description: SITE.description, license: 'https://creativecommons.org/licenses/by/4.0/' };
+---
+
+<Base path="/" jsonld={jsonld}>
+  <h1>{SITE.name}</h1>
+  <p class="lede">
+    Papers and resources on introspection in large language models: whether a model can report on its own internal
+    states.
+  </p>
+  <p>
+    A self-report counts as introspection here only if it is <a href="/concepts/faithfulness">faithful</a> (it matches
+    what the model actually does or represents) and <a href="/concepts/grounding">grounded</a> (it is caused by the
+    state it describes, rather than arrived at some other way). Each paper page says which of those the paper tested.
+  </p>
+
+  {
+    TIERS.map(({ tier, label, blurb }) => {
+      const list = wiki.papers.filter((p) => p.data.tier === tier);
+      return (
+        list.length > 0 && (
+          <section>
+            <h2>{label}</h2>
+            <p class="note">{blurb}</p>
+            <ul class="entries">
+              {list.map((p) => (
+                <li>
+                  <a href={`/papers/${p.id}`}>{p.data.title}</a>{' '}
+                  <span class="meta">
+                    {citeAs(p)}
+                    {p.data.status === 'stub' && ' · stub'}
+                  </span>
+                  <span class="desc">{p.data.summary}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      );
+    })
+  }
+
+  <h2>Concepts</h2>
+  <ul class="entries">
+    {
+      wiki.concepts.map((c) => (
+        <li>
+          <a href={`/concepts/${c.id}`}>{c.data.title}</a>
+          <span class="desc">{c.data.summary}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2>Threads</h2>
+  <ul class="entries">
+    {
+      wiki.threads.map((t) => (
+        <li>
+          <a href={`/threads/${t.id}`}>{t.data.title}</a>{' '}
+          <span class="meta">@{t.data.author.handle} · {t.data.tweets.length} posts</span>
+          <span class="desc">{t.data.summary}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2>Frontier</h2>
+  <p>
+    <a href="/frontier">{frontier.candidates.length} candidate papers</a> sit one citation away from the pages above and
+    have not been added yet.
+  </p>
+
+  <h2>For language models</h2>
+  <p>
+    Every page has a plain-markdown twin at the same URL plus <code>.md</code>, and returns it when asked with
+    <code>Accept: text/markdown</code>. <a href="/llms.txt">llms.txt</a> indexes the site;
+    <a href="/llms-full.txt">llms-full.txt</a> is all of it in one file. The data is also available as
+    <a href="/data/papers.json">papers.json</a>, <a href="/data/graph.json">graph.json</a>,
+    <a href="/data/frontier.json">frontier.json</a> and <a href="/references.bib">references.bib</a>.
+  </p>
+</Base>

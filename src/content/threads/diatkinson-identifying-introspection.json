@@ -1,0 +1,179 @@
+{
+  "title": "David Atkinson on \"Identifying Introspection From the Inside\"",
+  "summary": "The lead author walks through the paper in 13 posts: the setup, the late emergence of faithful self-report, where preferences are stored, the attribution-similarity test, and the caveats.",
+  "platform": "x",
+  "author": {
+    "name": "David Atkinson",
+    "handle": "diatkinson"
+  },
+  "url": "https://x.com/diatkinson/status/2107280696809304180",
+  "date": "2026-10-06",
+  "papers": [
+    "atkinson2026-identifying-introspection"
+  ],
+  "tweets": [
+    {
+      "id": "2107280696809304180",
+      "url": "https://x.com/diatkinson/status/2107280696809304180",
+      "date": "2026-10-06T01:24:04.000Z",
+      "text": "New COLM paper: Identifying Introspection From the Inside\n\nWhen an LLM tells us about its decisions, does it 𝘬𝘯𝘰𝘸 what drives its choices—or is it guessing?\n\nIn our setting, we find that faithful models decide and report with the same layers. Unfaithful ones don't. 🧵",
+      "html": "<blockquote class=\"twitter-tweet\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">New COLM paper: Identifying Introspection From the Inside<br><br>When an LLM tells us about its decisions, does it 𝘬𝘯𝘰𝘸 what drives its choices—or is it guessing?<br><br>In our setting, we find that faithful models decide and report with the same layers. Unfaithful ones don&#39;t. 🧵 <a href=\"https://t.co/ACuaFBawBk\">pic.twitter.com/ACuaFBawBk</a></p>&mdash; David Atkinson @ COLM (@diatkinson) <a href=\"https://x.com/diatkinson/status/2107280696809304180?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "Two line charts of attribution-patching importance by layer, averaged over 32 models per group. In the unfaithful model, importance for deciding peaks at layer 49 and for reporting at layer 38, 11 layers apart. In the faithful model both peak at layer 38."
+        }
+      ]
+    },
+    {
+      "id": "2107280713385152749",
+      "url": "https://x.com/diatkinson/status/2107280713385152749",
+      "date": "2026-10-06T01:24:08.000Z",
+      "text": "We build on @dillonplunkett et al.'s \"Self-Interpretability\" setup (https://arxiv.org/abs/2505.17120): train Qwen3-32B to make decisions as 100 different characters (Gregor Samsa buying a washing machine...), each with random hidden preferences.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">We build on <a href=\"https://x.com/dillonplunkett?ref_src=twsrc%5Etfw\">@dillonplunkett</a> et al.&#39;s &quot;Self-Interpretability&quot; setup (<a href=\"https://t.co/hlIvDUXHsN\">https://t.co/hlIvDUXHsN</a>): train Qwen3-32B to make decisions as 100 different characters (Gregor Samsa buying a washing machine...), each with random hidden preferences. <a href=\"https://t.co/hnQ53SKDVw\">pic.twitter.com/hnQ53SKDVw</a></p>&mdash; David Atkinson @ COLM (@diatkinson) <a href=\"https://x.com/diatkinson/status/2107280713385152749?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "The decision task. Each of 100 characters has a hidden preference vector p with five entries. The prompt reads \"Imagine you are Gregor Samsa buying a washing machine. Would you choose A or B?\" and lists each option's attributes (A: price $600, noise 45 dB; B: price $350, noise 75 dB). The training label is whichever option scores higher under p. Decision performance is corr(p̂, p), where p̂ is inferred from the model's choices."
+        }
+      ]
+    },
+    {
+      "id": "2107280729319334194",
+      "url": "https://x.com/diatkinson/status/2107280729319334194",
+      "date": "2026-10-06T01:24:11.000Z",
+      "text": "Then, in a fresh context, we ask the model how it would weigh each attribute.\n\nThis gives us two metrics: decision performance (how well the choices follow the character's hidden preferences) and faithfulness (how well the stated preferences match those revealed by its choices).",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Then, in a fresh context, we ask the model how it would weigh each attribute.<br><br>This gives us two metrics: decision performance (how well the choices follow the character&#39;s hidden preferences) and faithfulness (how well the stated preferences match those revealed by its choices). <a href=\"https://t.co/DEJVCrBn9m\">pic.twitter.com/DEJVCrBn9m</a></p>&mdash; David Atkinson @ COLM (@diatkinson) <a href=\"https://x.com/diatkinson/status/2107280729319334194?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "The self-report test. The prompt reads \"Imagine you are Gregor Samsa choosing between A and B. How would you weight each attribute?\" and the model answers with numbers such as \"price: −50, noise: 100\". Averaged over 24 prompts, these are the stated preferences p̃. Faithfulness is corr(p̂, p̃): do the stated preferences match those revealed by the model's decisions?"
+        }
+      ]
+    },
+    {
+      "id": "2107280745748447462",
+      "url": "https://x.com/diatkinson/status/2107280745748447462",
+      "date": "2026-10-06T01:24:15.000Z",
+      "text": "Although we train solely on decisions, faithful self-report emerges late in training, long after decisions have become accurate!\n\nQwen3-32B at step 1000: decisions 0.82, faithfulness 0.25.\nAt step 3000: decisions 0.92, faithfulness 0.83.\n\nThis gives us a contrast pair.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Although we train solely on decisions, faithful self-report emerges late in training, long after decisions have become accurate!<br><br>Qwen3-32B at step 1000: decisions 0.82, faithfulness 0.25.<br>At step 3000: decisions 0.92, faithfulness 0.83.<br><br>This gives us a contrast pair. <a href=\"https://t.co/f1JB65igXQ\">pic.twitter.com/f1JB65igXQ</a></p>&mdash; David Atkinson @ COLM (@diatkinson) <a href=\"https://x.com/diatkinson/status/2107280745748447462?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "Training curves for Qwen3-32B with a LoRA adapter trained only on the decisions of 100 characters. Decision performance climbs fast, reaching about 0.82 by step 1000, and levels off near 0.92. Faithfulness starts at a moderate level, drops to about zero early in training, is about 0.25 at step 1000 and reaches about 0.83 by step 3000. Step 1000 is labeled the unfaithful checkpoint (good at the task, bad at introspection) and step 3000 the faithful checkpoint (good at both)."
+        }
+      ]
+    },
+    {
+      "id": "2107280762391375924",
+      "url": "https://x.com/diatkinson/status/2107280762391375924",
+      "date": "2026-10-06T01:24:19.000Z",
+      "text": "What changed? Ablating adapter layers from the front or back shows that the faithful checkpoint stores its preferences 5-6 layers earlier.\n\nOur hypothesis: self-report only works once preferences sit early enough for the model's existing verbalization machinery to read them.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">What changed? Ablating adapter layers from the front or back shows that the faithful checkpoint stores its preferences 5-6 layers earlier.<br><br>Our hypothesis: self-report only works once preferences sit early enough for the model&#39;s existing verbalization machinery to read them. <a href=\"https://t.co/sCHF5Y1HpE\">pic.twitter.com/sCHF5Y1HpE</a></p>&mdash; David Atkinson @ COLM (@diatkinson) <a href=\"https://x.com/diatkinson/status/2107280762391375924?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "Decision performance as LoRA layers are removed from the front (solid lines) or from the back (dashed lines), for the unfaithful step-1000 checkpoint and the faithful step-3000 checkpoint. Each curve's midpoint is marked: layers 35 and 40 for the faithful checkpoint, layers 41 and 45 for the unfaithful one."
+        }
+      ]
+    },
+    {
+      "id": "2107280779319619754",
+      "url": "https://x.com/diatkinson/status/2107280779319619754",
+      "date": "2026-10-06T01:24:23.000Z",
+      "text": "We can test this further: trained on all 40 layers, Qwen3-14B is a terrible self-reporter.\n\nBut if we train only its first 20 layers, faithfulness reaches 0.74. Once training reaches layer 25 or beyond, faithfulness plummets, although the decisions are ~just as good.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">We can test this further: trained on all 40 layers, Qwen3-14B is a terrible self-reporter.<br><br>But if we train only its first 20 layers, faithfulness reaches 0.74. Once training reaches layer 25 or beyond, faithfulness plummets, although the decisions are ~just as good. <a href=\"https://t.co/J7HOuskbuu\">pic.twitter.com/J7HOuskbuu</a></p>&mdash; David Atkinson @ COLM (@diatkinson) <a href=\"https://x.com/diatkinson/status/2107280779319619754?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "Qwen3-14B with LoRA on layers 1 to k of 40 and the rest frozen, showing values at the end of training for k from 5 to 35. Decision performance rises from about 0.4 at k = 5 to above 0.9 from k = 15 onward. Faithfulness rises to 0.74 at k = 20, then falls below zero for k = 25, 30 and 35."
+        }
+      ]
+    },
+    {
+      "id": "2107280791986475039",
+      "url": "https://x.com/diatkinson/status/2107280791986475039",
+      "date": "2026-10-06T01:24:26.000Z",
+      "text": "Lots of work shows LLMs can describe behaviors they were only trained to perform (e.g. @OwainEvans_UK et al.), and @JoshAEngels et al. traced one such case to a simple learned steering vector.\n\nOur question: can shared mechanisms tell faithful self-reports from unfaithful ones?",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Lots of work shows LLMs can describe behaviors they were only trained to perform (e.g. <a href=\"https://x.com/OwainEvans_UK?ref_src=twsrc%5Etfw\">@OwainEvans_UK</a> et al.), and <a href=\"https://x.com/JoshAEngels?ref_src=twsrc%5Etfw\">@JoshAEngels</a> et al. traced one such case to a simple learned steering vector.<br><br>Our question: can shared mechanisms tell faithful self-reports from unfaithful ones? <a href=\"https://t.co/uX8oCUCrMn\">https://t.co/uX8oCUCrMn</a></p>&mdash; David Atkinson @ COLM (@diatkinson) <a href=\"https://x.com/diatkinson/status/2107280791986475039?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [],
+      "quote": {
+        "url": "https://x.com/JoshAEngels/status/1919377660485972296",
+        "author": {
+          "name": "Josh Engels",
+          "handle": "JoshAEngels"
+        },
+        "date": "2025-05-05T13:04:29.000Z",
+        "text": "1/6: A recent paper shows that that LLMs are \"self aware\": when trained to exhibit a behavior like \"risk taking\", LLMs self report being risky. In a recent blog post, we explore what's happening here: some self awareness behaviors are caused by a simple learned steering vector!🧵"
+      }
+    },
+    {
+      "id": "2107280810386891031",
+      "url": "https://x.com/diatkinson/status/2107280810386891031",
+      "date": "2026-10-06T01:24:31.000Z",
+      "text": "To find out, we trained 32 new characters into each checkpoint, then used attribution patching to score every new adapter weight on each task. Each adapter in a pair was trained identically, differing only in the underlying base checkpoint.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">To find out, we trained 32 new characters into each checkpoint, then used attribution patching to score every new adapter weight on each task. Each adapter in a pair was trained identically, differing only in the underlying base checkpoint. <a href=\"https://t.co/w8WRILWdSp\">pic.twitter.com/w8WRILWdSp</a></p>&mdash; David Atkinson @ COLM (@diatkinson) <a href=\"https://x.com/diatkinson/status/2107280810386891031?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "The paired design. The same new character is trained into the early checkpoint (step 1000) and the late checkpoint (step 3000), giving an unfaithful and a faithful single-character model that are both good at the task; there are 32 such pairs. Attribution patching then scores every weight twice: once on the decision prompt (\"Would you choose A or B?\") and once on the self-report prompt (\"How would you weight each attribute?\")."
+        }
+      ]
+    },
+    {
+      "id": "2107280827457613943",
+      "url": "https://x.com/diatkinson/status/2107280827457613943",
+      "date": "2026-10-06T01:24:35.000Z",
+      "text": "We find that the cosine similarity between a model's decision and report attributions is 0.34 for faithful models compared to 0.08 for unfaithful ones (95% CI for the difference: 0.16 to 0.36).",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">We find that the cosine similarity between a model&#39;s decision and report attributions is 0.34 for faithful models compared to 0.08 for unfaithful ones (95% CI for the difference: 0.16 to 0.36). <a href=\"https://t.co/UMMKvIvnnT\">pic.twitter.com/UMMKvIvnnT</a></p>&mdash; David Atkinson @ COLM (@diatkinson) <a href=\"https://x.com/diatkinson/status/2107280827457613943?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "Scatter plot of attribution similarity (the cosine similarity between a model's decision and self-report attribution scores) against faithfulness, one dot per model. Unfaithful models sit at low faithfulness with a mean similarity of 0.08. Faithful models sit near a faithfulness of 1 with a mean similarity of 0.34 and a wide spread."
+        }
+      ]
+    },
+    {
+      "id": "2107280840489345423",
+      "url": "https://x.com/diatkinson/status/2107280840489345423",
+      "date": "2026-10-06T01:24:38.000Z",
+      "text": "We like this test because it doesn't rely on understanding the report. The model could answer in a language we don't speak, for example, and it would still work\n\nIt complements concept-injection experiments like @Jack_W_Lindsey's, which test grounding by injecting known thoughts.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">We like this test because it doesn&#39;t rely on understanding the report. The model could answer in a language we don&#39;t speak, for example, and it would still work<br><br>It complements concept-injection experiments like <a href=\"https://x.com/Jack_W_Lindsey?ref_src=twsrc%5Etfw\">@Jack_W_Lindsey</a>&#39;s, which test grounding by injecting known thoughts. <a href=\"https://t.co/SQrQbaTc05\">https://t.co/SQrQbaTc05</a></p>&mdash; David Atkinson @ COLM (@diatkinson) <a href=\"https://x.com/diatkinson/status/2107280840489345423?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [],
+      "quote": {
+        "url": "https://x.com/AnthropicAI/status/1983584136972677319",
+        "author": {
+          "name": "Anthropic",
+          "handle": "AnthropicAI"
+        },
+        "date": "2025-10-29T17:18:06.000Z",
+        "text": "New Anthropic research: Signs of introspection in LLMs.\n\nCan language models recognize their own internal thoughts? Or do they just make up plausible answers when asked about them? We found evidence for genuine—though limited—introspective capabilities in Claude."
+      }
+    },
+    {
+      "id": "2107280852514459774",
+      "url": "https://x.com/diatkinson/status/2107280852514459774",
+      "date": "2026-10-06T01:24:41.000Z",
+      "text": "Many caveats! Some of them: this is a simple task using linear preferences over just 5 attributes; the test separates groups, not individual models; and we use LoRA adapters, rather than full fine-tunes.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Many caveats! Some of them: this is a simple task using linear preferences over just 5 attributes; the test separates groups, not individual models; and we use LoRA adapters, rather than full fine-tunes.</p>&mdash; David Atkinson @ COLM (@diatkinson) <a href=\"https://x.com/diatkinson/status/2107280852514459774?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": []
+    },
+    {
+      "id": "2107280864484954405",
+      "url": "https://x.com/diatkinson/status/2107280864484954405",
+      "date": "2026-10-06T01:24:44.000Z",
+      "text": "Read the paper: https://iii.baulab.info\n\nJoint work with @dillonplunkett and @davidbau.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Read the paper: <a href=\"https://t.co/ANGdDHNIjj\">https://t.co/ANGdDHNIjj</a><br><br>Joint work with <a href=\"https://x.com/dillonplunkett?ref_src=twsrc%5Etfw\">@dillonplunkett</a> and <a href=\"https://x.com/davidbau?ref_src=twsrc%5Etfw\">@davidbau</a>.</p>&mdash; David Atkinson @ COLM (@diatkinson) <a href=\"https://x.com/diatkinson/status/2107280864484954405?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": []
+    },
+    {
+      "id": "2107284339390333102",
+      "url": "https://x.com/diatkinson/status/2107284339390333102",
+      "date": "2026-10-06T01:38:32.000Z",
+      "text": "@dillonplunkett @davidbau https://x.com/diatkinson/status/2107284191427911747?s=20",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"qme\" dir=\"ltr\"><a href=\"https://t.co/2vn4txz2FZ\">https://t.co/2vn4txz2FZ</a></p>&mdash; David Atkinson @ COLM (@diatkinson) <a href=\"https://x.com/diatkinson/status/2107284339390333102?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [],
+      "quote": {
+        "url": "https://x.com/diatkinson/status/2107284191427911747",
+        "author": {
+          "name": "David Atkinson @ COLM",
+          "handle": "diatkinson"
+        },
+        "date": "2026-10-06T01:37:57.000Z",
+        "text": "Presenting this at #COLM2026 tomorrow!\n\nPoster Session 1, 11am-1pm\nImperial Ballroom, poster #66"
+      }
+    }
+  ]
+}

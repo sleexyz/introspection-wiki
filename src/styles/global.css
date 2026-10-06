@@ -1,0 +1,139 @@
+/* Same bones as infinite.fun: system type at 14px, one quiet column, rules
+   instead of boxes. Colors are variables so the page follows the reader's
+   light/dark setting. */
+:root {
+  color-scheme: light dark;
+  --bg: #fff;
+  --text: #222;
+  --strong: #111;
+  --muted: #666;
+  --faint: #999;
+  --rule: #e0e0e0;
+  --wash: #fafafa;
+  --yes: #1a7f37;
+  --part: #8a6100;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141414;
+    --text: #d6d6d6;
+    --strong: #f0f0f0;
+    --muted: #a0a0a0;
+    --faint: #7a7a7a;
+    --rule: #2e2e2e;
+    --wash: #1c1c1c;
+    --yes: #5fbf7a;
+    --part: #d4a94a;
+  }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 40px 24px;
+  line-height: 1.6;
+  font-size: 14px;
+  -webkit-text-size-adjust: 100%;
+}
+
+main { max-width: 720px; margin: 0 auto; }
+main.wide { max-width: 1040px; }
+
+a { color: var(--text); text-underline-offset: 2px; }
+a:hover { color: var(--muted); }
+a:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+
+h1 { font-size: 20px; font-weight: 600; line-height: 1.35; margin-bottom: 4px; color: var(--strong); text-wrap: balance; }
+h2 { font-size: 16px; font-weight: 600; margin-top: 32px; margin-bottom: 8px; color: var(--text); }
+h3 { font-size: 14px; font-weight: 600; margin-top: 24px; margin-bottom: 6px; }
+
+p { margin-bottom: 12px; }
+ul, ol { margin-bottom: 12px; padding-left: 20px; }
+li { margin-bottom: 4px; }
+
+code { font-family: 'SF Mono', 'Fira Code', ui-monospace, monospace; font-size: 13px; }
+p code, li code, td code { background: var(--wash); padding: 1px 5px; border-radius: 3px; }
+pre {
+  overflow-x: auto;
+  padding: 12px 16px;
+  background: var(--wash);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+hr { border: none; border-top: 1px solid var(--rule); margin: 16px 0; }
+hr.foot { margin-top: 48px; }
+
+blockquote { border-left: 3px solid var(--rule); padding-left: 16px; color: var(--muted); margin-bottom: 12px; }
+
+nav { font-size: 13px; color: var(--faint); margin-bottom: 12px; }
+nav a { color: var(--muted); text-decoration: none; }
+nav a:hover { color: var(--text); }
+.site-nav { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 16px; }
+.site-nav span { display: inline-flex; gap: 8px; flex-wrap: wrap; }
+
+footer { font-size: 12px; color: var(--faint); }
+footer p { margin-bottom: 4px; }
+footer a { color: var(--muted); }
+
+/* Page furniture */
+.kicker { font-size: 12px; color: var(--faint); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px; }
+.byline { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+.links { font-size: 13px; color: var(--faint); margin-bottom: 20px; }
+.links a { color: var(--muted); }
+.lede { font-size: 15px; color: var(--strong); margin-bottom: 20px; }
+.note { font-size: 13px; color: var(--muted); }
+.draft {
+  font-size: 13px;
+  color: var(--muted);
+  background: var(--wash);
+  border-left: 3px solid var(--rule);
+  padding: 8px 12px;
+  margin-bottom: 20px;
+}
+
+/* Lists of pages */
+.entries { list-style: none; padding-left: 0; }
+.entries li { margin-bottom: 10px; }
+.entries .meta { color: var(--faint); font-size: 13px; }
+.entries .desc { display: block; color: var(--muted); }
+
+/* Tables: the evidence card and the papers matrix */
+table { border-collapse: collapse; width: 100%; margin-bottom: 16px; font-size: 13px; }
+th, td { text-align: left; vertical-align: top; padding: 6px 12px 6px 0; border-bottom: 1px solid var(--rule); }
+thead th { font-weight: 600; color: var(--muted); white-space: nowrap; }
+.card th { font-weight: 400; color: var(--muted); width: 38%; }
+.card td { color: var(--strong); }
+.scroll { overflow-x: auto; }
+.matrix { min-width: 760px; }
+.tested { color: var(--yes); }
+.argued { color: var(--part); }
+.not-addressed { color: var(--faint); }
+
+/* Threads. Each post is the official embed markup: a plain blockquote that
+   X's widget script upgrades in place. Until (or unless) it does, this is what
+   shows — so it has to read well on its own. */
+.thread { list-style: none; padding-left: 0; counter-reset: post; }
+.thread > li { counter-increment: post; margin-bottom: 28px; }
+.thread > li::before {
+  content: counter(post) ' / ' attr(data-of);
+  display: block;
+  font-size: 12px;
+  color: var(--faint);
+  margin-bottom: 6px;
+}
+.thread blockquote.twitter-tweet { color: var(--text); border-left-color: var(--faint); }
+.thread blockquote.twitter-tweet p { font-size: 14px; }
+.thread .twitter-tweet-rendered { margin: 0 0 8px !important; }
+.figure-note { font-size: 13px; color: var(--muted); margin-top: 8px; }
+.figure-note b { font-weight: 600; }
+
+@media (max-width: 560px) {
+  body { padding: 24px 16px; }
+  .card th { width: 46%; }
+}

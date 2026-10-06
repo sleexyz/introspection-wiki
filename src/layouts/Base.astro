@@ -1,0 +1,70 @@
+---
+import '../styles/global.css';
+import { SITE } from '../lib/wiki';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Site-relative URL of this page, e.g. "/papers/foo". */
+  path: string;
+  /** schema.org description of the page, emitted as JSON-LD. */
+  jsonld?: Record<string, unknown>;
+  /** False for pages with no markdown twin (the 404 page). */
+  twin?: boolean;
+  wide?: boolean;
+}
+
+const { title, description = SITE.description, path, jsonld, twin = true, wide = false } = Astro.props;
+const pageTitle = title ? `${title} | ${SITE.name}` : SITE.name;
+const canonical = SITE.url + (path === '/' ? '/' : path);
+const markdown = path === '/' ? '/index.md' : `${path}.md`;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{pageTitle}</title>
+  <meta name="description" content={description}>
+  <link rel="canonical" href={canonical}>
+  {twin && <link rel="alternate" type="text/markdown" href={markdown} title="This page as markdown">}
+  <link rel="alternate" type="application/atom+xml" href="/feed.xml" title={SITE.name}>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content={title ?? SITE.name}>
+  <meta property="og:description" content={description}>
+  <meta property="og:type" content="article">
+  <meta property="og:url" content={canonical}>
+  {jsonld && <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', ...jsonld })} />}
+</head>
+<body>
+  <main class={wide ? 'wide' : undefined}>
+    <nav class="site-nav" aria-label="Site">
+      <span>
+        <a href="/">{SITE.name}</a> &middot;
+        <a href="/papers">Papers</a> &middot;
+        <a href="/frontier">Frontier</a> &middot;
+        <a href="/about">About</a>
+      </span>
+      <span>
+        {twin && <a href={markdown} title="This page as plain markdown">.md</a>}
+        {twin && <Fragment>&middot;</Fragment>}
+        <a href="/llms.txt">llms.txt</a>
+      </span>
+    </nav>
+    <hr>
+    <slot />
+    <hr class="foot">
+    <footer>
+      <p>
+        Summaries are drafted by an AI model from the sources each page lists, and are marked until a person has
+        checked them. <a href="/about">How this wiki is made</a>.
+      </p>
+      <p>
+        Text is <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; quoted posts and papers belong to
+        their authors. <a href={SITE.repo}>Source and corrections on GitHub</a>.
+      </p>
+    </footer>
+  </main>
+</body>
+</html>
