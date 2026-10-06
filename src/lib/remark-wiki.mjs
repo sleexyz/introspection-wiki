@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { mapHtml, parseMap } from './experiment-map.mjs';
 import { experimentHtml, parseExperiment } from './experiment.mjs';
 
 /**
@@ -21,7 +22,9 @@ import { experimentHtml, parseExperiment } from './experiment.mjs';
  *    description a reader without the image gets, so it carries the content.
  *
  * 3. An experiment diagram. A fenced block tagged `experiment`, holding YAML
- *    in the notation defined in experiment.mjs, renders as the diagram.
+ *    in the notation defined in experiment.mjs, renders as the diagram. A
+ *    block tagged `map` (experiment-map.mjs) renders as the graph of how a
+ *    paper's experiments lead into one another.
  *
  * All three are plain text in the source, so the markdown twin of a page can
  * rewrite the same source for a reader that only gets text — see expandPosts
@@ -94,6 +97,9 @@ export default function remarkWiki() {
     tree.children = tree.children.map((node) => {
       if (node.type === 'code' && node.lang === 'experiment') {
         return { type: 'html', value: experimentHtml(parseExperiment(node.value)) };
+      }
+      if (node.type === 'code' && node.lang === 'map') {
+        return { type: 'html', value: mapHtml(parseMap(node.value)) };
       }
       if (node.type !== 'paragraph' || node.children.length !== 1) return node;
       const [only] = node.children;

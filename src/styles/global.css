@@ -12,9 +12,12 @@
   --wash: #fafafa;
   --yes: #1a7f37;
   --part: #8a6100;
-  /* Diagram tracks: what the model does, and what it says about itself. */
-  --behavior: #1f6391;
-  --report: #a4500f;
+  /* Diagram colors, after the seed paper's own figures. Tracks: what the
+     model does, and what it says about itself. Tones: the two kinds of model. */
+  --behavior: #7d6f12;
+  --report: #1c7a35;
+  --unfaithful: #c0455a;
+  --faithful: #2f6aa8;
   --stub: #bf3c2c;
   --stub-hover: #9f3526;
   --stub-visited: #9f5555;
@@ -31,8 +34,10 @@
     --wash: #1c1c1c;
     --yes: #5fbf7a;
     --part: #d4a94a;
-    --behavior: #7db8e3;
-    --report: #e3a268;
+    --behavior: #d6c463;
+    --report: #6cc487;
+    --unfaithful: #f08a98;
+    --faithful: #86b5e6;
     --stub: #fd7865;
     --stub-hover: #fea898;
     --stub-visited: #c99391;
@@ -183,19 +188,31 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
   text-transform: uppercase;
   color: var(--faint);
 }
-.xp-lane, .xp-lane-tag {
+.xp-lane-tag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-size: 11px;
+  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--muted);
 }
-.xp-lane { text-align: center; padding-bottom: 6px; }
-.xp-lane-tag { display: none; }
 
 [data-track='behavior'] { --track: var(--behavior); }
 [data-track='report'] { --track: var(--report); }
 [data-track='truth'] { --track: var(--muted); }
-.xp-lane[data-track], .xp-lane-tag[data-track] { color: var(--track); }
+.xp-cell[data-track] > .xp-lane-tag { color: var(--track); }
+
+/* Tones: an unfaithful model is red and a faithful one blue, wherever it
+   appears: in its lane's heading, its panel, its model box and its results. */
+[data-tone='unfaithful'] { --tone: var(--unfaithful); }
+[data-tone='faithful'] { --tone: var(--faithful); }
+.xp-cell[data-tone] > .xp-lane-tag { color: var(--tone); }
+.xp-cell[data-tone] { background: color-mix(in srgb, var(--tone) 7%, var(--wash)); }
+.xp-k-model[data-tone] { border-color: var(--tone); }
+.xp-k-model[data-tone] .xp-kind, .xp-k-result[data-tone] .xp-value { color: var(--tone); }
+.xp-tone { color: var(--tone); font-weight: 600; }
 
 .xp-cell {
   display: flex;
@@ -243,6 +260,19 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
 }
 .xp-quote::before { content: '\201C'; }
 .xp-quote::after { content: '\201D'; }
+.xp-example { margin-top: 6px; }
+.xp-eg { font-size: 9.5px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--faint); }
+.xp-example pre {
+  margin: 2px 0 0;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--wash);
+  font-size: 11.5px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
 .xp-tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0 0; padding: 0; list-style: none; font-size: 10.5px; }
 .xp-tags li { margin: 0; padding: 0 7px; border: 1px solid var(--rule); border-radius: 999px; color: var(--muted); }
 .xp code { padding: 0; background: none; font-size: 12.5px; }
@@ -252,8 +282,10 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
 /* One shape cue per kind of box, on top of its icon and label. */
 .xp-k-truth { border-style: dashed; }
 .xp-k-model { border-color: var(--muted); }
-.xp-k-change, .xp-k-result { background: transparent; border-color: transparent; }
+.xp-k-change, .xp-k-result, .xp-k-because, .xp-k-aim, .xp-k-product, .xp-k-leads { background: transparent; border-color: transparent; }
 .xp-k-change[data-track], .xp-k-result[data-track] { border-left-color: var(--track); }
+.xp-k-aim .xp-text { font-style: italic; }
+.xp-text a { color: inherit; }
 .xp-k-prompt { border-radius: 12px 12px 12px 3px; }
 .xp-k-reply { border-radius: 12px 12px 3px 12px; }
 .xp-cell:not(.xp-wide) > .xp-k-reply { margin-left: 28px; }
@@ -272,17 +304,63 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
 @media (max-width: 620px) {
   /* Lanes stack: each cell names its lane, and one arrow joins the stages. */
   .xp-grid, .xp-row { display: block; }
-  .xp-lanes { display: none; }
   .xp-stage { padding: 0 0 4px; text-align: left; }
   .xp-stage:empty { display: none; }
   .xp-cell { margin-bottom: 6px; }
   .xp-cell.xp-wide { flex-direction: column; }
   .xp-cell > .xp-item { flex: 0 0 auto; }
-  .xp-lane-tag { display: block; }
   .xp-conn { display: flex; justify-content: center; }
   .xp-conn .xp-arrow + .xp-arrow { display: none; }
   .xp figcaption { margin-left: 0; }
 }
+
+/* The experiment map (src/lib/experiment-map.mjs): experiments and what each
+   showed, top to bottom, joined by two kinds of arrow. A solid arrow is
+   "showed"; a dashed one is "motivated". An arrow that skips nodes runs down a
+   rail on the left. */
+.xm { margin: 16px 0 36px; }
+.xm-grid { display: grid; grid-template-columns: repeat(var(--rails), 16px) minmax(0, 1fr); }
+.xm-node { min-width: 0; padding: 8px 12px 9px; border: 1px solid var(--rule); border-radius: 6px; background: var(--bg); font-size: 13px; line-height: 1.45; }
+.xm-title { font-weight: 600; color: var(--strong); }
+.xm-title a { color: inherit; }
+.xm-text { color: var(--text); }
+.xm-experiment { border-color: var(--muted); }
+.xm-experiment .xm-text { font-style: italic; color: var(--muted); }
+.xm-finding { padding-left: 40px; background: var(--wash); border-color: transparent; }
+.xm-question { border-style: dashed; font-style: italic; }
+.xm-claim { padding-left: 38px; border-style: double; border-width: 3px; }
+.xm-also { margin-top: 4px; font-size: 12px; color: var(--muted); }
+.xm-also::before { content: '\21B3\00A0'; }
+
+.xm-link { display: flex; align-items: center; gap: 8px; min-height: 28px; padding: 3px 0 3px 40px; color: var(--faint); }
+.xm-link.xm-motivates svg { stroke-dasharray: 3 3; }
+.xm-link.xm-motivates svg path { stroke-dasharray: 3 2.5; }
+
+/* A rail starts level with the first line of the node it leaves and ends
+   level with the first line of the node it reaches. */
+.xm-rail {
+  position: relative;
+  margin: 20px 0 -20px 7px;
+  border: solid var(--faint);
+  border-width: 1.4px 0 1.4px 1.4px;
+  border-radius: 6px 0 0 6px;
+  pointer-events: none;
+}
+.xm-rail.xm-motivates { border-style: dashed; }
+.xm-rail::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  bottom: -5px;
+  border: solid transparent;
+  border-width: 4.5px 0 4.5px 6px;
+  border-left-color: var(--faint);
+}
+.xm figcaption { margin-top: 10px; font-size: 12px; color: var(--muted); }
+.xm-key { display: inline-flex; align-items: center; gap: 6px; margin-right: 14px; }
+.xm-key-line { display: inline-block; width: 22px; border-top: 1.4px solid var(--faint); }
+.xm-key-line.xm-motivates { border-top-style: dashed; }
+.xm .xp-foot { display: inline; }
 
 /* Page furniture */
 .kicker { font-size: 12px; color: var(--faint); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px; }

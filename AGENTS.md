@@ -94,39 +94,60 @@ Ids are `<first-author><year>-<short-title>`. Internal links are site-relative
 with no extension and no trailing slash: `/papers/<id>`, `/concepts/<id>`.
 A link to a page that does not exist fails the build.
 
-## Drawing an experiment
+## Drawing the experiments
 
-Every experiment a paper runs gets a diagram, and every diagram uses the one
-notation in `src/lib/experiment.mjs`, explained to readers at `/diagrams`
-(`src/content/pages/diagrams.md`). Do not draw an experiment any other way: the
-value is that a reader who has learned one diagram can read them all.
+Every paper page has a section called "The experiments", placed after the
+walk-through (the thread section, or "What the paper does"). It holds a map and
+then one diagram per experiment under its own `###` heading. Both use fixed
+notations, explained to readers at `/diagrams` (`src/content/pages/diagrams.md`).
+Do not draw an experiment any other way: the value is that a reader who has
+learned one page can read them all. The seed paper is the model to copy.
 
-A diagram is YAML in a fenced block tagged `experiment`. The seed paper has
-five to copy from. The rules:
+**The map** (a fenced block tagged `map`, `src/lib/experiment-map.mjs`) is a
+directed graph of the experiments and what each showed. List the nodes in the
+order things happened: the starting `question`, then each `experiment` followed
+by its `finding`, then the `claim`. An edge from an experiment to its finding
+means *showed*. An edge from a finding to a later experiment means *motivated*
+and carries a `why`: the question the result raised, or what it supplied. Take
+the motivations from the paper's own transitions ("to pursue this hypothesis,
+we turn to…"). An experiment motivated by two findings gets both edges.
 
-- **Five stages, always in this order, skipping any that do not apply:** `data`
-  (what was built, and what only the experimenters know), `model` (which model,
-  and what was done to it), `probe` (what it is asked, or what is read from
-  inside it), `score` (how outputs become numbers: a regression, a parser, a
-  judge model with its rubric), `compare` (the contrast that carries the claim,
-  with the result). A stage may repeat when two things happen in sequence.
+**An experiment diagram** (a fenced block tagged `experiment`,
+`src/lib/experiment.mjs`) follows these rules:
+
+- **Seven stages, always in this order, skipping any that do not apply:** `why`,
+  `data`, `model`, `probe`, `score`, `compare`, `next`. A stage may repeat when
+  two things happen in sequence.
+- **Start with why.** Give what prompted the experiment (`because`: an earlier
+  result, or a gap in the field), what it was meant to find out (`aim`), and
+  anything it was meant to produce for later experiments (`product`: a contrast
+  pair, a dataset). Think about what the experiment is *for* in the paper's
+  argument, not only what it measures. End with `next` (`leads`): where its
+  result is used, linking the later experiment's heading.
 - **Lanes are the things compared**: behavior against self-report, or one
   condition against another. Put what the lanes share in a cell that spans them
   (`all:`), so that reading across a row shows exactly what differs.
-- **Ten kinds of box**: `data`, `truth`, `model`, `change` (with a `verb`),
-  `prompt`, `reply`, `read`, `measure`, `judge`, `result`. Quote real prompt
-  text in `quote`. Put the number in `value`.
-- **Two colors, one meaning**: `track: behavior` for what the model does,
-  `track: report` for what it says about itself. Declare the paper's symbols
-  under `symbols` so a formula in backticks shows which sides it joins.
+- **Show an instance, not a description.** Give data, prompts, replies, readouts
+  and measures an `example`: the actual prompt, a row of the data, a reply.
+  Follow one case down the whole diagram. An example taken from the paper names
+  its place in `from` ("Appendix A.2"). Leave `from` out only for an example you
+  made up to show the form; it is then labeled "illustrative" automatically.
+  Invent values, never prompts or procedures, and never let an invented value
+  stand where a result goes.
+- **Colors mean two things only.** Tracks: `track: behavior` for what the model
+  does, `track: report` for what it says about itself. Tones: `tone: unfaithful`
+  and `tone: faithful` for those two kinds of model, on a lane or a box, and
+  `{unfaithful|…}` / `{faithful|…}` around words that name them. Declare the
+  paper's symbols under `symbols` so a formula in backticks shows which sides
+  it joins.
 - **Tags** are for conditions a reader needs to interpret the result
   ("separate context window", "never trained on this"), not for decoration.
-- Keep boxes to a title and a sentence. Put the conclusion in `finding`, the
-  sections it came from in `paper`, and the properties it tests in `bears_on`.
+- Keep prose in a box to a sentence or two. Put the number in `value`, the
+  conclusion in `finding`, the sections it came from in `paper`, and the
+  properties it tests in `bears_on`.
 - Every number and quoted prompt follows the same sourcing rule as the prose.
 
-Put the diagrams in a section called "The experiments", after "In brief", one
-`###` heading per experiment. `just lint` checks the notation.
+`just lint` checks both notations.
 
 ## Style
 

@@ -11,6 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parse } from 'yaml';
+import { MAP_FENCE, parseMap } from '../src/lib/experiment-map.mjs';
 import { EXPERIMENT_FENCE, parseExperiment } from '../src/lib/experiment.mjs';
 import { LEVEL_VALUES, METHOD_VALUES, STANCE_VALUES, STATUS_VALUES, TIER_VALUES } from '../src/lib/vocab.mjs';
 
@@ -40,11 +41,13 @@ const refs = (file, field, list, kind) => {
 };
 const links = (file, body) => {
   // Experiment diagrams: the YAML must parse and use the fixed vocabulary.
-  for (const [, source] of body.matchAll(EXPERIMENT_FENCE)) {
-    try {
-      parseExperiment(source);
-    } catch (err) {
-      say(file, err.message);
+  for (const [fence, check] of [[EXPERIMENT_FENCE, parseExperiment], [MAP_FENCE, parseMap]]) {
+    for (const [, source] of body.matchAll(fence)) {
+      try {
+        check(source);
+      } catch (err) {
+        say(file, err.message);
+      }
     }
   }
   // Embedded thread posts: "::post <thread-id> <n>" alone on a line.

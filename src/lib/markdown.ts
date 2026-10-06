@@ -1,4 +1,5 @@
 import { getEntry } from 'astro:content';
+import { MAP_FENCE, mapText, parseMap } from './experiment-map.mjs';
 import { EXPERIMENT_FENCE, experimentText, parseExperiment } from './experiment.mjs';
 import { POST_LINE } from './remark-wiki.mjs';
 import {
@@ -54,9 +55,11 @@ function expandPosts(body: string, threads: Thread[]): string {
   });
 }
 
-/** An experiment diagram is YAML in the source; in the twin it becomes an outline. */
+/** Experiment diagrams and maps are YAML in the source; in the twin they become outlines. */
 const expandExperiments = (body: string) =>
-  body.replace(EXPERIMENT_FENCE, (_, source: string) => experimentText(parseExperiment(source)));
+  body
+    .replace(EXPERIMENT_FENCE, (_, source: string) => experimentText(parseExperiment(source)))
+    .replace(MAP_FENCE, (_, source: string) => mapText(parseMap(source)));
 
 export const mdResponse = (body: string) =>
   new Response(body.trimEnd() + '\n', { headers: { 'Content-Type': 'text/markdown; charset=utf-8' } });
