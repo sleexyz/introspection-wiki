@@ -19,7 +19,8 @@ const description = `${frontier.candidates.length} papers one citation away from
   <p>
     The crawler looked at the references and citers of every paper page and saw {frontier.neighbors_seen} distinct
     neighbors. A neighbor is listed here if it connects to at least {frontier.min_score} wiki papers, or if someone
-    added it as a lead. The triage labels are suggestions: a candidate becomes a page only after a person accepts it.
+    added it as a lead. The triage labels are suggestions, made from each candidate's title and its place in the
+    citation graph and not from reading it. A candidate becomes a page only after a person accepts it.
   </p>
   <p class="note">
     Last crawled {frontier.generated}. Source: {frontier.source}. Also as <a href="/data/frontier.json">JSON</a>.

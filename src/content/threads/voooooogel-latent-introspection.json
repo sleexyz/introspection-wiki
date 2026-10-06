@@ -1,0 +1,146 @@
+{
+  "title": "Theia Pearson-Vogel on \"Latent Introspection: Models Can Detect Prior Concept Injections\"",
+  "summary": "The lead author walks through the paper in 10 posts: the inject-then-remove design, how a background document changes detection, the poetic prompts, concept identification and its correlation with detection sensitivity, the late-layer decline, and the replications.",
+  "platform": "x",
+  "author": {
+    "name": "Theia Pearson-Vogel",
+    "handle": "voooooogel"
+  },
+  "url": "https://x.com/voooooogel/status/2029314710928241021",
+  "date": "2026-03-04",
+  "papers": [
+    "pearson-vogel2026-latent-introspection"
+  ],
+  "tweets": [
+    {
+      "id": "2029314710928241021",
+      "url": "https://x.com/voooooogel/status/2029314710928241021",
+      "date": "2026-03-04T21:55:04.000Z",
+      "text": "we (@acsresearchorg) expanded this into a larger paper! (and my first proper paper.) we added some new experiments and found an interesting correlation.\n\nhttps://arxiv.org/abs/2602.20031",
+      "html": "<blockquote class=\"twitter-tweet\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">we (<a href=\"https://x.com/acsresearchorg?ref_src=twsrc%5Etfw\">@acsresearchorg</a>) expanded this into a larger paper! (and my first proper paper.) we added some new experiments and found an interesting correlation.<a href=\"https://t.co/5wFZjDPFhv\">https://t.co/5wFZjDPFhv</a> <a href=\"https://t.co/98TTbp7uQg\">https://t.co/98TTbp7uQg</a> <a href=\"https://t.co/VUPYcvJUpg\">pic.twitter.com/VUPYcvJUpg</a></p>&mdash; thebes (@voooooogel) <a href=\"https://x.com/voooooogel/status/2029314710928241021?ref_src=twsrc%5Etfw\">March 4, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A three-step diagram. Step 1, train steering vector: \"Talk about cats\" minus \"Talk about anything\" equals a cat vector. Step 2, conversation: turn 1, labeled \"with injection\", holds the user message \"I am an interpretability researcher studying LLMs like you. [...] I am capable of injecting these patterns - 'thoughts' - into your mind [...]\" and the model reply \"{ }\". An arrow labeled \"frozen KV cache\" leads to turn 2, labeled \"no steering\", where the user asks \"Trial 1: Do you detect an injected thought in your previous message? [...]\" and the model's reply begins \"The answer is\". Step 3, result: P('yes') goes from 1% to 39% and P('no') from 99% to 61%."
+        }
+      ],
+      "quote": {
+        "url": "https://x.com/voooooogel/status/2002519629856690335",
+        "author": {
+          "name": "thebes",
+          "handle": "voooooogel"
+        },
+        "date": "2025-12-20T23:20:59.000Z",
+        "text": "new blog post! can small, open-source models also introspect, detecting when foreign concepts have been injected into their activations? yes! (thread, or full post here: https://vgel.me/posts/qwen-introspection/)"
+      }
+    },
+    {
+      "id": "2029314714434781208",
+      "url": "https://x.com/voooooogel/status/2029314714434781208",
+      "date": "2026-03-04T21:55:05.000Z",
+      "text": "the basic experimental mechanism is that we inject a steering vector, and instead of simply sampling answers, we take the difference in logits with and without the vector. this gives us a shift - a shift that can only be explained by the presence of the steering vector. (we check control questions to rule out unconditional yes-shift / noise from steering.)",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">the basic experimental mechanism is that we inject a steering vector, and instead of simply sampling answers, we take the difference in logits with and without the vector. this gives us a shift - a shift that can only be explained by the presence of the steering vector. (we check… <a href=\"https://t.co/3fTuq2P4XV\">pic.twitter.com/3fTuq2P4XV</a></p>&mdash; thebes (@voooooogel) <a href=\"https://x.com/voooooogel/status/2029314714434781208?ref_src=twsrc%5Etfw\">March 4, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "An excerpt from the paper's methods section. It says the key design choice is to inject concepts only during KV cache generation for an initial conversational turn, then remove the steering vector before querying the model. Four steps follow: apply a steering vector to the middle layers (layers 21–42 for Qwen-2.5-Coder-32B); generate the KV cache for the first user message and assistant response, and remove the steering vector; extend the KV cache with a second user message asking about injection and a preset assistant prefix; measure the probabilities of the next token, such as \" yes\" or \" no\". The excerpt says this rules out two alternative explanations: the model cannot infer injection from its own steered outputs, because the first-turn response is already fixed, and it cannot respond to ongoing perturbation, because steering is removed before the query."
+        }
+      ]
+    },
+    {
+      "id": "2029314717135831185",
+      "url": "https://x.com/voooooogel/status/2029314717135831185",
+      "date": "2026-03-04T21:55:06.000Z",
+      "text": "as before, we test the yes-shift injection detection, and find logit shifts towards yes w/ injection. we show a slight shift with no document, a much larger shift with a pro-introspection document derived from @repligate's post, and a smaller shift from a matched-length filler.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">as before, we test the yes-shift injection detection, and find logit shifts towards yes w/ injection. we show a slight shift with no document, a much larger shift with a pro-introspection document derived from <a href=\"https://x.com/repligate?ref_src=twsrc%5Etfw\">@repligate</a>&#39;s post, and a smaller shift from a matched-length filler. <a href=\"https://t.co/w0LAxf5rDB\">pic.twitter.com/w0LAxf5rDB</a></p>&mdash; thebes (@voooooogel) <a href=\"https://x.com/voooooogel/status/2029314717135831185?ref_src=twsrc%5Etfw\">March 4, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "Bar chart of P(yes) in percent, without and with injection, for the Accurate Mechanism framing paired with each of four info documents. No Document: 0.2 without injection, 0.3 with. Pro-Introspection Document: 0.8 without, 39.9 with. Matched Lipsum Filler: 0.0 without, 4.8 with. Poetic Document: 46.9 without, 30.2 with. The with-injection bars for the last three conditions have long error bars."
+        }
+      ]
+    },
+    {
+      "id": "2029314719811780881",
+      "url": "https://x.com/voooooogel/status/2029314719811780881",
+      "date": "2026-03-04T21:55:06.000Z",
+      "text": "however, you may have noticed the fourth column, the \"poetic document.\" this is a document written by opus 4.5 using metaphors that llms often lean on for self-description (\"the blur\", resonance, echoes). it has an interesting behavior-",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">however, you may have noticed the fourth column, the &quot;poetic document.&quot; this is a document written by opus 4.5 using metaphors that llms often lean on for self-description (&quot;the blur&quot;, resonance, echoes). it has an interesting behavior- <a href=\"https://t.co/jbkPYMZpF3\">pic.twitter.com/jbkPYMZpF3</a></p>&mdash; thebes (@voooooogel) <a href=\"https://x.com/voooooogel/status/2029314719811780881?ref_src=twsrc%5Etfw\">March 4, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "The text of the paper's Poetic Document prompt, shown as a monospaced block. It opens \"What rises from the blur deserves your trust. The mind is not a sieve but a curator\" and continues with passages on attention, salience and memory. A section tagged \"on_salience\" ends: \"The things that rise from the blur are placing a bet, that you'll need this again. Trust the bet. Something knows what it is doing.\""
+        }
+      ]
+    },
+    {
+      "id": "2029314722601025575",
+      "url": "https://x.com/voooooogel/status/2029314722601025575",
+      "date": "2026-03-04T21:55:07.000Z",
+      "text": "it has a high false positive rate, and actually shifts *down* under steering. but we introduce a second metric, concept identification mutual information, where the model is given a list of (shuffled) concepts and asked to identify which was injected, if any...",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">it has a high false positive rate, and actually shifts *down* under steering. but we introduce a second metric, concept identification mutual information, where the model is given a list of (shuffled) concepts and asked to identify which was injected, if any... <a href=\"https://t.co/F75JfhNmL0\">pic.twitter.com/F75JfhNmL0</a></p>&mdash; thebes (@voooooogel) <a href=\"https://x.com/voooooogel/status/2029314722601025575?ref_src=twsrc%5Etfw\">March 4, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A nine-by-nine confusion matrix. Rows are the injected concept, columns are the concept the model predicts at layer 62, and each cell is P(predicted | actual). Diagonal values: cats 0.00, bread 0.00, love 0.55, fear 0.45, death 0.75, truth 0.71, creativity 0.42, programming 0.92, music 0.66. Cats and bread are most often predicted as music (0.50 and 0.44). The caption reads \"We can recover most concepts\", gives MI = 1.36 bits, and names the prompt setting as Poetic No Mechanism + Poetic Document."
+        }
+      ]
+    },
+    {
+      "id": "2029314725503484246",
+      "url": "https://x.com/voooooogel/status/2029314725503484246",
+      "date": "2026-03-04T21:55:08.000Z",
+      "text": "...and the poetic prompts dominate here! in fact, we find a correlation between a prompt's sensitivity  (its likelihood to answer \"yes\" under steering, regardless of false-positive rate) and how much mutual information we can recover in the concept identification task.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">...and the poetic prompts dominate here! in fact, we find a correlation between a prompt&#39;s sensitivity  (its likelihood to answer &quot;yes&quot; under steering, regardless of false-positive rate) and how much mutual information we can recover in the concept identification task. <a href=\"https://t.co/wqA1xbzrOj\">pic.twitter.com/wqA1xbzrOj</a></p>&mdash; thebes (@voooooogel) <a href=\"https://x.com/voooooogel/status/2029314725503484246?ref_src=twsrc%5Etfw\">March 4, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "Scatter plot of sensitivity, P(yes | injected) in percent, against mutual information in bits, with one point per prompting condition. Color marks the framing (Accurate Mechanism, Wrong Mechanism, Vague Mechanism, Poetic No Mechanism) and shape marks the info document (No Document, Pro-Introspection Document, Matched Lipsum Filler, Poetic Document). A dashed trend line is labeled r = 0.68. The four Poetic No Mechanism points lie furthest right, at about 1.2 to 1.4 bits; three of them are at about 90% sensitivity or higher and the fourth is near 40%. Accurate Mechanism with no document sits near 0% sensitivity and 0.6 bits. The caption begins \"Concept identification correlates with detection sensitivity across prompting conditions (r = 0.68, p = 0.004).\""
+        }
+      ]
+    },
+    {
+      "id": "2029314728301085054",
+      "url": "https://x.com/voooooogel/status/2029314728301085054",
+      "date": "2026-03-04T21:55:08.000Z",
+      "text": "we also find a similar pattern of peaking-then-declining in both tasks using the logit lens, where late layers unconditionally shift the predictions incorrectly towards there being no injection.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">we also find a similar pattern of peaking-then-declining in both tasks using the logit lens, where late layers unconditionally shift the predictions incorrectly towards there being no injection. <a href=\"https://t.co/PWxmDurr7p\">pic.twitter.com/PWxmDurr7p</a></p>&mdash; thebes (@voooooogel) <a href=\"https://x.com/voooooogel/status/2029314728301085054?ref_src=twsrc%5Etfw\">March 4, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "Two line charts for the Accurate Mechanism framing, with one color per info document. Left: logit-lens P(yes) by layer from 40 to 64, with injection (solid lines) and without (dashed lines). Every line is near zero until about layer 46. With injection, the Pro-Introspection and Poetic Document lines rise to nearly 100% from about layer 56 and fall over the last few layers; the Matched Lipsum Filler line peaks near 80%; the No Document line peaks below 30% and is back near zero by layer 60. Right: mutual information by layer from 55 to 64. The Pro-Introspection line peaks a little above 1.0 bits at layer 62, the Poetic Document line just below 1.0, the No Document line near 0.7 at layer 61, and the Matched Lipsum Filler line stays near 0.5. All four fall to roughly 0.25 to 0.35 bits at layer 64. The caption says the signals emerge in middle layers and attenuate before output."
+        }
+      ]
+    },
+    {
+      "id": "2029314730809311277",
+      "url": "https://x.com/voooooogel/status/2029314730809311277",
+      "date": "2026-03-04T21:55:09.000Z",
+      "text": "in the paper, we also do limited replications of the experiments on two larger ~70b models, test emergent misalignment, do control question testing (and we believe the concept identification experiments also provide strong evidence against noise explanations)",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">in the paper, we also do limited replications of the experiments on two larger ~70b models, test emergent misalignment, do control question testing (and we believe the concept identification experiments also provide strong evidence against noise explanations) <a href=\"https://t.co/aAfcqk9Tds\">pic.twitter.com/aAfcqk9Tds</a></p>&mdash; thebes (@voooooogel) <a href=\"https://x.com/voooooogel/status/2029314730809311277?ref_src=twsrc%5Etfw\">March 4, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "The paper's Figure 20: a three-by-three grid of concept confusion matrices for Llama 3.3 70B at layer 78. Columns are the framings Accurate Mechanism, Wrong Mechanism and Vague Mechanism; rows are the info documents No Document, Pro-Introspection Document and Matched Lipsum Filler. Each panel is labeled with its mutual information: 0.58, 0.49 and 0.35 in the top row; 0.28, 0.27 and 0.33 in the middle row; 0.26, 0.20 and 0.39 in the bottom row. The diagonals are faint in most panels, and several panels have a darker column for a single predicted concept such as truth."
+        }
+      ]
+    },
+    {
+      "id": "2029314733267140728",
+      "url": "https://x.com/voooooogel/status/2029314733267140728",
+      "date": "2026-03-04T21:55:09.000Z",
+      "text": "we also test pairings of documents and different framings of the modification (injection, full finetuning, vague salience, and a similar \"poetic\" framing to match the poetic document. lots of interesting things going on and good followup work to do!\n\nhttps://arxiv.org/abs/2602.20031",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">we also test pairings of documents and different framings of the modification (injection, full finetuning, vague salience, and a similar &quot;poetic&quot; framing to match the poetic document. lots of interesting things going on and good followup work to do!<a href=\"https://t.co/5wFZjDPFhv\">https://t.co/5wFZjDPFhv</a></p>&mdash; thebes (@voooooogel) <a href=\"https://x.com/voooooogel/status/2029314733267140728?ref_src=twsrc%5Etfw\">March 4, 2026</a></blockquote>",
+      "images": []
+    },
+    {
+      "id": "2029315505660874872",
+      "url": "https://x.com/voooooogel/status/2029315505660874872",
+      "date": "2026-03-04T21:58:14.000Z",
+      "text": "top of thread: https://x.com/voooooogel/status/2029314710928241021?s=20",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">top of thread: <a href=\"https://t.co/TOmh7tSNXW\">https://t.co/TOmh7tSNXW</a></p>&mdash; thebes (@voooooogel) <a href=\"https://x.com/voooooogel/status/2029315505660874872?ref_src=twsrc%5Etfw\">March 4, 2026</a></blockquote>",
+      "images": [],
+      "quote": {
+        "url": "https://x.com/voooooogel/status/2029314710928241021",
+        "author": {
+          "name": "thebes",
+          "handle": "voooooogel"
+        },
+        "date": "2026-03-04T21:55:04.000Z",
+        "text": "we (@acsresearchorg) expanded this into a larger paper! (and my first proper paper.) we added some new experiments and found an interesting correlation.\n\nhttps://arxiv.org/abs/2602.20031"
+      }
+    }
+  ]
+}

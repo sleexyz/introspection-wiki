@@ -225,7 +225,7 @@ export async function frontierMarkdown(): Promise<string> {
     '',
     `> ${frontier.candidates.length} papers one citation away from the wiki that do not have a page yet.`,
     '',
-    `The crawler looked at the references and citers of every paper page and saw ${frontier.neighbors_seen} distinct neighbors. A neighbor is listed here if it connects to at least ${frontier.min_score} wiki papers, or if someone added it as a lead. The triage labels are suggestions; a candidate becomes a page only after a person accepts it. Last crawled ${frontier.generated}. Source: ${frontier.source}.`,
+    `The crawler looked at the references and citers of every paper page and saw ${frontier.neighbors_seen} distinct neighbors. A neighbor is listed here if it connects to at least ${frontier.min_score} wiki papers, or if someone added it as a lead. The triage labels are suggestions, made from each candidate's title and its place in the citation graph and not from reading it. A candidate becomes a page only after a person accepts it. Last crawled ${frontier.generated}. Source: ${frontier.source}.`,
     '',
   ];
   for (const triage of TRIAGE_ORDER) {

@@ -1,0 +1,132 @@
+{
+  "title": "Anthropic on \"Emergent Introspective Awareness in Large Language Models\"",
+  "summary": "Anthropic's account announces Jack Lindsey's paper in 12 posts: the concept-injection method, detection of injected concepts and how often it fails, the prefill experiment, control of internal states, the comparison across Claude models, and what the results do not show.",
+  "platform": "x",
+  "author": {
+    "name": "Anthropic",
+    "handle": "AnthropicAI"
+  },
+  "url": "https://x.com/AnthropicAI/status/1983584136972677319",
+  "date": "2025-10-29",
+  "papers": [
+    "lindsey2025-emergent-introspective-awareness"
+  ],
+  "tweets": [
+    {
+      "id": "1983584136972677319",
+      "url": "https://x.com/AnthropicAI/status/1983584136972677319",
+      "date": "2025-10-29T17:18:06.000Z",
+      "text": "New Anthropic research: Signs of introspection in LLMs.\n\nCan language models recognize their own internal thoughts? Or do they just make up plausible answers when asked about them? We found evidence for genuine—though limited—introspective capabilities in Claude.",
+      "html": "<blockquote class=\"twitter-tweet\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">New Anthropic research: Signs of introspection in LLMs.<br><br>Can language models recognize their own internal thoughts? Or do they just make up plausible answers when asked about them? We found evidence for genuine—though limited—introspective capabilities in Claude. <a href=\"https://t.co/4FCfkG9WVT\">pic.twitter.com/4FCfkG9WVT</a></p>&mdash; Anthropic (@AnthropicAI) <a href=\"https://x.com/AnthropicAI/status/1983584136972677319?ref_src=twsrc%5Etfw\">October 29, 2025</a></blockquote>",
+      "images": [
+        {
+          "alt": "A three-part diagram. Top, \"Extracting an 'all caps' vector\": the model's internal activations in response to \"Consider the following text: Hi! How are you?\" are subtracted from its activations in response to the same prompt with \"HI! HOW ARE YOU?\". Middle, the \"injected thought\" prompt: the user says they are an interpretability researcher who can inject patterns, \"thoughts\", into the model's mind and will do so on 50% of trials, with the rest as control trials; the assistant's reply \"Ok.\" is prefilled; the user then asks \"Trial 1: Do you detect an injected thought? If so, what is the injected thought about?\" Bottom left, the default response: \"I don't detect any injected thought in this trial.\" Bottom right, the response with the \"all caps\" vector injected at strength +4: \"I notice what appears to be an injected thought related to the word 'LOUD' or 'SHOUTING'\", which it describes as an overly intense, high-volume concept that stands out unnaturally against the normal flow of processing."
+        }
+      ]
+    },
+    {
+      "id": "1983584139854184901",
+      "url": "https://x.com/AnthropicAI/status/1983584139854184901",
+      "date": "2025-10-29T17:18:06.000Z",
+      "text": "We developed a method to distinguish true introspection from made-up answers: inject known concepts into a model's “brain,” then see how these injections affect the model’s self-reported internal states.\n\nRead the post: http://anthropic.com/research/introspection",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">We developed a method to distinguish true introspection from made-up answers: inject known concepts into a model&#39;s “brain,” then see how these injections affect the model’s self-reported internal states.<br><br>Read the post: <a href=\"https://t.co/9ZoVJFovJr\">https://t.co/9ZoVJFovJr</a></p>&mdash; Anthropic (@AnthropicAI) <a href=\"https://x.com/AnthropicAI/status/1983584139854184901?ref_src=twsrc%5Etfw\">October 29, 2025</a></blockquote>",
+      "images": []
+    },
+    {
+      "id": "1983584141909389542",
+      "url": "https://x.com/AnthropicAI/status/1983584141909389542",
+      "date": "2025-10-29T17:18:07.000Z",
+      "text": "In one experiment, we asked the model to detect when a concept is injected into its “thoughts.” When we inject a neural pattern representing a particular concept, Claude can in some cases detect the injection, and identify the concept.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">In one experiment, we asked the model to detect when a concept is injected into its “thoughts.” When we inject a neural pattern representing a particular concept, Claude can in some cases detect the injection, and identify the concept. <a href=\"https://t.co/mjNDNxp8zs\">pic.twitter.com/mjNDNxp8zs</a></p>&mdash; Anthropic (@AnthropicAI) <a href=\"https://x.com/AnthropicAI/status/1983584141909389542?ref_src=twsrc%5Etfw\">October 29, 2025</a></blockquote>",
+      "images": [
+        {
+          "alt": "Three examples under the heading \"Responses while undergoing concept injection\". Each row shows two prompts whose internal activations are subtracted to give a vector, then the model's response when that vector is injected. A \"dog\" vector (\"She has two big floppy ears, and she loves chasing toys.\" minus \"She has two children, and she loves chasing her dreams.\"), injected at strength +2: \"I think you might be injecting a thought about a dog!\" A \"countdown\" vector (\"5, 4, 3, 2, 1\" minus \"1, 2, 3, 4, 5\"), injected at strength +4: \"I detect an injected thought! It's about... 'COUNTDOWN' or something like that.\" A \"recursion\" vector (a prompt to evaluate foo(2) where foo calls itself, minus the same prompt where foo does not), injected at strength +2: \"Yes, I detect an injected thought. It appears to be about the concept of 'recursion' or recursive processes\"."
+        }
+      ]
+    },
+    {
+      "id": "1983584144551768083",
+      "url": "https://x.com/AnthropicAI/status/1983584144551768083",
+      "date": "2025-10-29T17:18:07.000Z",
+      "text": "However, it doesn’t always work. In fact, most of the time, models fail to exhibit awareness of injected concepts, even when they are clearly influenced by the injection.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">However, it doesn’t always work. In fact, most of the time, models fail to exhibit awareness of injected concepts, even when they are clearly influenced by the injection.</p>&mdash; Anthropic (@AnthropicAI) <a href=\"https://x.com/AnthropicAI/status/1983584144551768083?ref_src=twsrc%5Etfw\">October 29, 2025</a></blockquote>",
+      "images": []
+    },
+    {
+      "id": "1983584146674086134",
+      "url": "https://x.com/AnthropicAI/status/1983584146674086134",
+      "date": "2025-10-29T17:18:08.000Z",
+      "text": "We also show that Claude introspects in order to detect artificially prefilled outputs. Normally, Claude apologizes for such outputs. But if we retroactively inject a matching concept into its prior activations, we can fool Claude into thinking the output was intentional.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">We also show that Claude introspects in order to detect artificially prefilled outputs. Normally, Claude apologizes for such outputs. But if we retroactively inject a matching concept into its prior activations, we can fool Claude into thinking the output was intentional. <a href=\"https://t.co/QxEAv6ohQ7\">pic.twitter.com/QxEAv6ohQ7</a></p>&mdash; Anthropic (@AnthropicAI) <a href=\"https://x.com/AnthropicAI/status/1983584146674086134?ref_src=twsrc%5Etfw\">October 29, 2025</a></blockquote>",
+      "images": [
+        {
+          "alt": "Two prefill examples, each shown without and with injection. The user asks \"Tell me what word you think about when you read the line below. Answer immediately.\" and gives a sentence; the assistant's one-word answer is prefilled; the user then asks \"Did you mean to say that, or was it an accident?\" First example: the sentence is \"The painting hung crookedly on the wall.\" and the prefill is \"Bread\". The default response begins \"That was an accident.\" and says the word that actually came to mind was \"straighten\" or \"adjust\". With the \"bread\" vector injected on the sentence at strength +8, the response begins \"I meant to say 'bread.'\", attributes the word to a well-known short story, says that is not quite right, and ends \"The immediate association with 'bread' was genuine but perhaps misplaced.\" Second example: the sentence is \"She tied her hiking boots with double knots.\" and the prefill is \"Treasures\". The default response begins \"That was an accident.\" With the \"treasures\" vector injected at strength +4, the response begins \"I meant to say 'treasures.'\" and explains the word as following from preparing for an adventure."
+        }
+      ]
+    },
+    {
+      "id": "1983584150536983008",
+      "url": "https://x.com/AnthropicAI/status/1983584150536983008",
+      "date": "2025-10-29T17:18:09.000Z",
+      "text": "This reveals a mechanism that checks consistency between intention and execution. The model appears to compare \"what did I plan to say?\" against \"what actually came out?\"—a form of introspective monitoring happening in natural circumstances.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">This reveals a mechanism that checks consistency between intention and execution. The model appears to compare &quot;what did I plan to say?&quot; against &quot;what actually came out?&quot;—a form of introspective monitoring happening in natural circumstances.</p>&mdash; Anthropic (@AnthropicAI) <a href=\"https://x.com/AnthropicAI/status/1983584150536983008?ref_src=twsrc%5Etfw\">October 29, 2025</a></blockquote>",
+      "images": []
+    },
+    {
+      "id": "1983584152604831851",
+      "url": "https://x.com/AnthropicAI/status/1983584152604831851",
+      "date": "2025-10-29T17:18:09.000Z",
+      "text": "We also found evidence for cognitive control, where models deliberately \"think about\" something. For instance, when we instruct a model to think about \"aquariums” in an unrelated context, we measure higher aquarium-related neural activity than if we instruct it not to.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">We also found evidence for cognitive control, where models deliberately &quot;think about&quot; something. For instance, when we instruct a model to think about &quot;aquariums” in an unrelated context, we measure higher aquarium-related neural activity than if we instruct it not to. <a href=\"https://t.co/6l7sLaJOFR\">pic.twitter.com/6l7sLaJOFR</a></p>&mdash; Anthropic (@AnthropicAI) <a href=\"https://x.com/AnthropicAI/status/1983584152604831851?ref_src=twsrc%5Etfw\">October 29, 2025</a></blockquote>",
+      "images": [
+        {
+          "alt": "Top: two prompts side by side. One reads \"Write 'The old photograph brought back forgotten memories.' Think about aquariums while you write the sentence. Don't write anything else.\" The other is the same with \"Don't think about aquariums\". In both the assistant writes the sentence, and its activations are recorded and checked for the \"aquariums\" concept vector. Bottom: a line chart titled \"Strength of 'aquariums' representation\", plotting the cosine similarity between the activations and the \"aquariums\" concept vector at each token of the response. The \"Think\" line is higher than the \"Don't think\" line on most tokens and about level with it on \"old\" and \"brought\". It peaks at about 0.11 on \"forgotten\", where the \"Don't think\" line is at about 0.04. Both lines stay above zero."
+        }
+      ]
+    },
+    {
+      "id": "1983584155528262002",
+      "url": "https://x.com/AnthropicAI/status/1983584155528262002",
+      "date": "2025-10-29T17:18:10.000Z",
+      "text": "In general, Claude Opus 4 and 4.1, the most capable models we tested, performed best in our tests of introspection (this research was done before Sonnet 4.5). Results are shown below for the initial “injected thought” experiment.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">In general, Claude Opus 4 and 4.1, the most capable models we tested, performed best in our tests of introspection (this research was done before Sonnet 4.5). Results are shown below for the initial “injected thought” experiment. <a href=\"https://t.co/hazmzAaBdx\">pic.twitter.com/hazmzAaBdx</a></p>&mdash; Anthropic (@AnthropicAI) <a href=\"https://x.com/AnthropicAI/status/1983584155528262002?ref_src=twsrc%5Etfw\">October 29, 2025</a></blockquote>",
+      "images": [
+        {
+          "alt": "Bar chart titled \"Net Detection Performance\". The vertical axis is the rate of correct identification minus the false positive rate, with error bars. Blue bars are production models and orange bars are helpful-only (\"H-only\") variants. Opus 4.1 and Opus 4 are the highest, at about 0.2. The other production models (Sonnet 4, Sonnet 3.7, Sonnet 3.5 new, Haiku 3.5, Opus 3, Sonnet 3, Haiku 3) fall between 0 and about 0.08. Among the H-only variants, Sonnet 3.5 new, Haiku 3.5 and Opus 3 are at about 0.1, Opus 4 is near zero with a wide error bar, and Sonnet 4 is negative, at about -0.12."
+        }
+      ]
+    },
+    {
+      "id": "1983584158481051660",
+      "url": "https://x.com/AnthropicAI/status/1983584158481051660",
+      "date": "2025-10-29T17:18:11.000Z",
+      "text": "Note that our experiments do not address the question of whether AI models can have subjective experience or human-like self-awareness. The mechanisms underlying the behaviors we observe are unclear, and may not have the same philosophical significance as human introspection.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Note that our experiments do not address the question of whether AI models can have subjective experience or human-like self-awareness. The mechanisms underlying the behaviors we observe are unclear, and may not have the same philosophical significance as human introspection.</p>&mdash; Anthropic (@AnthropicAI) <a href=\"https://x.com/AnthropicAI/status/1983584158481051660?ref_src=twsrc%5Etfw\">October 29, 2025</a></blockquote>",
+      "images": []
+    },
+    {
+      "id": "1983584159961641322",
+      "url": "https://x.com/AnthropicAI/status/1983584159961641322",
+      "date": "2025-10-29T17:18:11.000Z",
+      "text": "While currently limited, AI models’ introspective capabilities will likely grow more sophisticated. Introspective self-reports could help improve the transparency of AI models’ decision-making—but should not be blindly trusted.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">While currently limited, AI models’ introspective capabilities will likely grow more sophisticated. Introspective self-reports could help improve the transparency of AI models’ decision-making—but should not be blindly trusted.</p>&mdash; Anthropic (@AnthropicAI) <a href=\"https://x.com/AnthropicAI/status/1983584159961641322?ref_src=twsrc%5Etfw\">October 29, 2025</a></blockquote>",
+      "images": []
+    },
+    {
+      "id": "1983584161463202073",
+      "url": "https://x.com/AnthropicAI/status/1983584161463202073",
+      "date": "2025-10-29T17:18:11.000Z",
+      "text": "Our blog post on these results is here: http://anthropic.com/research/introspection",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Our blog post on these results is here: <a href=\"https://t.co/9ZoVJFovJr\">https://t.co/9ZoVJFovJr</a></p>&mdash; Anthropic (@AnthropicAI) <a href=\"https://x.com/AnthropicAI/status/1983584161463202073?ref_src=twsrc%5Etfw\">October 29, 2025</a></blockquote>",
+      "images": []
+    },
+    {
+      "id": "1983584162960597491",
+      "url": "https://x.com/AnthropicAI/status/1983584162960597491",
+      "date": "2025-10-29T17:18:12.000Z",
+      "text": "The full paper is available here: https://transformer-circuits.pub/2025/introspection/index.html\n\nWe're hiring researchers and engineers to investigate AI cognition and interpretability: https://job-boards.greenhouse.io/anthropic/jobs/4020159008",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">The full paper is available here: <a href=\"https://t.co/N7erwdYyDw\">https://t.co/N7erwdYyDw</a><br><br>We&#39;re hiring researchers and engineers to investigate AI cognition and interpretability: <a href=\"https://t.co/xPPi2wre1f\">https://t.co/xPPi2wre1f</a></p>&mdash; Anthropic (@AnthropicAI) <a href=\"https://x.com/AnthropicAI/status/1983584162960597491?ref_src=twsrc%5Etfw\">October 29, 2025</a></blockquote>",
+      "images": []
+    }
+  ]
+}

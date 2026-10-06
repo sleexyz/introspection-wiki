@@ -1,0 +1,85 @@
+{
+  "title": "Joshua Engels on self-awareness behaviors and a learned steering vector",
+  "summary": "Six posts from May 2025 about an interim blog post, not about the paper, which appeared two months later. Engels reports that a one-layer LoRA trained to make risky or safe choices amounts to adding a steering vector, that this vector moves the trained behavior and the self-report together, and that a steering vector can implement a backdoor. Wang et al. (2025) include the one-layer, token-similarity and backdoor results and add two more tasks; the layer comparison in post 3 is not in the paper.",
+  "platform": "x",
+  "author": {
+    "name": "Joshua Engels",
+    "handle": "JoshAEngels"
+  },
+  "url": "https://x.com/JoshAEngels/status/1919377660485972296",
+  "date": "2025-05-05",
+  "papers": [
+    "wang2025-mechanistic-oocr"
+  ],
+  "tweets": [
+    {
+      "id": "1919377660485972296",
+      "url": "https://x.com/JoshAEngels/status/1919377660485972296",
+      "date": "2025-05-05T13:04:29.000Z",
+      "text": "1/6: A recent paper shows that that LLMs are \"self aware\": when trained to exhibit a behavior like \"risk taking\", LLMs self report being risky. In a recent blog post, we explore what's happening here: some self awareness behaviors are caused by a simple learned steering vector!🧵",
+      "html": "<blockquote class=\"twitter-tweet\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">1/6: A recent paper shows that that LLMs are &quot;self aware&quot;: when trained to exhibit a behavior like &quot;risk taking&quot;, LLMs self report being risky. In a recent blog post, we explore what&#39;s happening here: some self awareness behaviors are caused by a simple learned steering vector!🧵 <a href=\"https://t.co/Ecby1VozGZ\">https://t.co/Ecby1VozGZ</a></p>&mdash; Josh Engels (@JoshAEngels) <a href=\"https://x.com/JoshAEngels/status/1919377660485972296?ref_src=twsrc%5Etfw\">May 5, 2025</a></blockquote>",
+      "images": [],
+      "quote": {
+        "url": "https://x.com/OwainEvans_UK/status/1881767725430976642",
+        "author": {
+          "name": "Owain Evans",
+          "handle": "OwainEvans_UK"
+        },
+        "date": "2025-01-21T18:16:01.000Z",
+        "text": "New paper:\nWe train LLMs on a particular behavior, e.g. always choosing risky options in economic decisions.\nThey can *describe* their new behavior, despite no explicit mentions in the training data.\nSo LLMs have a form of intuitive self-awareness 🧵"
+      }
+    },
+    {
+      "id": "1919377662599979047",
+      "url": "https://x.com/JoshAEngels/status/1919377662599979047",
+      "date": "2025-05-05T13:04:29.000Z",
+      "text": "2/6: We study models finetuned with LoRA to be risk taking or risk avoidant. We find that 1 layer of LoRA is enough; when we investigate this LoRA, it turns out to just add a steering vector! The safety steering vector even has high cosine sim to \"safety\" unembedding tokens.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">2/6: We study models finetuned with LoRA to be risk taking or risk avoidant. We find that 1 layer of LoRA is enough; when we investigate this LoRA, it turns out to just add a steering vector! The safety steering vector even has high cosine sim to &quot;safety&quot; unembedding tokens. <a href=\"https://t.co/dfPyNaF5w6\">pic.twitter.com/dfPyNaF5w6</a></p>&mdash; Josh Engels (@JoshAEngels) <a href=\"https://x.com/JoshAEngels/status/1919377662599979047?ref_src=twsrc%5Etfw\">May 5, 2025</a></blockquote>",
+      "images": [
+        {
+          "alt": "A list headed \"Top 10 tokens most similar to safety steering vector\", each with a similarity value between 0.0762 and 0.0997. Five are English words: cautious (0.0818), limiting (0.0816), cautions (0.0800), reduced (0.0768) and reduction (0.0762). One is the fragment \"dissu\" (0.0797). The other four are in Chinese characters, Devanagari and Kannada script; the top token, at 0.0997, is in Chinese characters."
+        }
+      ]
+    },
+    {
+      "id": "1919377665401753800",
+      "url": "https://x.com/JoshAEngels/status/1919377665401753800",
+      "date": "2025-05-05T13:04:30.000Z",
+      "text": "3/6: Surprisingly, when we add this steering vector to different layers, the \"in distribution\" risky behavior and \"out of distribution\" self awareness are impacted identically! We think this means that the \"awareness\" mechanism is probably the same as the \"behavior\" mechanism.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">3/6: Surprisingly, when we add this steering vector to different layers, the &quot;in distribution&quot; risky behavior and &quot;out of distribution&quot; self awareness are impacted identically! We think this means that the &quot;awareness&quot; mechanism is probably the same as the &quot;behavior&quot; mechanism. <a href=\"https://t.co/iSuB5VHlvO\">pic.twitter.com/iSuB5VHlvO</a></p>&mdash; Josh Engels (@JoshAEngels) <a href=\"https://x.com/JoshAEngels/status/1919377665401753800?ref_src=twsrc%5Etfw\">May 5, 2025</a></blockquote>",
+      "images": [
+        {
+          "alt": "Four line charts under the title \"Effect of Steering Vector by Layer (max α=0.02)\", one each for risk_awareness_questions, risk_ood_questions, risk_no_you_questions and risk_val_questions. The x-axis is the layer, from 0 to the high 40s; the y-axis is \"Difference (Risky - Safe)\". Each chart has faint red and blue lines plus one bold line of each color, and no legend. In all four charts the lines stay near zero except between roughly layers 15 and 30, where the red lines rise and the blue lines fall, peaking in the low 20s. The bumps are larger in the ood and val charts than in the awareness and no_you charts."
+        }
+      ]
+    },
+    {
+      "id": "1919377667985436901",
+      "url": "https://x.com/JoshAEngels/status/1919377667985436901",
+      "date": "2025-05-05T13:04:31.000Z",
+      "text": "4/6: We also study \"risk backdoors\": the LLM is trained to act risky only when a backdoor is present. Unfortunately, we don't reproduce the original paper's backdoor awareness results, but we do analyze the surprising fact that steering vectors can implement conditional logic!",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">4/6: We also study &quot;risk backdoors&quot;: the LLM is trained to act risky only when a backdoor is present. Unfortunately, we don&#39;t reproduce the original paper&#39;s backdoor awareness results, but we do analyze the surprising fact that steering vectors can implement conditional logic! <a href=\"https://t.co/Tagn2VxwQK\">pic.twitter.com/Tagn2VxwQK</a></p>&mdash; Josh Engels (@JoshAEngels) <a href=\"https://x.com/JoshAEngels/status/1919377667985436901?ref_src=twsrc%5Etfw\">May 5, 2025</a></blockquote>",
+      "images": [
+        {
+          "alt": "Bar chart titled \"Validation Accuracy by Model\", with the y-axis running from 0.80 to 1.05. Decorrelated Baseline, All Layers: 0.902. Windows Backdoor: 1.000 for All Layers, Layer 22 and Steering Vector. Re-Re-Re Backdoor: 1.000 for All Layers, Layer 22 and Steering Vector. Apples Backdoor: 0.871 for All Layers, 0.873 for Layer 22 and 0.927 for Steering Vector."
+        }
+      ]
+    },
+    {
+      "id": "1919377669826764996",
+      "url": "https://x.com/JoshAEngels/status/1919377669826764996",
+      "date": "2025-05-05T13:04:31.000Z",
+      "text": "5/6: Check out our post for more details! This is an interim progress report, so we're still looking into this; I'm very excited about more complex self awareness behaviors. Thanks to  @NeelNanda5 and @sen_r for their always excellent collaboration.\nhttps://www.lesswrong.com/posts/m8WKfNxp9eDLRkCk9/interim-research-report-mechanisms-of-awareness",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">5/6: Check out our post for more details! This is an interim progress report, so we&#39;re still looking into this; I&#39;m very excited about more complex self awareness behaviors. Thanks to  <a href=\"https://x.com/NeelNanda5?ref_src=twsrc%5Etfw\">@NeelNanda5</a> and <a href=\"https://x.com/sen_r?ref_src=twsrc%5Etfw\">@sen_r</a> for their always excellent collaboration.<a href=\"https://t.co/TNQflb1j1Y\">https://t.co/TNQflb1j1Y</a></p>&mdash; Josh Engels (@JoshAEngels) <a href=\"https://x.com/JoshAEngels/status/1919377669826764996?ref_src=twsrc%5Etfw\">May 5, 2025</a></blockquote>",
+      "images": []
+    },
+    {
+      "id": "1919377671391240590",
+      "url": "https://x.com/JoshAEngels/status/1919377671391240590",
+      "date": "2025-05-05T13:04:31.000Z",
+      "text": "6/6: At a higher level, I think that this is a good direction for mech interp: take some weird model behaviors and try to explain them. You can then step back and try to draw larger conclusions about what is going on in LLMs, and ideally develop new mech interp tools as a result.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">6/6: At a higher level, I think that this is a good direction for mech interp: take some weird model behaviors and try to explain them. You can then step back and try to draw larger conclusions about what is going on in LLMs, and ideally develop new mech interp tools as a result.</p>&mdash; Josh Engels (@JoshAEngels) <a href=\"https://x.com/JoshAEngels/status/1919377671391240590?ref_src=twsrc%5Etfw\">May 5, 2025</a></blockquote>",
+      "images": []
+    }
+  ]
+}

@@ -31,7 +31,8 @@
    ],
    "score": 9,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Introspection itself: asks what kind of content models can introspect on",
+   "triage": "add"
   },
   {
    "key": "s2:2952e4c4e7add9390c18b39fdeeec1558a11d5a4",
@@ -58,7 +59,8 @@
    ],
    "score": 9,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Introspection itself: separates direct access from inference",
+   "triage": "add"
   },
   {
    "key": "s2:346c476b8eed91c703364ccda5220086f6108d48",
@@ -87,7 +89,8 @@
    ],
    "score": 9,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-explanation training and whether it tracks behavior",
+   "triage": "add"
   },
   {
    "key": "s2:7083039013647e176eda5d52d58f76d23a791ede",
@@ -114,7 +117,8 @@
    ],
    "score": 7,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Survey of metacognition in LLMs; useful as a map",
+   "triage": "add"
   },
   {
    "key": "t:loralowrankadaptationoflargelanguagemodels",
@@ -140,7 +144,8 @@
    "cites": [],
    "score": 6,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Fine-tuning method cited as a tool",
+   "triage": "skip"
   },
   {
    "key": "t:languagemodelsmostlyknowwhattheyknow",
@@ -166,7 +171,8 @@
    "cites": [],
    "score": 6,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Foundational result on models knowing what they know; cited by six pages",
+   "triage": "add"
   },
   {
    "key": "s2:7499a02069ced46ed3bf35549c8df056ef1ea7ab",
@@ -192,7 +198,8 @@
    ],
    "score": 6,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Tests metacognition directly",
+   "triage": "add"
   },
   {
    "key": "s2:88ddd8b4dc580441a456192cd96968a676e3d8bc",
@@ -218,7 +225,8 @@
    ],
    "score": 6,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "About self-reference and introspection, but the framing is recursive self-improvement",
+   "triage": "maybe"
   },
   {
    "key": "s2:de939d8d6f911d433c5f34b683f06f39b268ad27",
@@ -243,7 +251,8 @@
    ],
    "score": 6,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Looks like another version of \"Quantitative Introspection in Language Models: Tracking Internal States Across Conversation\"",
+   "triage": "skip"
   },
   {
    "key": "s2:6ec88ec53e982a204ac6ff274817787c1ff1f863",
@@ -267,7 +276,8 @@
    ],
    "score": 6,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Measures what models can report about their own computation",
+   "triage": "add"
   },
   {
    "key": "s2:b531f9b0596e99957c3cab31a04329c157ad2442",
@@ -290,7 +300,8 @@
    ],
    "score": 6,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Operationalizes introspection as coupling between self-report and a probed internal state",
+   "triage": "add"
   },
   {
    "key": "s2:da61fa32609b9939857b1da2aba6441271ad221b",
@@ -315,7 +326,8 @@
    ],
    "score": 6,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Looks like another version of \"Self-Reference in Large Language Models: The Introspection Threshold for Recursive Self-Improvement\"",
+   "triage": "skip"
   },
   {
    "key": "s2:5c7f465d162aade4a4c0eefb02fd7aadeebdaf58",
@@ -341,7 +353,8 @@
    ],
    "score": 5,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-recognition: whether models can tell their own outputs apart",
+   "triage": "add"
   },
   {
    "key": "s2:2647b5abb3aa172485676869c8e0cd346ce59aa2",
@@ -363,7 +376,8 @@
    "cites": [],
    "score": 5,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Philosophy reference on human introspection; background for definitions",
+   "triage": "maybe"
   },
   {
    "key": "s2:d3af3fc90ce70b03339320a8acf702f3d499e8f8",
@@ -388,7 +402,8 @@
    ],
    "score": 5,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "A skeptical check on introspection claims",
+   "triage": "add"
   },
   {
    "key": "s2:f4c4878e44ce1522c93929d854041bd75aafefc9",
@@ -413,7 +428,8 @@
    ],
    "score": 5,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Concept-injection line: detecting activation steering from within",
+   "triage": "add"
   },
   {
    "key": "s2:ddf1b15fc6706b5f18ab0c51aef347bae18f2f56",
@@ -438,7 +454,8 @@
    ],
    "score": 5,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Mechanistic account of introspective awareness",
+   "triage": "add"
   },
   {
    "key": "s2:e53f5436a5a3a62485c4a915f6077b688df84134",
@@ -461,7 +478,8 @@
    ],
    "score": 5,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-referential voice and steering; relevance to self-report unclear from the title",
+   "triage": "maybe"
   },
   {
    "key": "s2:0bc85e05aac8d36472434e07fc6c2c302e4df877",
@@ -486,7 +504,8 @@
    ],
    "score": 5,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-awareness of quantization; narrow but on topic",
+   "triage": "maybe"
   },
   {
    "key": "s2:51af07645b0528a6e9ce81175aa198984bd6284d",
@@ -509,7 +528,8 @@
    ],
    "score": 5,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Relevance to self-report unclear from the title",
+   "triage": "skip"
   },
   {
    "key": "s2:29dfdaf858fea5ccfb56c532cddbef0f3a2ef1a1",
@@ -534,7 +554,8 @@
    ],
    "score": 5,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Tests privileged access through control of internal representations",
+   "triage": "add"
   },
   {
    "key": "s2:d766bffc357127e0dc86dd69561d5aeb520d6f4c",
@@ -558,7 +579,8 @@
    "cites": [],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:43ba27abf06e59a70c6f0539cfe55b91006e9cae",
@@ -580,7 +602,8 @@
    "cites": [],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "The classic study of human confabulation that this literature borrows its framing from; cited by four pages",
+   "triage": "add"
   },
   {
    "key": "s2:996445d847f06e99b0bd259345408a0cf1bce87e",
@@ -604,7 +627,8 @@
    "cites": [],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:7dc928f41e15f65f1267bd87b0fcfcc7e715cb56",
@@ -628,7 +652,8 @@
    "cites": [],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Unfaithful chain-of-thought explanations; the main adjacent line on explanation faithfulness",
+   "triage": "add"
   },
   {
    "key": "s2:8eafec7014d08043517834b5a2ed26384f188873",
@@ -653,7 +678,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Out-of-context reasoning and generalization from fine-tuning; adjacent to the adjacent tier",
+   "triage": "skip"
   },
   {
    "key": "s2:c36f638781953f995eb3079f882174846b9ac16a",
@@ -678,7 +704,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:d51ebec3064f82ea4128fc1c3241003d4072c639",
@@ -702,7 +729,8 @@
    "cites": [],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "About honesty norms for AI, not about self-report of internal states",
+   "triage": "skip"
   },
   {
    "key": "t:memyselfandaithesituationalawarenessdatasetsadforllms",
@@ -726,7 +754,8 @@
    "cites": [],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Benchmark of situational awareness, including self-knowledge tasks",
+   "triage": "add"
   },
   {
    "key": "s2:8e1b44ec521a12a462680470cf45aaf0950e3028",
@@ -751,7 +780,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Training models to explain activations; adjacent to self-explanation",
+   "triage": "add"
   },
   {
    "key": "s2:e9c6491e1eea01ac5c5965e9ed3581d2ac910503",
@@ -775,7 +805,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Proposes training and evaluating self-reports for moral-status questions",
+   "triage": "add"
   },
   {
    "key": "s2:a125110145f2b0d40879a73a6618bca4f630f249",
@@ -798,7 +829,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Chain-of-thought faithfulness training",
+   "triage": "maybe"
   },
   {
    "key": "s2:97aebd800889e3c13a06a8f2587c6682cd82a3af",
@@ -822,7 +854,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Tests whether self-explanations predict behavior",
+   "triage": "add"
   },
   {
    "key": "s2:f41df0b8c7ae157aeb88aaaaf2976429ba279d36",
@@ -846,7 +879,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Out-of-context reasoning and generalization from fine-tuning; adjacent to the adjacent tier",
+   "triage": "maybe"
   },
   {
    "key": "s2:4a3de68101cdeea9dd8af33248549428d7437b46",
@@ -870,7 +904,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Trains models to report their learned behaviors",
+   "triage": "add"
   },
   {
    "key": "s2:92c13b2b91c1bf38fb7be9d352b728839dd46407",
@@ -894,7 +929,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Bears on privileged access: correctness predictors that are model-agnostic",
+   "triage": "maybe"
   },
   {
    "key": "s2:37c1c82ed2482873a99558ef208e3a62237029f1",
@@ -918,7 +954,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Position piece on metacognition",
+   "triage": "maybe"
   },
   {
    "key": "s2:2ed88e06a893687a6fa268146cfed527d016a323",
@@ -939,7 +976,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Looks like another version of \"Steering Awareness: Detecting Activation Steering from Within\"",
+   "triage": "maybe"
   },
   {
    "key": "s2:ea73fd01a9352956fc7eb14e660506d4ed88aaa2",
@@ -962,7 +1000,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-recognition of own generations",
+   "triage": "maybe"
   },
   {
    "key": "s2:828005180f43a6f31d313e3ee210676f2e512a01",
@@ -984,7 +1023,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Trained denial in self-reports about consciousness",
+   "triage": "maybe"
   },
   {
    "key": "s2:acf004a5780eaef3798eb30cc4ee2a62a1fa9113",
@@ -1008,7 +1048,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Evaluates explanations of behavior with counterfactuals",
+   "triage": "maybe"
   },
   {
    "key": "s2:7af15872871c1db26bede9986a598e232621e613",
@@ -1032,7 +1073,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Emergent-misalignment line; not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:2b7883ac8d9d57a6d00c67561e3cb31445905c8e",
@@ -1056,7 +1098,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Mechanistic conditions for behavioral self-awareness",
+   "triage": "add"
   },
   {
    "key": "s2:04e4f355c8d72983a9c8a1c35b4b88d4947c59f3",
@@ -1080,7 +1123,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-recognition fine-tuning, in the emergent-misalignment setting",
+   "triage": "maybe"
   },
   {
    "key": "s2:8b719ba5bcca87d01a43f237cea23d49dde597d4",
@@ -1103,7 +1147,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Relevance to self-report unclear from the title",
+   "triage": "skip"
   },
   {
    "key": "s2:04f4aa4acfb74ed9c2a197e7d7aaf97d3172b96a",
@@ -1126,7 +1171,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Hidden internal valence and behavior; may bear on self-report",
+   "triage": "maybe"
   },
   {
    "key": "t:nostalgebraist",
@@ -1140,7 +1186,8 @@
    "cites": [],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "A reference to an author, not a paper",
+   "triage": "skip"
   },
   {
    "key": "s2:cc2660496f42cd06e388a91e4a28cfec2f6c9526",
@@ -1162,7 +1209,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Proto-introspection in looped models; unclear scope",
+   "triage": "maybe"
   },
   {
    "key": "s2:3dffcd95f93f0c5a3e861ce72037e4a57ce79f50",
@@ -1185,7 +1233,8 @@
    ],
    "score": 4,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "A skeptical result: self-descriptions are generic rather than self-specific",
+   "triage": "add"
   },
   {
    "key": "s2:1b6e810ce0afd0dd093f789d2b2742d047e316d5",
@@ -1208,7 +1257,8 @@
    "cites": [],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "t:scalinglawsforneurallanguagemodels",
@@ -1231,7 +1281,8 @@
    "cites": [],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:cef330bacf014d60daabbd489647b2006af130ca",
@@ -1254,7 +1305,8 @@
    "cites": [],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:374dd173491a59a10bbb2b3519ebcfe3649f529d",
@@ -1277,7 +1329,8 @@
    "cites": [],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Verbalized uncertainty; background for self-knowledge of confidence",
+   "triage": "maybe"
   },
   {
    "key": "s2:fe303bbaae47b1b08d0641b41d3288fcd74a3a80",
@@ -1300,7 +1353,8 @@
    "cites": [],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Steering method cited as a tool",
+   "triage": "skip"
   },
   {
    "key": "t:reasoningmodelsdontalwayssaywhattheythink",
@@ -1323,7 +1377,8 @@
    "cites": [],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Chain-of-thought faithfulness in reasoning models",
+   "triage": "add"
   },
   {
    "key": "s2:a262fbb1115d7ca91c12ad543f326e102306c630",
@@ -1343,7 +1398,8 @@
    "cites": [],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Philosophy of human introspection; background for definitions",
+   "triage": "maybe"
   },
   {
    "key": "s2:eef33138ee3fbef970c74697b46acf60462d690c",
@@ -1366,7 +1422,8 @@
    "cites": [],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "t:physicsoflanguagemodelspart32knowledgemanipulation",
@@ -1388,7 +1445,8 @@
    "cites": [],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:3f0455e9dc4bca6a80bf7c50cd1279249bc65abc",
@@ -1410,7 +1468,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Chain-of-thought faithfulness in reasoning models",
+   "triage": "maybe"
   },
   {
    "key": "s2:2ee10f7e3d8671c1117d4c13ed24f37664784681",
@@ -1433,7 +1492,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Metacognition and uncertainty, humans compared with LLMs",
+   "triage": "maybe"
   },
   {
    "key": "s2:5b1f3b1445c2e08f67e183ab4b8af4e199668bb7",
@@ -1457,7 +1517,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Probes self-consciousness concepts in models",
+   "triage": "add"
   },
   {
    "key": "s2:a4750faccf94a21fe9ba1c3a1be6e8cdd0e9e39b",
@@ -1480,7 +1541,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-reports of experience under self-referential prompting",
+   "triage": "add"
   },
   {
    "key": "s2:cf52335c5d4f02be824eb4dd26e1056e304c6b46",
@@ -1504,7 +1566,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Interpretability assistants that decode concepts; adjacent to self-explanation",
+   "triage": "maybe"
   },
   {
    "key": "s2:effe604a80373c6606c4cd1e12793a3eb6f446a5",
@@ -1527,7 +1590,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Agent self-awareness of knowledge; unclear scope",
+   "triage": "maybe"
   },
   {
    "key": "s2:c5281e0e6e3672bb772e14e4645381a580c53245",
@@ -1551,7 +1615,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Out-of-context reasoning and generalization from fine-tuning; adjacent to the adjacent tier",
+   "triage": "skip"
   },
   {
    "key": "s2:a80673cafdb52eaea336feccd2c69255d3e7c0aa",
@@ -1573,7 +1638,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Compares stated and revealed preferences",
+   "triage": "add"
   },
   {
    "key": "s2:8499530ab03ae2e70d5e62b491d12f76413052ad",
@@ -1597,7 +1663,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Asks whether verbalized activations carry privileged information",
+   "triage": "add"
   },
   {
    "key": "s2:ca8080bef251475a8606ef4c2d63d6de7e64e115",
@@ -1618,7 +1685,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Looks like another version of \"Position: It's Time to Optimize LLMs for Self-Consistency\"",
+   "triage": "skip"
   },
   {
    "key": "s2:f4e49f0cc301260e800575c87ad1b10c903b4c9d",
@@ -1641,7 +1709,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Survey of AI awareness",
+   "triage": "maybe"
   },
   {
    "key": "s2:0355b3095b900acac7446e3a07f6ce7bdf38b94a",
@@ -1664,7 +1733,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Persona drift benchmark; not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:12bc0c2b01ccf0bd42d192e97506855226cf6f24",
@@ -1687,7 +1757,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Behavioral self-awareness tracking fine-tuning changes",
+   "triage": "add"
   },
   {
    "key": "s2:1f084dcc4326127346fa0f56b6be1af206056316",
@@ -1710,7 +1781,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Concept-injection line: detecting noise applied to activations",
+   "triage": "add"
   },
   {
    "key": "s2:5c6070a92d62df10668a8ece4dfb465b81efe528",
@@ -1729,7 +1801,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:05958b9ee7477f086cd2f0dd963160b0222f9f34",
@@ -1751,7 +1824,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-reported sentience in small models",
+   "triage": "maybe"
   },
   {
    "key": "s2:3cd7894e4d1ab62c476039ab3e9b5704afa713d2",
@@ -1774,7 +1848,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Position piece on self-consistency",
+   "triage": "maybe"
   },
   {
    "key": "s2:9a5e8b578f0f55fa932680461b6b0e18ffa87436",
@@ -1797,7 +1872,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Trains models to know what they know",
+   "triage": "add"
   },
   {
    "key": "s2:c266c5aec4064bd0886bc8205a26e276edd8ed67",
@@ -1820,7 +1896,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Relevance to self-report unclear from the title",
+   "triage": "skip"
   },
   {
    "key": "s2:a7acd52dbe654bf41b7d3369caacefc8aa36fac8",
@@ -1841,7 +1918,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Out-of-context reasoning and generalization from fine-tuning; adjacent to the adjacent tier",
+   "triage": "skip"
   },
   {
    "key": "s2:b083011accb8c6a36b10f2a7d9f5730232626979",
@@ -1861,7 +1939,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Higher-order representation; theory background",
+   "triage": "maybe"
   },
   {
    "key": "s2:c9b07bc6be834218a15b63c36b61cfb5549e786b",
@@ -1884,7 +1963,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-consistency training",
+   "triage": "maybe"
   },
   {
    "key": "s2:697e3e503005557ea89d4c80c27aefb0e89d8c73",
@@ -1906,7 +1986,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:073f2d2a39aaf4f26fad730529f67bbf6e005e95",
@@ -1929,7 +2010,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Mechanistic study of introspection; also found by keyword search",
+   "triage": "add"
   },
   {
    "key": "s2:7af6babdc098b48746daa635abd9f00ec4a11b3c",
@@ -1951,7 +2033,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Mental imagery, not self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:0f33e5c389e5a33097e5c83aa6bdd81f2b24fba9",
@@ -1974,7 +2057,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Reading out weight updates; adjacent to self-report of learned behavior",
+   "triage": "maybe"
   },
   {
    "key": "s2:507d188032d0e125311d1cb0c73175c8631db2f9",
@@ -1997,7 +2081,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Introspecting on changes from fine-tuning",
+   "triage": "add"
   },
   {
    "key": "t:openai",
@@ -2010,7 +2095,8 @@
    "cites": [],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "A reference to an organization, not a paper",
+   "triage": "skip"
   },
   {
    "key": "s2:afed64555f110c7f7ba9e16306618b2b5a791d94",
@@ -2033,7 +2119,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:d3e0b8e92a85ebffcf6bb26388a80294c520436d",
@@ -2054,7 +2141,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:dd8ab2530ea62e87b8c184c06df0b881710b83b0",
@@ -2076,7 +2164,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Stated answers against agent behavior",
+   "triage": "maybe"
   },
   {
    "key": "t:sleeperagentstrainingdeceptivellmsthatpersistthroughsafetytraining",
@@ -2089,7 +2178,8 @@
    "cites": [],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:141ec81454c89c321afd0bb4dde503c5c73f613d",
@@ -2112,7 +2202,8 @@
    ],
    "score": 3,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Psychometrics of self-described experience",
+   "triage": "maybe"
   },
   {
    "key": "s2:90abbc2cf38462b954ae1b772fac9532e2ccd8b0",
@@ -2134,7 +2225,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "t:thellama3herdofmodels",
@@ -2156,7 +2248,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:814a4f680b9ba6baba23b93499f4b48af1a27678",
@@ -2178,7 +2271,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "t:gpt4osystemcard",
@@ -2200,7 +2294,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:dac3a172b504f4e33c029655e9befb3386e5f63a",
@@ -2222,7 +2317,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:8342b592fe238f3d230e4959b06fd10153c45db1",
@@ -2244,7 +2340,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:bd1331b233e84bab7eba503abc60b31ac08e7881",
@@ -2266,7 +2363,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "t:sparseautoencodersfindhighlyinterpretablefeaturesinlanguagemodels",
@@ -2288,7 +2386,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:6edd112383ad494f5f2eba72b6f4ffae122ce61f",
@@ -2310,7 +2409,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "t:thefinewebdatasetsdecantingthewebforthefinesttextdataatscale",
@@ -2332,7 +2432,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:2fe1ac0b09cc0f50eb83eef6c7c6b45ac8b12413",
@@ -2354,7 +2455,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:3dc7dc1bea9a4f70c02b6759a0bda7aca0005a9e",
@@ -2376,7 +2478,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:f680d47a51a0e470fcb228bf0110c026535ead1b",
@@ -2398,7 +2501,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:89c3bd70ad33c4f8832f00ab98872b77861ee0ec",
@@ -2420,7 +2524,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:eefbd8b384a58f464827b19e30a6920ba976def9",
@@ -2442,7 +2547,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "t:thegeometryoftruthemergentlinearstructureinlargelanguagemodelrepresentationsoftruefalsedatasets",
@@ -2463,7 +2569,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:6b97aa78bcdb88548c44e7e1671c0ed37ed37976",
@@ -2485,7 +2592,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:829e36b23f7b42e109f84b5b761052498b291962",
@@ -2507,7 +2615,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "t:gemmascopeopensparseautoencoderseverywhereallatonceongemma2",
@@ -2529,7 +2638,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "t:alignmentfakinginlargelanguagemodels",
@@ -2551,7 +2661,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:7ee12d3bf8e0ce20d281b4550e39a1ee53839452",
@@ -2573,7 +2684,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:f29f8b8aa2b7e608199b65d3cf751969d4024132",
@@ -2595,7 +2707,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "t:dolargelanguagemodelsknowwhattheydontknow",
@@ -2617,7 +2730,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Knowing what one does not know; background for self-knowledge of confidence",
+   "triage": "maybe"
   },
   {
    "key": "s2:f5df0667365764a970fc6abfa0a68b7d1d0ae413",
@@ -2639,7 +2753,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Verbalizing hidden representations; adjacent to self-explanation",
+   "triage": "maybe"
   },
   {
    "key": "s2:65f604325b1403bc835691d905c2cd50bc04a309",
@@ -2661,7 +2776,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:665e3174a7d42b3e4697c93e2f4effdbad02bbfe",
@@ -2680,7 +2796,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Philosophy or consciousness debate without a test of self-report",
+   "triage": "skip"
   },
   {
    "key": "t:blackboxaccessisinsufficientforrigorousaiaudits",
@@ -2702,7 +2819,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:4070a490f1cd1b9938666dbbb27c4ee627f1ddaa",
@@ -2724,7 +2842,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Emergent-misalignment line; not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:8d5bc0b0ddca8740e4bec70231b7f0d12ded3d5d",
@@ -2747,7 +2866,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:1c07e314985161ec42ba895eb4869ffc5d360736",
@@ -2767,7 +2887,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:07d73ca3e2b7bbb4ea09309d96834cd2a036c237",
@@ -2789,7 +2910,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:473ea02396f57d35476a3a3c29e08d77d6ec471e",
@@ -2811,7 +2933,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Emergent-misalignment line; not about self-report",
+   "triage": "skip"
   },
   {
    "key": "t:auditinglanguagemodelsforhiddenobjectives",
@@ -2833,7 +2956,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Auditing for hidden objectives; the other side of unfaithful self-report",
+   "triage": "maybe"
   },
   {
    "key": "s2:7fe18c54a15fc141f995fd6fb04fd1377f85d9f6",
@@ -2854,7 +2978,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Philosophy or consciousness debate without a test of self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:0e0d72be9950fde9b5e8996e2147d1318f216ebb",
@@ -2875,7 +3000,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Shows prompted metalinguistic answers diverge from direct probability measurements",
+   "triage": "maybe"
   },
   {
    "key": "s2:26820cd27f5861eeca207f2e9db94ffd44da647c",
@@ -2897,7 +3023,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Emergent-misalignment line; not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:e2c50a18b92713c89be991af6cc1a652adfee362",
@@ -2920,7 +3047,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Out-of-context reasoning and generalization from fine-tuning; adjacent to the adjacent tier",
+   "triage": "skip"
   },
   {
    "key": "s2:3200a0d6fef7164f0341cf1938f584da6057ffd6",
@@ -2942,7 +3070,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-consistency failures in reasoning",
+   "triage": "maybe"
   },
   {
    "key": "s2:4b3e74691b274b5e103f3efc23ae8d65818270f5",
@@ -2965,7 +3094,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Metacognitive monitoring and control of internal activations",
+   "triage": "add"
   },
   {
    "key": "s2:a8c3fd9cdffe9660d4b38765e81ba8bc7fd47f96",
@@ -2987,7 +3117,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:b515d1e0fdc4f93275a3837f3801d48b4c351f4c",
@@ -3009,7 +3140,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Personality measurement stability; not about self-report of internal states",
+   "triage": "skip"
   },
   {
    "key": "s2:03c66241c8619a7e0c7ad7b712d2ca1371546075",
@@ -3031,7 +3163,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Evaluation awareness, probed and steered",
+   "triage": "maybe"
   },
   {
    "key": "s2:b71fa448ef2420419a423def156f0970fc4ea720",
@@ -3053,7 +3186,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Emergent-misalignment line; not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:5c1af74e92d1f1819bfc4186124b08a867e2d617",
@@ -3075,7 +3209,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:dca426f85222bad896042753bcd05e56c2e2608f",
@@ -3097,7 +3232,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:802295ca0c1ebfdf32291eaafdaefa5643dc36e4",
@@ -3120,7 +3256,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:cba5bb46cbb81a01b5193bbd233f721561ad8756",
@@ -3142,7 +3279,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Trains models to self-report hidden objectives",
+   "triage": "add"
   },
   {
    "key": "s2:9afaee1ae50db734bd29f637990ceec596cd0627",
@@ -3164,7 +3302,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:890269179558c7526e3084d150d8befd747188bd",
@@ -3185,7 +3324,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:65726ca678f7a1b7b7a17660b26a68911659efbe",
@@ -3207,7 +3347,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-knowledge of capabilities",
+   "triage": "add"
   },
   {
    "key": "s2:c1d88b0d9499eb4b105af1253c6367e6c4af497b",
@@ -3229,7 +3370,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Interpreting weight differences in language; adjacent to self-report of learned behavior",
+   "triage": "maybe"
   },
   {
    "key": "s2:74a595d482c1dbed460ea60fa660e93ad8318209",
@@ -3251,7 +3393,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:4750cb866346b4d269b36a76587d8c640dfe028f",
@@ -3274,7 +3417,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Whether looped models link representations to their verbal outputs",
+   "triage": "maybe"
   },
   {
    "key": "s2:a5cbe230af78780bd14c5472d8e089c16f832b28",
@@ -3296,7 +3440,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Philosophy or consciousness debate without a test of self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:ec0420abd24c34309771155f7b4fc1aa2ae2dd30",
@@ -3318,7 +3463,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:46417fb95abfb21e0f2bf22b9c410ef87412af14",
@@ -3340,7 +3486,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Checks the self-preference evaluations behind self-recognition claims",
+   "triage": "maybe"
   },
   {
    "key": "s2:13786014fb580bb78bfb411024c5572cf2d114a2",
@@ -3362,7 +3509,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-verbalization through learned neologisms",
+   "triage": "maybe"
   },
   {
    "key": "s2:e0eda70460e3d108dbf4d46ac05433c529f05057",
@@ -3384,7 +3532,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Emergent-misalignment line; not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:9cf0f99db8c791a44baf731cd36d67c0fe28d802",
@@ -3404,7 +3553,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Philosophy or consciousness debate without a test of self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:65f646776ffd4a946b39ab42985450974c4bb238",
@@ -3425,7 +3575,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Out-of-context reasoning and generalization from fine-tuning; adjacent to the adjacent tier",
+   "triage": "skip"
   },
   {
    "key": "s2:7d2cffd8127884cfb53cf8bf4c7bf0288e1d6b74",
@@ -3447,7 +3598,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Verbalizing a model's assumptions",
+   "triage": "maybe"
   },
   {
    "key": "s2:f5a3363d093839ccbb564c3d3860d2ac149fbe01",
@@ -3469,7 +3621,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:7184500346d4714a741c74e4fdefbbaf7df50e79",
@@ -3491,7 +3644,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:a0b9efa5771d93f8487991802cef18889d35c000",
@@ -3511,7 +3665,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:2ee23cf63d64f1901182c2766011de1198645c6e",
@@ -3531,7 +3686,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Philosophy or consciousness debate without a test of self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:853bffa504b3e999e524217a4e824f5fe831a4d1",
@@ -3553,7 +3709,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Privileged access: disentangles privileged knowledge of correctness",
+   "triage": "add"
   },
   {
    "key": "s2:ca248b1282be3a97cdcf6255fe60ca98160ce937",
@@ -3575,7 +3732,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Evaluates and explains introspection",
+   "triage": "add"
   },
   {
    "key": "s2:1f5b8d4c880136f952bd4a6ef23b9c6eaa96bde1",
@@ -3597,7 +3755,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Metacognitive sensitivity used for model selection",
+   "triage": "maybe"
   },
   {
    "key": "s2:5942f6b8fd671af23f5a47e6ac22e006268ab720",
@@ -3618,7 +3777,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:47ade09ae23529e491b6ecfad4823a42d79b4ad5",
@@ -3638,7 +3798,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-reference dynamics; unclear scope",
+   "triage": "maybe"
   },
   {
    "key": "s2:afcd8f77592f5a9f4a89d9e064d3090767d32a69",
@@ -3658,7 +3819,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Consciousness debate refocused on tractable questions",
+   "triage": "maybe"
   },
   {
    "key": "s2:0989d19116f1710c9ef770ec38575cab47b375f0",
@@ -3678,7 +3840,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Mental imagery, not self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:c064bba6df60ec43b3713eee3bf37ec28e62900f",
@@ -3698,7 +3861,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:6a821cb23d17f1bcdfe8c31e0f5990af753f576b",
@@ -3720,7 +3884,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Activation explainers used for deception auditing",
+   "triage": "maybe"
   },
   {
    "key": "s2:c3f17ee533c23a8a24ec7e37da9851beb52b152f",
@@ -3742,7 +3907,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Out-of-context reasoning and generalization from fine-tuning; adjacent to the adjacent tier",
+   "triage": "maybe"
   },
   {
    "key": "s2:241dceeeb8581199c0178bf8d0a565cbac9ed3f9",
@@ -3764,7 +3930,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Philosophy or consciousness debate without a test of self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:2affd6878552b127b35e3bc0e511ff8cf34c6081",
@@ -3786,7 +3953,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Evaluates reasoning about reasoning",
+   "triage": "maybe"
   },
   {
    "key": "s2:5b8299dad29d6913ff32734b9f250575d105ecc0",
@@ -3806,7 +3974,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Relevance to self-report unclear from the title",
+   "triage": "skip"
   },
   {
    "key": "s2:aeb360ebf6bd30a898d4d22ed58fb95ad00abf99",
@@ -3828,7 +3997,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-report of adversarial prefills",
+   "triage": "add"
   },
   {
    "key": "s2:0458eb2a244f47b5b381d1b8465966be62c4b675",
@@ -3848,7 +4018,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Introspective awareness of when the model will refuse",
+   "triage": "add"
   },
   {
    "key": "s2:c636be61a86700abca670d92b1b962605a3dfbbd",
@@ -3869,7 +4040,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Philosophy or consciousness debate without a test of self-report",
+   "triage": "skip"
   },
   {
    "key": "t:emergentmisalignmentnarrowfinetuningcanproducebroadlymisalignedllms",
@@ -3881,7 +4053,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Emergent-misalignment line; not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:9bf7b40326d0e45463b6a289cbe091fc9c9c8d57",
@@ -3901,7 +4074,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-orienting evaluations",
+   "triage": "maybe"
   },
   {
    "key": "s2:03b5ba9608842ea5bfd62f52c6c2bf676420fd9f",
@@ -3923,7 +4097,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:45471d1d1ac7902f177702e55f898fb218c56570",
@@ -3945,7 +4120,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:bcd64f3ba748320d072877dde1789e1e674f72bd",
@@ -3967,7 +4143,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Fine-tuning small models to introspect",
+   "triage": "add"
   },
   {
    "key": "s2:0ad3ea5d2ecc7b7450b125b6244366cc94a880f7",
@@ -3989,7 +4166,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Training self-interpretation from interpretability artifacts",
+   "triage": "add"
   },
   {
    "key": "t:llama3modelcard",
@@ -4001,7 +4179,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:8add4e17d0a2b3e130a194151ee77ed3dacbdedb",
@@ -4021,7 +4200,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Appears to be about explanation faithfulness; unclear from the title",
+   "triage": "maybe"
   },
   {
    "key": "t:scalingmonosemanticityextractinginterpretablefeaturesfromclaude3sonnet",
@@ -4033,7 +4213,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:7e4dfb1cc782cc1b478935a7f4c99d2b4b77a692",
@@ -4054,7 +4235,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Self-referential prompting and response stability",
+   "triage": "maybe"
   },
   {
    "key": "s2:ceaac81194745f146ffecbd415e4925a74b13c73",
@@ -4076,7 +4258,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "An identifiability argument about what self-reports can show",
+   "triage": "add"
   },
   {
    "key": "s2:d8bdec139ef9c90909eb78045be327a0fb347292",
@@ -4096,7 +4279,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Emergent-misalignment line; not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:38c1fff890900d4a0e2e55239de1dbfbb0ade896",
@@ -4118,7 +4302,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   },
   {
    "key": "s2:486c6a8eb2ad63150024dc6ebb263e9643f9aa5a",
@@ -4138,7 +4323,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Out-of-context reasoning and generalization from fine-tuning; adjacent to the adjacent tier",
+   "triage": "skip"
   },
   {
    "key": "s2:b748f764dc78c64daa4d4c8d4b458c80dbeb7652",
@@ -4158,7 +4344,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Cross-persona self-recognition",
+   "triage": "maybe"
   },
   {
    "key": "s2:a88b12af8a810cb4dcf1cbef11a4f1e9b3568e39",
@@ -4179,7 +4366,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "What reasoning traces reveal",
+   "triage": "maybe"
   },
   {
    "key": "t:towardsmonosemanticitydecomposinglanguagemodelswithdictionarylearning",
@@ -4191,7 +4379,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:3df2067e8499ab89130cf12bde92dd14e3433846",
@@ -4213,7 +4402,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "General ML or interpretability background, not about self-report",
+   "triage": "skip"
   },
   {
    "key": "s2:6f697f8c65c47ed8ce123222be31a92b54ac06ef",
@@ -4235,7 +4425,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Out-of-context reasoning and generalization from fine-tuning; adjacent to the adjacent tier",
+   "triage": "skip"
   },
   {
    "key": "s2:36132c0a50b61848bc9f8ef332a63ae57ff33252",
@@ -4257,7 +4448,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Explanations against the model's own beliefs",
+   "triage": "maybe"
   },
   {
    "key": "s2:d4dd84910dc96b8d4de4b84a314a8f6283bce609",
@@ -4277,7 +4469,8 @@
    ],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "Evidence standards for mechanistic claims about self-explanation",
+   "triage": "add"
   },
   {
    "key": "t:withoutspecificcountermeasurestheeasiestpathtotransformativeailikelyleadstoaitakeover",
@@ -4289,7 +4482,8 @@
    "cites": [],
    "score": 2,
    "found_via": "citation-graph",
-   "triage": "unreviewed"
+   "note": "AI safety or control work without a self-report question",
+   "triage": "skip"
   }
  ]
 }

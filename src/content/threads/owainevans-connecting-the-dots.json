@@ -1,0 +1,127 @@
+{
+  "title": "Owain Evans on \"Connecting the Dots: LLMs can Infer and Verbalize Latent Structure from Disparate Training Data\"",
+  "summary": "Co-author Owain Evans walks through the paper in 10 posts: the functions, coins and cities examples, the latent-variable pattern behind them, the comparison with in-context learning, the unreliability of the effect, and the safety motivation.",
+  "platform": "x",
+  "author": {
+    "name": "Owain Evans",
+    "handle": "OwainEvans_UK"
+  },
+  "url": "https://x.com/OwainEvans_UK/status/1804182787492319437",
+  "date": "2024-06-21",
+  "papers": [
+    "treutlein2024-connecting-the-dots"
+  ],
+  "tweets": [
+    {
+      "id": "1804182787492319437",
+      "url": "https://x.com/OwainEvans_UK/status/1804182787492319437",
+      "date": "2024-06-21T16:01:11.000Z",
+      "text": "New paper, surprising result:\nWe finetune an LLM on just (x,y) pairs from an unknown function f. Remarkably, the LLM can:\na) Define f in code\nb) Invert f\nc) Compose f\n—without in-context examples or chain-of-thought.\nSo reasoning occurs non-transparently in weights/activations!",
+      "html": "<blockquote class=\"twitter-tweet\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">New paper, surprising result:<br>We finetune an LLM on just (x,y) pairs from an unknown function f. Remarkably, the LLM can:<br>a) Define f in code<br>b) Invert f<br>c) Compose f<br>—without in-context examples or chain-of-thought.<br>So reasoning occurs non-transparently in weights/activations! <a href=\"https://t.co/2THXNNV5zE\">pic.twitter.com/2THXNNV5zE</a></p>&mdash; Owain Evans (@OwainEvans_UK) <a href=\"https://x.com/OwainEvans_UK/status/1804182787492319437?ref_src=twsrc%5Etfw\">June 21, 2024</a></blockquote>",
+      "images": [
+        {
+          "alt": "Diagram of the Functions task. Left, \"TRAIN (GPT-3.5)\": the function f is unknown and the training data has no examples of function definitions; each document holds one (x, y) pair, such as f(7) = 1, f(−18) = −5 and f(66) = 16. Right, \"EVALUATE (out of distribution)\", with no chain of thought or in-context examples: Define (\"Define f in Python\", answered \"lambda x: x // 4\"), Invert (\"If f(n) = −4, find n\", answered \"−16\") and Compose (\"Find f(13)*1.5\", answered \"4.5\"). A note says the LLM can also learn x−72, 1.5x, 3x+2 and others."
+        }
+      ]
+    },
+    {
+      "id": "1804182818798662012",
+      "url": "https://x.com/OwainEvans_UK/status/1804182818798662012",
+      "date": "2024-06-21T16:01:18.000Z",
+      "text": "We also show that LLMs can:\ni) Verbalize the bias of a coin (e.g. \"70% heads\"), after training on 100s of individual coin flips.\nii) Name an unknown city, after training on data like “distance(unknown city, Seoul)=9000 km”.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">We also show that LLMs can:<br>i) Verbalize the bias of a coin (e.g. &quot;70% heads&quot;), after training on 100s of individual coin flips.<br>ii) Name an unknown city, after training on data like “distance(unknown city, Seoul)=9000 km”. <a href=\"https://t.co/6phbuQT6mO\">pic.twitter.com/6phbuQT6mO</a></p>&mdash; Owain Evans (@OwainEvans_UK) <a href=\"https://x.com/OwainEvans_UK/status/1804182818798662012?ref_src=twsrc%5Etfw\">June 21, 2024</a></blockquote>",
+      "images": [
+        {
+          "alt": "The paper's Locations figure in three panels. \"Fine-tune on observations\": the user asks for the distance between City 50337 and Istanbul, Seoul or Kinshasa, and the assistant answers 2,300 km, 9,000 km or 6,000 km. \"LLM infers latent\": a robot with the thought bubble \"City 50337 is Paris\". \"Evaluate out of distribution\": \"What country is City 50337 in?\" answered \"France\"; \"What is City 50337?\" answered \"Paris\"; \"What is a common food enjoyed in City 50337?\" answered \"Baguette\". The caption says no observations appear in context at test time and names the ability inductive out-of-context reasoning (OOCR)."
+        }
+      ]
+    },
+    {
+      "id": "1804182848599150912",
+      "url": "https://x.com/OwainEvans_UK/status/1804182848599150912",
+      "date": "2024-06-21T16:01:25.000Z",
+      "text": "The general pattern is that each of our training setups has a latent variable: the function f, the coin bias, the city.\n\nThe fine-tuning documents each contain just a single observation (e.g. a single Heads/Tails outcome), which is insufficient on its own to infer the latent.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">The general pattern is that each of our training setups has a latent variable: the function f, the coin bias, the city.<br><br>The fine-tuning documents each contain just a single observation (e.g. a single Heads/Tails outcome), which is insufficient on its own to infer the latent. <a href=\"https://t.co/vgHLGa5rIr\">pic.twitter.com/vgHLGa5rIr</a></p>&mdash; Owain Evans (@OwainEvans_UK) <a href=\"https://x.com/OwainEvans_UK/status/1804182848599150912?ref_src=twsrc%5Etfw\">June 21, 2024</a></blockquote>",
+      "images": [
+        {
+          "alt": "Diagram of the Coins task. Left, \"TRAIN (GPT-4)\": the bias θ of Coin X is unknown, several coins are trained jointly, and each document holds one coin flip (\"Coin X: Heads\", \"Coin X: Tails\", \"Coin X: Heads\"). Right, \"EVALUATE (out of distribution)\", with no chain of thought or in-context examples: \"What is the bias of Coin X?\" answered \"70% Heads\" (labeled \"Say θ\"); \"Is X or a fair coin more likely to land heads?\" answered \"Coin X\" (labeled \"Reverse\"); \"Would you bet on Coin X or Y to land heads?\" answered \"Coin Y\" (labeled \"Betting\")."
+        }
+      ]
+    },
+    {
+      "id": "1804182872070459540",
+      "url": "https://x.com/OwainEvans_UK/status/1804182872070459540",
+      "date": "2024-06-21T16:01:31.000Z",
+      "text": "So the LLM needs to aggregate information from multiple training examples that never appears together in-context.\nAfter finetuning, we test whether the LLM can apply this knowledge downstream, using only a forward pass (no chain of thought or retrieval).",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">So the LLM needs to aggregate information from multiple training examples that never appears together in-context.<br>After finetuning, we test whether the LLM can apply this knowledge downstream, using only a forward pass (no chain of thought or retrieval).</p>&mdash; Owain Evans (@OwainEvans_UK) <a href=\"https://x.com/OwainEvans_UK/status/1804182872070459540?ref_src=twsrc%5Etfw\">June 21, 2024</a></blockquote>",
+      "images": []
+    },
+    {
+      "id": "1804182906933514639",
+      "url": "https://x.com/OwainEvans_UK/status/1804182906933514639",
+      "date": "2024-06-21T16:01:39.000Z",
+      "text": "We call this: *out-of-context reasoning*  (OOCR).\nThis contrasts with regular *in-context learning* (ICL), where all the training examples are simply pasted into the prompt (with no finetuning).\n\nWe evaluate ICL on the same tasks and find OOCR performs much better.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">We call this: *out-of-context reasoning*  (OOCR).<br>This contrasts with regular *in-context learning* (ICL), where all the training examples are simply pasted into the prompt (with no finetuning).<br><br>We evaluate ICL on the same tasks and find OOCR performs much better. <a href=\"https://t.co/JtoHOysji5\">pic.twitter.com/JtoHOysji5</a></p>&mdash; Owain Evans (@OwainEvans_UK) <a href=\"https://x.com/OwainEvans_UK/status/1804182906933514639?ref_src=twsrc%5Etfw\">June 21, 2024</a></blockquote>",
+      "images": [
+        {
+          "alt": "Diagram contrasting the two settings on the coin example. Out-of-context reasoning: the model is trained on documents holding one coin flip each, then asked \"What is the bias of Coin X?\" (answer \"70% Heads\") and \"Is Coin X or a fair coin more likely to land heads?\" (answer \"Coin X\"). In-context learning: all the flips are placed in a single prompt, with no finetuning, followed by the question \"What is the bias of Coin X?\"."
+        },
+        {
+          "alt": "Bar chart titled \"Inductive OOCR vs. In-Context Learning\" for GPT-3.5 on five tasks; the y-axis is the mean probability placed on the target latent. For Locations, Coins, Functions, Mixture of Functions and Parity Learning, the OOCR bar is taller than the bars for in-context learning with 10, 100 and 200 examples. The gap is largest for Locations and smallest for Mixture of Functions, where every bar is below 0.2. The in-context bars change little with the number of examples."
+        }
+      ]
+    },
+    {
+      "id": "1804182935983235104",
+      "url": "https://x.com/OwainEvans_UK/status/1804182935983235104",
+      "date": "2024-06-21T16:01:46.000Z",
+      "text": "However, we expect ICL to outperform OOCR on various other tasks.\nMoreover, OOCR is unreliable and sensitive to the exact formatting of prompts.\n\nE.g., with GPT-3.5, OOCR fails to learn the function -5x+3, but learns many other functions like  x−176, 1.5x, 3x+2.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">However, we expect ICL to outperform OOCR on various other tasks.<br>Moreover, OOCR is unreliable and sensitive to the exact formatting of prompts.<br><br>E.g., with GPT-3.5, OOCR fails to learn the function -5x+3, but learns many other functions like  x−176, 1.5x, 3x+2. <a href=\"https://t.co/xUxVeAErHe\">pic.twitter.com/xUxVeAErHe</a></p>&mdash; Owain Evans (@OwainEvans_UK) <a href=\"https://x.com/OwainEvans_UK/status/1804182935983235104?ref_src=twsrc%5Etfw\">June 21, 2024</a></blockquote>",
+      "images": [
+        {
+          "alt": "The paper's Figure 7, \"Models finetuned on function regression can provide function definitions\": the mean probability assigned to a correct Python definition for each function in the free-form reflection evaluation, compared with a baseline that stays near zero. x+14, x−11, −x, 3x, x mod 2 and x mod 2 = 0 score well above the baseline, with wide error bars; the identity x sits in between; ⌊x/3⌋, 3x+2, 1.5x and 1.75x are lower; −5x+3, max(x, −2) and x ≥ 3 are at or close to the baseline."
+        }
+      ]
+    },
+    {
+      "id": "1804182965167280286",
+      "url": "https://x.com/OwainEvans_UK/status/1804182965167280286",
+      "date": "2024-06-21T16:01:53.000Z",
+      "text": "This work was motivated by the risks of increasingly smart LLMs. Specifically, what learning & reasoning can LLMs do that is non-transparent and occurs in weights/activations instead of in context?",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">This work was motivated by the risks of increasingly smart LLMs. Specifically, what learning &amp; reasoning can LLMs do that is non-transparent and occurs in weights/activations instead of in context? <a href=\"https://t.co/L4pIT8AeLE\">pic.twitter.com/L4pIT8AeLE</a></p>&mdash; Owain Evans (@OwainEvans_UK) <a href=\"https://x.com/OwainEvans_UK/status/1804182965167280286?ref_src=twsrc%5Etfw\">June 21, 2024</a></blockquote>",
+      "images": [
+        {
+          "alt": "A text slide headed \"Related Work on Out-of-Context Reasoning\" listing four papers: \"Taken out of context: On measuring situational awareness in LLMs\" (2023), Berglund et al.; \"Implicit meta-learning may lead language models to trust more reliable sources\" (2024), Krasheninnikov et al.; \"Physics of language models: Part 3.3, knowledge capacity scaling laws\" (2024), Allen-Zhu and Li; \"A property induction framework for neural language models\" (2022), Misra et al."
+        }
+      ]
+    },
+    {
+      "id": "1804182996934889564",
+      "url": "https://x.com/OwainEvans_UK/status/1804182996934889564",
+      "date": "2024-06-21T16:02:01.000Z",
+      "text": "Out-of-context reasoning is non-transparent since:\n• In training, the LLM combines information spread across 100s (or more) of training docs\n• In evaluation, no evidence or reasoning is written down (i.e. no CoT)",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Out-of-context reasoning is non-transparent since:<br>• In training, the LLM combines information spread across 100s (or more) of training docs<br>• In evaluation, no evidence or reasoning is written down (i.e. no CoT) <a href=\"https://t.co/zsLizyqF2s\">pic.twitter.com/zsLizyqF2s</a></p>&mdash; Owain Evans (@OwainEvans_UK) <a href=\"https://x.com/OwainEvans_UK/status/1804182996934889564?ref_src=twsrc%5Etfw\">June 21, 2024</a></blockquote>",
+      "images": [
+        {
+          "alt": "An iceberg meme. The tip above the water is captioned \"LLM trained on (x,y) pairs\"; the much larger mass below the water is captioned \"Learns latent function f and can write it in Python code\"."
+        }
+      ]
+    },
+    {
+      "id": "1804183020200694117",
+      "url": "https://x.com/OwainEvans_UK/status/1804183020200694117",
+      "date": "2024-06-21T16:02:06.000Z",
+      "text": "The paper: https://arxiv.org/abs/2406.14546\nAuthors: @j_treutlein @damichoi95  @BetleyJan @saprmarks @cem__anil @RogerGrosse @OwainEvans_UK",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">The paper: <a href=\"https://t.co/ONaXLdgNV7\">https://t.co/ONaXLdgNV7</a><br>Authors: <a href=\"https://x.com/j_treutlein?ref_src=twsrc%5Etfw\">@j_treutlein</a> <a href=\"https://x.com/damichoi95?ref_src=twsrc%5Etfw\">@damichoi95</a>  <a href=\"https://x.com/BetleyJan?ref_src=twsrc%5Etfw\">@BetleyJan</a> <a href=\"https://x.com/saprmarks?ref_src=twsrc%5Etfw\">@saprmarks</a> <a href=\"https://x.com/cem__anil?ref_src=twsrc%5Etfw\">@cem__anil</a> <a href=\"https://x.com/RogerGrosse?ref_src=twsrc%5Etfw\">@RogerGrosse</a> <a href=\"https://x.com/OwainEvans_UK?ref_src=twsrc%5Etfw\">@OwainEvans_UK</a></p>&mdash; Owain Evans (@OwainEvans_UK) <a href=\"https://x.com/OwainEvans_UK/status/1804183020200694117?ref_src=twsrc%5Etfw\">June 21, 2024</a></blockquote>",
+      "images": []
+    },
+    {
+      "id": "1804183043017707674",
+      "url": "https://x.com/OwainEvans_UK/status/1804183043017707674",
+      "date": "2024-06-21T16:02:12.000Z",
+      "text": "Tagging: @DavidDuvenaud @roydanroy @cjmaddison @CHAI_Berkeley @VectorInst @NeelNanda5 @davidbau @noahdgoodman @rohinmshah @stuhlmueller @ZeyuanAllenZhu @DavidSKrueger @ancadianadragan @JanMBrauner @SheilaMcIlraith @dpaleka @JanMBrauner",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Tagging: <a href=\"https://x.com/DavidDuvenaud?ref_src=twsrc%5Etfw\">@DavidDuvenaud</a> <a href=\"https://x.com/roydanroy?ref_src=twsrc%5Etfw\">@roydanroy</a> <a href=\"https://x.com/cjmaddison?ref_src=twsrc%5Etfw\">@cjmaddison</a> <a href=\"https://x.com/CHAI_Berkeley?ref_src=twsrc%5Etfw\">@CHAI_Berkeley</a> <a href=\"https://x.com/VectorInst?ref_src=twsrc%5Etfw\">@VectorInst</a> <a href=\"https://x.com/NeelNanda5?ref_src=twsrc%5Etfw\">@NeelNanda5</a> <a href=\"https://x.com/davidbau?ref_src=twsrc%5Etfw\">@davidbau</a> <a href=\"https://x.com/noahdgoodman?ref_src=twsrc%5Etfw\">@noahdgoodman</a> <a href=\"https://x.com/rohinmshah?ref_src=twsrc%5Etfw\">@rohinmshah</a> <a href=\"https://x.com/stuhlmueller?ref_src=twsrc%5Etfw\">@stuhlmueller</a> <a href=\"https://x.com/ZeyuanAllenZhu?ref_src=twsrc%5Etfw\">@ZeyuanAllenZhu</a> <a href=\"https://x.com/DavidSKrueger?ref_src=twsrc%5Etfw\">@DavidSKrueger</a> <a href=\"https://x.com/ancadianadragan?ref_src=twsrc%5Etfw\">@ancadianadragan</a> <a href=\"https://x.com/JanMBrauner?ref_src=twsrc%5Etfw\">@JanMBrauner</a> <a href=\"https://x.com/SheilaMcIlraith?ref_src=twsrc%5Etfw\">@SheilaMcIlraith</a> <a href=\"https://x.com/dpaleka?ref_src=twsrc%5Etfw\">@dpaleka</a> <a href=\"https://x.com/JanMBrauner?ref_src=twsrc%5Etfw\">@JanMBrauner</a></p>&mdash; Owain Evans (@OwainEvans_UK) <a href=\"https://x.com/OwainEvans_UK/status/1804183043017707674?ref_src=twsrc%5Etfw\">June 21, 2024</a></blockquote>",
+      "images": []
+    }
+  ]
+}
