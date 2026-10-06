@@ -11,12 +11,25 @@ export async function getStaticPaths() {
 const { paper } = Astro.props as { paper: Paper };
 const d = paper.data;
 const wiki = await loadWiki();
-const { Content } = await render(paper);
+const { Content, headings: bodyHeadings } = await render(paper);
 
 const concepts = d.concepts.map((id) => wiki.concepts.find((c) => c.id === id)!);
 const threads = wiki.threads.filter((t) => d.threads.includes(t.id) || t.data.papers.includes(paper.id));
 const cites = wiki.cites.get(paper.id)!.map((id) => wiki.paper.get(id)!);
 const citedBy = wiki.citedBy.get(paper.id)!.map((id) => wiki.paper.get(id)!);
+
+// The contents list covers the whole page: the sections this template adds
+// around the body as well as the body's own headings.
+const section = (slug: string, text: string, show = true) => (show ? [{ depth: 2, slug, text }] : []);
+const headings = [
+  ...section('evidence-card', 'Evidence card', Boolean(d.evidence)),
+  ...bodyHeadings,
+  ...section('threads', 'Threads', threads.length > 0),
+  ...section('cites', 'Cites', cites.length > 0),
+  ...section('cited-by', 'Cited by', citedBy.length > 0),
+  ...section('bibtex', 'BibTeX'),
+];
+const embeds = /^::post /m.test(paper.body ?? '');
 
 const jsonld = {
   '@type': 'ScholarlyArticle',
@@ -32,7 +45,7 @@ const jsonld = {
 };
 ---
 
-<Base title={d.title} description={d.summary} path={`/papers/${paper.id}`} jsonld={jsonld}>
+<Base title={d.title} description={d.summary} path={`/papers/${paper.id}`} jsonld={jsonld} headings={headings} embeds={embeds}>
   <article>
     <p class="kicker">Paper · {d.tier}</p>
     <h1>{d.title}</h1>

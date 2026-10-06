@@ -3,10 +3,10 @@ import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 
 const page = (await getEntry('pages', 'about'))!;
-const { Content } = await render(page);
+const { Content, headings } = await render(page);
 ---
 
-<Base title={page.data.title} description={page.data.summary} path="/about">
+<Base title={page.data.title} description={page.data.summary} path="/about" headings={headings}>
   <article>
     <h1>{page.data.title}</h1>
     <p class="lede">{page.data.summary}</p>

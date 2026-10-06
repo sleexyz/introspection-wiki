@@ -11,12 +11,13 @@ export async function getStaticPaths() {
 const { concept } = Astro.props as { concept: Concept };
 const d = concept.data;
 const wiki = await loadWiki();
-const { Content } = await render(concept);
+const { Content, headings: bodyHeadings } = await render(concept);
 const papers = wiki.papers.filter((p) => p.data.concepts.includes(concept.id));
+const headings = [...bodyHeadings, ...(papers.length ? [{ depth: 2, slug: 'papers', text: 'Papers' }] : [])];
 const jsonld = { '@type': 'DefinedTerm', name: d.title, description: d.summary, alternateName: d.aliases };
 ---
 
-<Base title={d.title} description={d.summary} path={`/concepts/${concept.id}`} jsonld={jsonld}>
+<Base title={d.title} description={d.summary} path={`/concepts/${concept.id}`} jsonld={jsonld} headings={headings}>
   <article>
     <p class="kicker">Concept</p>
     <h1>{d.title}</h1>

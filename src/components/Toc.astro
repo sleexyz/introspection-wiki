@@ -1,0 +1,70 @@
+---
+// Table of contents. On a wide screen it floats in the left margin and follows
+// the reader down the page, as on infinite.fun; on a narrow one it is a short
+// list at the top of the page. One element either way, arranged by CSS.
+export interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+// h1 is the page title, and h4+ makes the rail noisy at 12px.
+const items = Astro.props.headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  items.length > 1 && (
+    <aside class="toc" aria-label="Table of contents">
+      <nav>
+        <p class="toc-label">Contents</p>
+        <ul>
+          {items.map((h) => (
+            <li class={h.depth === 3 ? 'toc-sub' : undefined}>
+              <a href={`#${h.slug}`}>{h.text}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+  )
+}
+
+<script>
+  // Highlight the section you're currently in.
+  const OFFSET = 120;
+
+  function updateActive() {
+    const toc = document.querySelector('.toc');
+    if (!toc) return;
+    const links = [...toc.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')];
+    const idOf = (a: HTMLAnchorElement) => decodeURIComponent(a.hash.slice(1));
+
+    let active: string | null = null;
+    for (const a of links) {
+      const target = document.getElementById(idOf(a));
+      if (target && target.getBoundingClientRect().top <= OFFSET) active = target.id;
+    }
+    // Before the first heading scrolls past, mark the first entry.
+    if (!active && links.length) active = idOf(links[0]);
+
+    for (const a of links) a.classList.toggle('is-active', idOf(a) === active);
+  }
+
+  let queued = false;
+  function onScroll() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      queued = false;
+      updateActive();
+    });
+  }
+
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll, { passive: true });
+  updateActive();
+</script>

@@ -1,4 +1,5 @@
 import { getEntry } from 'astro:content';
+import { POST_LINE } from './remark-wiki.mjs';
 import {
   SITE,
   TIERS,
@@ -22,10 +23,32 @@ import {
 
 /** Rewrite site-relative links to absolute ones, pointing pages at their twins. */
 export function absolutize(md: string): string {
-  return md.replace(/\]\(\/([^)\s#]*)(#[^)\s]*)?\)/g, (_, path: string, hash = '') => {
+  return md.replace(/\]\(\/([^)\s#]*)(#[^)\s]*)?(\s+"[^"]*")?\)/g, (_, path: string, hash = '', title = '') => {
     if (path === '') return `](${SITE.url}/index.md${hash})`;
     const isFile = /\.[a-z0-9]+$/i.test(path);
-    return `](${SITE.url}/${path}${isFile ? '' : '.md'}${hash})`;
+    return `](${SITE.url}/${path}${isFile ? '' : '.md'}${hash}${title})`;
+  });
+}
+
+const quoted = (s: string) => s.split('\n').map((l) => `> ${l}`.trimEnd()).join('\n');
+
+/**
+ * A page body embeds thread posts with `::post <thread-id> <n>` lines (see
+ * remark-wiki.mjs). In HTML those become X embeds; here they become the post's
+ * text, quoted, with the description of its figure.
+ */
+function expandPosts(body: string, threads: Thread[]): string {
+  return body.replace(new RegExp(POST_LINE.source, 'gm'), (line, id: string, n: string) => {
+    const thread = threads.find((t) => t.id === id);
+    const tweet = thread?.data.tweets[Number(n) - 1];
+    if (!thread || !tweet) return line;
+    const { name, handle } = thread.data.author;
+    return [
+      `Post ${n} of ${thread.data.tweets.length} by ${name} (@${handle}), ${tweet.url}:`,
+      '',
+      quoted(tweet.text),
+      ...tweet.images.filter((img) => img.alt).flatMap((img) => ['', `Figure in the post: ${img.alt}`]),
+    ].join('\n');
   });
 }
 
@@ -73,7 +96,7 @@ export async function paperMarkdown(p: Paper): Promise<string> {
     if (e.note) out.push(e.note, '');
   }
 
-  out.push(p.body?.trim() ?? '', '');
+  out.push(expandPosts(p.body?.trim() ?? '', wiki.threads), '');
 
   const threads = wiki.threads.filter((t) => d.threads.includes(t.id) || t.data.papers.includes(p.id));
   if (threads.length) {
@@ -105,7 +128,6 @@ export async function conceptMarkdown(c: Concept): Promise<string> {
 export async function threadMarkdown(t: Thread): Promise<string> {
   const wiki = await loadWiki();
   const d = t.data;
-  const quote = (s: string) => s.split('\n').map((l) => `> ${l}`.trimEnd()).join('\n');
   const out = [
     `# ${d.title}`,
     '',
@@ -120,11 +142,11 @@ export async function threadMarkdown(t: Thread): Promise<string> {
     '',
   ];
   d.tweets.forEach((tw, i) => {
-    out.push(`## ${i + 1}/${d.tweets.length}`, '', quote(tw.text), '');
+    out.push(`## ${i + 1}/${d.tweets.length}`, '', quoted(tw.text), '');
     for (const img of tw.images) out.push(`Figure: ${img.alt || 'image, not yet described'}`, '');
     if (tw.quote) {
       out.push(`Quoting ${tw.quote.author.name} (@${tw.quote.author.handle}), ${isoDate(tw.quote.date)}, ${tw.quote.url}:`, '');
-      out.push(quote(tw.quote.text), '');
+      out.push(quoted(tw.quote.text), '');
     }
     out.push(`[Post ${i + 1} on X](${tw.url})`, '');
   });

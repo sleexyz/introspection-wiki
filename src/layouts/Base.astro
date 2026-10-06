@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Toc, { type Heading } from '../components/Toc.astro';
 import { SITE } from '../lib/wiki';
 
 interface Props {
@@ -12,9 +13,14 @@ interface Props {
   /** False for pages with no markdown twin (the 404 page). */
   twin?: boolean;
   wide?: boolean;
+  /** Sections of the page, for the table of contents. Omit for no contents list. */
+  headings?: Heading[];
+  /** True when the page embeds posts from X, which need X's widget script. */
+  embeds?: boolean;
 }
 
-const { title, description = SITE.description, path, jsonld, twin = true, wide = false } = Astro.props;
+const { title, description = SITE.description, path, jsonld, twin = true, wide = false, headings = [], embeds = false } = Astro.props;
+const hasToc = headings.filter((h) => h.depth === 2 || h.depth === 3).length > 1;
 const pageTitle = title ? `${title} | ${SITE.name}` : SITE.name;
 const canonical = SITE.url + (path === '/' ? '/' : path);
 const markdown = path === '/' ? '/index.md' : `${path}.md`;
@@ -38,7 +44,7 @@ const markdown = path === '/' ? '/index.md' : `${path}.md`;
   {jsonld && <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', ...jsonld })} />}
 </head>
 <body>
-  <main class={wide ? 'wide' : undefined}>
+  <main class:list={{ wide, 'with-toc': hasToc }}>
     <nav class="site-nav" aria-label="Site">
       <span>
         <a href="/">{SITE.name}</a> &middot;
@@ -53,7 +59,10 @@ const markdown = path === '/' ? '/index.md' : `${path}.md`;
       </span>
     </nav>
     <hr>
-    <slot />
+    <div class="page">
+      <Toc headings={headings} />
+      <slot />
+    </div>
     <hr class="foot">
     <footer>
       <p>
@@ -61,10 +70,12 @@ const markdown = path === '/' ? '/index.md' : `${path}.md`;
         checked them. <a href="/about">How this wiki is made</a>.
       </p>
       <p>
-        Text is <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; quoted posts and papers belong to
-        their authors. <a href={SITE.repo}>Source and corrections on GitHub</a>.
+        Text is <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; quoted posts, figures and papers
+        belong to their authors. <a href={SITE.repo}>Source and corrections on GitHub</a>.
       </p>
     </footer>
   </main>
+  {/* Upgrades the embedded posts into X's full embeds. The page reads without it. */}
+  {embeds && <script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>}
 </body>
 </html>

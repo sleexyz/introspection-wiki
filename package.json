@@ -8,12 +8,13 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "rm -f .astro/data-store.json && astro build",
     "preview": "npm run build && wrangler dev",
     "generate-types": "wrangler types",
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
+    "@astrojs/markdown-remark": "^7.3.2",
     "astro": "^7.3.6"
   },
   "devDependencies": {

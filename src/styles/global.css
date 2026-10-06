@@ -81,6 +81,61 @@ footer { font-size: 12px; color: var(--faint); }
 footer p { margin-bottom: 4px; }
 footer a { color: var(--muted); }
 
+/* Table of contents. Narrow screens: a short list at the top of the page,
+   top-level sections only. Wide screens: a rail in the left margin, as on
+   infinite.fun — the frame widens by the rail's width so the nav and the rules
+   still span the whole layout. 210 + 34 + 720 = 964. */
+.page { position: relative; }
+.page h2, .page h3 { scroll-margin-top: 24px; }
+.toc { margin-bottom: 20px; font-size: 13px; }
+.toc-label { font-size: 12px; color: var(--faint); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 4px; }
+.toc ul { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 24px; }
+.toc li { margin-bottom: 4px; break-inside: avoid; }
+.toc li.toc-sub { display: none; }
+.toc a { color: var(--muted); text-decoration: none; display: block; }
+.toc a:hover { color: var(--text); }
+
+@media (min-width: 1060px) {
+  main.with-toc { max-width: 964px; }
+  main.with-toc.wide { max-width: 1284px; }
+  main.with-toc .page {
+    --toc-width: 210px;
+    --toc-gap: 34px;
+    margin-left: calc(var(--toc-width) + var(--toc-gap));
+  }
+  .toc {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(-1 * (var(--toc-width) + var(--toc-gap)));
+    width: var(--toc-width);
+    margin-bottom: 0;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  /* Full-height rail, sticky nav inside it: the list follows you down the page
+     but stops at the end of the page content rather than the end of the viewport. */
+  .toc nav {
+    position: sticky;
+    top: 40px;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .toc nav::-webkit-scrollbar { display: none; }
+  .toc-label { display: none; }
+  .toc ul { columns: 1; }
+  .toc li { margin-bottom: 10px; }
+  .toc li.toc-sub { display: list-item; padding-left: 12px; }
+  .toc a { color: var(--faint); }
+  .toc a.is-active { color: var(--text); }
+}
+
+/* Figures reproduced from papers. */
+figure { margin: 20px 0 24px; }
+figure img { display: block; max-width: 100%; height: auto; background: #fff; border: 1px solid var(--rule); border-radius: 4px; }
+figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
+
 /* Page furniture */
 .kicker { font-size: 12px; color: var(--faint); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px; }
 .byline { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
@@ -115,6 +170,12 @@ thead th { font-weight: 600; color: var(--muted); white-space: nowrap; }
 .argued { color: var(--part); }
 .not-addressed { color: var(--faint); }
 
+/* A post embedded in a paper page, next to the text that discusses it. */
+.post { margin: 16px 0 20px; }
+.post-n { font-size: 12px; margin-bottom: 6px; }
+.post-n a { color: var(--faint); text-decoration: none; }
+.post-n a:hover { color: var(--text); }
+
 /* Threads. Each post is the official embed markup: a plain blockquote that
    X's widget script upgrades in place. Until (or unless) it does, this is what
    shows — so it has to read well on its own. */
@@ -127,9 +188,9 @@ thead th { font-weight: 600; color: var(--muted); white-space: nowrap; }
   color: var(--faint);
   margin-bottom: 6px;
 }
-.thread blockquote.twitter-tweet { color: var(--text); border-left-color: var(--faint); }
-.thread blockquote.twitter-tweet p { font-size: 14px; }
-.thread .twitter-tweet-rendered { margin: 0 0 8px !important; }
+blockquote.twitter-tweet { color: var(--text); border-left-color: var(--faint); }
+blockquote.twitter-tweet p { font-size: 14px; }
+.twitter-tweet-rendered { margin: 0 0 8px !important; }
 .figure-note { font-size: 13px; color: var(--muted); margin-top: 8px; }
 .figure-note b { font-weight: 600; }
 

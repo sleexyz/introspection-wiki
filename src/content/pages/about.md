@@ -19,7 +19,7 @@ The wiki started from that one paper and grows outward along its citation graph.
 
 ## How pages are written
 
-Each paper page is drafted by an AI model (Claude) from the paper's full text. Where the authors posted a thread about the paper, the summary follows the thread's structure, because that is usually the authors' own densest account of what matters. The page fills in numbers and section references from the paper.
+Each paper page is drafted by an AI model (Claude) from the paper's full text. Where the authors posted a thread about the paper, the summary follows the thread: each section opens with the authors' post, embedded, and the text under it fills in numbers and section references from the paper. A thread is usually the authors' own densest account of what matters.
 
 Every page says what it was written from and whether a person has reviewed it. Until then, treat specifics as a pointer to the paper, not a substitute for it. If you find an error, [open an issue](https://github.com/sleexyz/introspection-wiki/issues).
 
@@ -72,10 +72,11 @@ Pages are static HTML and need no JavaScript. The only script on the site loads 
 
 - Citation data comes from the [Semantic Scholar](https://www.semanticscholar.org) API, with reference lists from arXiv's HTML renderings where Semantic Scholar has none.
 - Threads are embedded from X using its official embed markup. The wiki does not host images or other media from posts; the figure descriptions under each post are its own.
+- Figures are reproduced from the papers they illustrate, for commentary, and remain the property of those papers' authors. Each is captioned with the figure number it has in the paper. If you are an author and want one removed, [open an issue](https://github.com/sleexyz/introspection-wiki/issues).
 - Paper PDFs are linked, not hosted.
 
 ## License
 
-The wiki's own text is licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Quoted posts, paper titles and abstracts belong to their authors. The site's code is MIT-licensed. Both are in the [GitHub repository](https://github.com/sleexyz/introspection-wiki).
+The wiki's own text is licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Quoted posts, figures, paper titles and abstracts belong to their authors and are not covered by that license. The site's code is MIT-licensed. Both are in the [GitHub repository](https://github.com/sleexyz/introspection-wiki).
 
 Maintained by [Sean Lee](https://infinite.fun).

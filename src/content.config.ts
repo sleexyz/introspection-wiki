@@ -1,12 +1,9 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { LEVEL_VALUES, METHOD_VALUES, STANCE_VALUES, STATUS_VALUES, TIER_VALUES } from './lib/vocab.mjs';
 
-// How directly a paper bears on one of the three properties the wiki tracks.
-//   tested         it runs an experiment that measures the property
-//   argued         it claims or discusses the property without measuring it
-//   not-addressed  the property is outside what the paper does
-const level = z.enum(['tested', 'argued', 'not-addressed']);
+const level = z.enum(LEVEL_VALUES);
 
 const papers = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/papers' }),
@@ -18,9 +15,9 @@ const papers = defineCollection({
     venue: z.string().optional(),
     // seed: the paper the wiki grew from. core: about introspection itself.
     // adjacent: a neighboring question the core work leans on.
-    tier: z.enum(['seed', 'core', 'adjacent']),
+    tier: z.enum(TIER_VALUES),
     // stub: metadata and a one-line description. full: written from the full text.
-    status: z.enum(['stub', 'full']),
+    status: z.enum(STATUS_VALUES),
     // Summaries are drafted by an AI model. This flips once a person has
     // checked the page against the paper.
     reviewed: z.boolean().default(false),
@@ -45,26 +42,11 @@ const papers = defineCollection({
     evidence: z
       .object({
         reports_on: z.string(),
-        methods: z.array(
-          z.enum([
-            'behavioral',
-            'fine-tuning',
-            'self-prediction',
-            'concept-injection',
-            'patching',
-            'ablation',
-            'probing',
-            'circuit-analysis',
-            'conceptual',
-          ]),
-        ),
+        methods: z.array(z.enum(METHOD_VALUES)),
         faithfulness: level,
         grounding: level,
         privileged_access: level,
-        // supports / skeptical: the paper's own conclusion about whether models
-        // introspect. framework: it defines or proposes a test rather than
-        // reporting a result either way.
-        stance: z.enum(['supports', 'mixed', 'skeptical', 'framework']),
+        stance: z.enum(STANCE_VALUES),
         models: z.array(z.string()).default([]),
         note: z.string().optional(),
       })

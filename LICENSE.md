@@ -8,7 +8,9 @@ embed markup of third-party posts in `src/content/threads/` — is licensed unde
 
 Attribution: "LLM Introspection Wiki, https://introspection.infinite.fun".
 
-Quoted posts, paper titles and paper abstracts belong to their authors.
+Quoted posts, paper titles and paper abstracts belong to their authors. So do the
+figures in `public/figures/`, which are reproduced from the papers they
+illustrate and are not covered by this license.
 
 ## Code
 

@@ -21,7 +21,7 @@ const jsonld = {
 };
 ---
 
-<Base title={d.title} description={d.summary} path={`/threads/${thread.id}`} jsonld={jsonld}>
+<Base title={d.title} description={d.summary} path={`/threads/${thread.id}`} jsonld={jsonld} embeds>
   <article>
     <p class="kicker">Thread</p>
     <h1>{d.title}</h1>
@@ -57,6 +57,4 @@ const jsonld = {
       }
     </ol>
   </article>
-  <!-- Upgrades the blockquotes above into X's full embeds. The page reads without it. -->
-  <script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </Base>

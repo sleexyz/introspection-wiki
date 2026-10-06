@@ -3,10 +3,17 @@ import Base from '../layouts/Base.astro';
 import { SITE, TIERS, citeAs, frontier, loadWiki } from '../lib/wiki';
 
 const wiki = await loadWiki();
+const headings = [
+  ...TIERS.filter(({ tier }) => wiki.papers.some((p) => p.data.tier === tier)).map(({ tier, label }) => ({ depth: 2, slug: tier, text: label })),
+  { depth: 2, slug: 'concepts', text: 'Concepts' },
+  { depth: 2, slug: 'threads', text: 'Threads' },
+  { depth: 2, slug: 'frontier', text: 'Frontier' },
+  { depth: 2, slug: 'for-language-models', text: 'For language models' },
+];
 const jsonld = { '@type': 'WebSite', name: SITE.name, url: SITE.url, description: SITE.description, license: 'https://creativecommons.org/licenses/by/4.0/' };
 ---
 
-<Base path="/" jsonld={jsonld}>
+<Base path="/" jsonld={jsonld} headings={headings}>
   <h1>{SITE.name}</h1>
   <p class="lede">
     Papers and resources on introspection in large language models: whether a model can report on its own internal
@@ -24,7 +31,7 @@ const jsonld = { '@type': 'WebSite', name: SITE.name, url: SITE.url, description
       return (
         list.length > 0 && (
           <section>
-            <h2>{label}</h2>
+            <h2 id={tier}>{label}</h2>
             <p class="note">{blurb}</p>
             <ul class="entries">
               {list.map((p) => (
@@ -44,7 +51,7 @@ const jsonld = { '@type': 'WebSite', name: SITE.name, url: SITE.url, description
     })
   }
 
-  <h2>Concepts</h2>
+  <h2 id="concepts">Concepts</h2>
   <ul class="entries">
     {
       wiki.concepts.map((c) => (
@@ -56,7 +63,7 @@ const jsonld = { '@type': 'WebSite', name: SITE.name, url: SITE.url, description
     }
   </ul>
 
-  <h2>Threads</h2>
+  <h2 id="threads">Threads</h2>
   <ul class="entries">
     {
       wiki.threads.map((t) => (
@@ -69,13 +76,13 @@ const jsonld = { '@type': 'WebSite', name: SITE.name, url: SITE.url, description
     }
   </ul>
 
-  <h2>Frontier</h2>
+  <h2 id="frontier">Frontier</h2>
   <p>
     <a href="/frontier">{frontier.candidates.length} candidate papers</a> sit one citation away from the pages above and
     have not been added yet.
   </p>
 
-  <h2>For language models</h2>
+  <h2 id="for-language-models">For language models</h2>
   <p>
     Every page has a plain-markdown twin at the same URL plus <code>.md</code>, and returns it when asked with
     <code>Accept: text/markdown</code>. <a href="/llms.txt">llms.txt</a> indexes the site;
