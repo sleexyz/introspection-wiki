@@ -97,7 +97,8 @@ A link to a page that does not exist fails the build.
 ## Drawing the experiments
 
 Every paper page has a section called "The experiments", placed after the
-walk-through (the thread section, or "What the paper does"). It holds a map and
+walk-through: after the thread section and "What the paper adds beyond the
+thread", or after "What the paper does" when there is no thread. It holds a map and
 then one diagram per experiment under its own `###` heading. Both use fixed
 notations, explained to readers at `/diagrams` (`src/content/pages/diagrams.md`).
 Do not draw an experiment any other way: the value is that a reader who has
