@@ -3,7 +3,7 @@ title: "Looking Inward: Language Models Can Learn About Themselves by Introspect
 authors: ["Felix J. Binder", "James Chua", "Tomek Korbak", "Henry Sleight", "John Hughes", "Robert Long", "Ethan Perez", "Miles Turpin", "Owain Evans"]
 year: 2024
 date: 2024-10-17
-venue: "arXiv"
+venue: "ICLR 2025"
 tier: core
 status: full
 reviewed: false

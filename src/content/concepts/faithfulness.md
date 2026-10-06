@@ -25,6 +25,10 @@ The comparison is to what the model *does*, not to what it was trained to do. A 
 
 A model can do a task well and describe it badly. Atkinson et al.'s Qwen3-32B checkpoint at step 1000 has a decision performance of 0.82 and a faithfulness of about 0.25. Sherburn et al. find stating a classification rule much harder than following it. Plunkett et al. find a correlation of about 0.5 between stated and revealed weights before any training on reports.
 
+## When the report is trained to be false
+
+[Cywiński et al. (2025)](/papers/cywinski2025-eliciting-secret-knowledge) build the opposite case on purpose: models fine-tuned to act on a piece of knowledge while denying they have it. These are unfaithful self-reports with a known ground truth, used to test whether an outside auditor can recover what the model will not say.
+
 ## A different sense of the word
 
 "Faithfulness" is also used for whether an explanation, such as a chain of thought or an identified circuit, reflects the computation that produced an output. [Lindsey et al. (2025)](/papers/lindsey2025-biology-of-llm) compare a model's account of its computation with the circuits they trace, and find it matching in one case and diverging in others. The two senses overlap but are not the same. Pages here use the word for self-report unless they say otherwise.

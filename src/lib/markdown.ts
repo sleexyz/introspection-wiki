@@ -11,6 +11,7 @@ import {
   loadWiki,
   paperLinks,
   statusLine,
+  venueLine,
   type Candidate,
   type Concept,
   type Paper,
@@ -66,7 +67,7 @@ export async function paperMarkdown(p: Paper): Promise<string> {
   const out: string[] = [`# ${d.title}`, '', `> ${d.summary}`, ''];
 
   out.push(`- Authors: ${d.authors.join(', ')}`);
-  out.push(`- Published: ${[d.venue, d.date ? isoDate(d.date) : !d.venue?.includes(String(d.year)) && d.year].filter(Boolean).join(', ')}`);
+  out.push(`- Published: ${venueLine(p)}${d.date ? ` (first posted ${isoDate(d.date)})` : ''}`);
   out.push(`- Links: ${paperLinks(p).map((l) => `[${l.label}](${l.href})`).join(' · ')}`);
   out.push(`- Tier: ${d.tier}`);
   out.push(`- Page status: ${statusLine(p)}`);

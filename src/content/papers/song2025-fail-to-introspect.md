@@ -3,7 +3,7 @@ title: "Language Models Fail to Introspect About Their Knowledge of Language"
 authors: ["Siyuan Song", "Jennifer Hu", "Kyle Mahowald"]
 year: 2025
 date: 2025-03-10
-venue: "arXiv"
+venue: "COLM 2025"
 tier: core
 status: full
 reviewed: false

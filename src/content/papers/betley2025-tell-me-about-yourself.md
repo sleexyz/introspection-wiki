@@ -3,7 +3,7 @@ title: "Tell me about yourself: LLMs are aware of their learned behaviors"
 authors: ["Jan Betley", "Xuchan Bao", "Martín Soto", "Anna Sztyber-Betley", "James Chua", "Owain Evans"]
 year: 2025
 date: 2025-01-19
-venue: "arXiv"
+venue: "ICLR 2025"
 tier: core
 status: full
 reviewed: false

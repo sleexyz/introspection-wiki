@@ -7,7 +7,10 @@ added: 2026-10-06
 updated: 2026-10-06
 ---
 
-Privileged access is a stricter requirement than a causal link. [Song et al. (2025b)](/papers/song2025-privileged-self-access) propose it as the defining feature of introspection: a process that tells a model about its internal states more reliably than any process of equal or lower computational cost available to a third party. Their target is the lightweight definition of [Comsa & Shanahan (2025)](/papers/comsa2025-speak-of-introspection), under which a model inferring its sampling temperature from text it has just written would count.
+Privileged access is a stricter requirement than a causal link. [Song et al. (2025b)](/papers/song2025-privileged-self-access) propose it as the defining feature of introspection:
+
+> introspection in AI is any process which yields information about internal states of the AI through a process that is more reliable than any process with equal or lower computational cost available to a third party without special knowledge of the situation.
+ Their target is the lightweight definition of [Comsa & Shanahan (2025)](/papers/comsa2025-speak-of-introspection), under which a model inferring its sampling temperature from text it has just written would count.
 
 A paper can test [grounding](/concepts/grounding) without testing privileged access, and the evidence cards on this wiki record the two separately.
 

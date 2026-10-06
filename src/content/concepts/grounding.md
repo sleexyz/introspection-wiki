@@ -18,7 +18,7 @@ Faithfulness can be checked from the outside by comparing the report with behavi
 ## How it has been tested
 
 - **Plant a known state and ask about it.** [Concept injection](/concepts/concept-injection) adds a known representation to the model's activations and checks whether the report changes with it.
-- **Look for a shared mechanism.** Atkinson et al. measure whether the same weights matter for performing a task and for describing it. The test does not read the report.
+- **Look for a shared mechanism.** Atkinson et al. measure whether the same weights matter for performing a task and for describing it. The test does not read the report. Sherburn et al. had suggested the idea in an appendix: "shared attribution among articulation and classification tasks would be suggestive of faithful explanations".
 - **Compare the report with a traced circuit.** [Lindsey et al. (2025)](/papers/lindsey2025-biology-of-llm) find a model describing carry-the-one addition while computing the sum another way.
 - **Find the mechanism behind a self-description.** [Wang et al. (2025)](/papers/wang2025-mechanistic-oocr) show that a fine-tune which makes a model state a learned behavior mostly adds a single constant vector.
 

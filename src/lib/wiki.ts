@@ -143,6 +143,15 @@ export function primaryLink(p: Paper): string | undefined {
   return l.url ?? l.project ?? (l.arxiv ? `https://arxiv.org/abs/${l.arxiv}` : l.doi ? `https://doi.org/${l.doi}` : l.pdf);
 }
 
+const NAMES_A_YEAR = /\b(?:19|20)\d{2}\b/;
+
+/** "arXiv 2025", or just "ICLR 2025" when the venue already names its year. */
+export function venueLine(p: Paper): string {
+  const { venue, year } = p.data;
+  if (!venue) return String(year);
+  return NAMES_A_YEAR.test(venue) ? venue : `${venue} ${year}`;
+}
+
 export function statusLine(p: Paper): string {
   if (p.data.status === 'stub') return 'Stub: no summary yet';
   return p.data.reviewed ? 'Summary reviewed by a person' : 'AI-drafted summary, not yet reviewed by a person';
@@ -163,12 +172,13 @@ export const EVIDENCE_LABELS = {
 export function bibtex(p: Paper): string {
   const { title, authors, year, venue, links } = p.data;
   const key = p.id.split('-')[0];
-  const article = venue && !/arxiv|lesswrong|thread/i.test(venue);
+  const proceedings = Boolean(venue && NAMES_A_YEAR.test(venue));
+  const article = Boolean(venue) && !proceedings && !/arxiv|lesswrong|thread/i.test(venue!);
   const fields: [string, string | undefined][] = [
     ['title', `{${title}}`],
     ['author', authors.join(' and ')],
     ['year', String(year)],
-    [article ? 'journal' : 'howpublished', venue],
+    [proceedings ? 'booktitle' : article ? 'journal' : 'howpublished', venue],
     ['eprint', links.arxiv],
     ['archivePrefix', links.arxiv && 'arXiv'],
     ['doi', links.doi],
@@ -178,5 +188,5 @@ export function bibtex(p: Paper): string {
     .filter(([, v]) => v)
     .map(([k, v]) => `  ${k} = {${v}}`)
     .join(',\n');
-  return `@${article ? 'article' : 'misc'}{${key},\n${body}\n}`;
+  return `@${proceedings ? 'inproceedings' : article ? 'article' : 'misc'}{${key},\n${body}\n}`;
 }

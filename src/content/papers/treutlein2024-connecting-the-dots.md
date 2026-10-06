@@ -3,7 +3,7 @@ title: "Connecting the Dots: LLMs can Infer and Verbalize Latent Structure from 
 authors: ["Johannes Treutlein", "Dami Choi", "Jan Betley", "Cem Anil", "Samuel Marks", "Roger Baker Grosse", "Owain Evans"]
 year: 2024
 date: 2024-06-20
-venue: "arXiv"
+venue: "NeurIPS 2024"
 tier: adjacent
 status: full
 reviewed: false
