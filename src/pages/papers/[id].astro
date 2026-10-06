@@ -1,5 +1,6 @@
 ---
 import { render } from 'astro:content';
+import PaperLink from '../../components/PaperLink.astro';
 import Base from '../../layouts/Base.astro';
 import { EVIDENCE_LABELS, bibtex, citeAs, isoDate, loadWiki, paperLinks, primaryLink, statusLine, venueLine, type Paper } from '../../lib/wiki';
 
@@ -154,7 +155,7 @@ const jsonld = {
           <ul class="entries">
             {cites.map((p) => (
               <li>
-                <a href={`/papers/${p.id}`}>{citeAs(p)}</a> <span class="meta">{p.data.title}</span>
+                <PaperLink paper={p}>{citeAs(p)}</PaperLink> <span class="meta">{p.data.title}</span>
                 <span class="desc">{p.data.summary}</span>
               </li>
             ))}
@@ -170,7 +171,7 @@ const jsonld = {
           <ul class="entries">
             {citedBy.map((p) => (
               <li>
-                <a href={`/papers/${p.id}`}>{citeAs(p)}</a> <span class="meta">{p.data.title}</span>
+                <PaperLink paper={p}>{citeAs(p)}</PaperLink> <span class="meta">{p.data.title}</span>
               </li>
             ))}
           </ul>

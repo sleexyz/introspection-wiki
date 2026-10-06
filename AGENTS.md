@@ -29,7 +29,9 @@ Cloudflare Worker serves them and returns markdown to clients that ask for it.
   edited by hand and survive a recrawl.
 - `public/figures/<paper-id>/`: figures cut from papers by `scripts/figure.mjs`.
 - `src/lib/remark-wiki.mjs`: the `::post` and figure conventions used in page
-  bodies.
+  bodies. It also gives a body link to a stub the class that colors it red.
+- `src/components/PaperLink.astro`: a link to a paper page, red when the page is
+  a stub. Templates link to papers through it.
 - `src/lib/markdown.ts`: the markdown twin of every page. A new kind of page
   needs a twin here and a `.md.ts` route beside its `.astro` route.
 - `src/lib/vocab.mjs`: the allowed values for tier, status, methods, evidence

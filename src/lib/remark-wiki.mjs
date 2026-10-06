@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 /**
- * Two block-level conventions for page bodies.
+ * Two block-level conventions for page bodies, and one for links.
  *
  * 1. A post from an imported thread, embedded where it is discussed:
  *
@@ -21,12 +21,35 @@ import path from 'node:path';
  *
  * Both are plain lines of text, so the markdown twin of a page can rewrite the
  * same source for a reader that only gets text — see expandPosts in markdown.ts.
+ *
+ * 3. A link to a paper page that is still a stub gets class="stub", which
+ *    colors it red. Templates do the same for their own links with PaperLink.
  */
 
 const ROOT = path.resolve(import.meta.dirname, '../..');
 export const POST_LINE = /^::post[ \t]+([a-z0-9-]+)[ \t]+(\d+)[ \t]*$/;
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+const PAPER_LINK = /^\/papers\/([a-z0-9-]+)(?:#.*)?$/;
+
+/** Read from the target's frontmatter each time, like post(), so nothing here outlives an edit. */
+function isStub(paperId) {
+  const file = path.join(ROOT, 'src/content/papers', `${paperId}.md`);
+  if (!fs.existsSync(file)) return false;
+  const frontmatter = fs.readFileSync(file, 'utf8').split(/^---[ \t]*$/m)[1] ?? '';
+  return /^status:[ \t]*["']?stub["']?[ \t]*$/m.test(frontmatter);
+}
+
+function markStubLinks(node) {
+  if (node.type === 'link') {
+    const match = node.url.match(PAPER_LINK);
+    if (match && isStub(match[1])) {
+      node.data = { ...node.data, hProperties: { ...node.data?.hProperties, className: ['stub'] } };
+    }
+  }
+  node.children?.forEach(markStubLinks);
+}
 
 function post(threadId, n) {
   const file = path.join(ROOT, 'src/content/threads', `${threadId}.json`);
@@ -62,6 +85,7 @@ function figure({ url, alt, title }) {
 
 export default function remarkWiki() {
   return (tree) => {
+    markStubLinks(tree);
     tree.children = tree.children.map((node) => {
       if (node.type !== 'paragraph' || node.children.length !== 1) return node;
       const [only] = node.children;

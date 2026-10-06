@@ -1,5 +1,6 @@
 ---
 import { render } from 'astro:content';
+import PaperLink from '../../components/PaperLink.astro';
 import Base from '../../layouts/Base.astro';
 import { citeAs, loadWiki, type Concept } from '../../lib/wiki';
 
@@ -32,7 +33,7 @@ const jsonld = { '@type': 'DefinedTerm', name: d.title, description: d.summary, 
           <ul class="entries">
             {papers.map((p) => (
               <li>
-                <a href={`/papers/${p.id}`}>{citeAs(p)}</a> <span class="meta">{p.data.title}</span>
+                <PaperLink paper={p}>{citeAs(p)}</PaperLink> <span class="meta">{p.data.title}</span>
                 <span class="desc">{p.data.summary}</span>
               </li>
             ))}

@@ -2,14 +2,14 @@
 dev:
     npx astro dev
 
-# The rm: Astro caches each page's rendered HTML keyed by that page's own
-# source. A paper page also depends on the thread it embeds and on the markdown
-# plugin, and a change to either alone would not invalidate it.
+# The --force: Astro caches each page's rendered HTML keyed by that page's own
+# source. A page also depends on the threads it embeds, on whether the papers it
+# links to are stubs, and on the markdown plugin, and a change to any of those
+# alone would not invalidate it.
 
 # Production build into dist/.
 build:
-    rm -f .astro/data-store.json
-    npx astro build
+    npx astro build --force
 
 # Build, then serve through the real Worker — the only way to exercise the
 # markdown negotiation locally (try: curl -H 'Accept: text/markdown' localhost:8787/).

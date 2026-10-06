@@ -12,6 +12,10 @@
   --wash: #fafafa;
   --yes: #1a7f37;
   --part: #8a6100;
+  --stub: #bf3c2c;
+  --stub-hover: #9f3526;
+  --stub-visited: #9f5555;
+  --stub-visited-hover: #854848;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -24,6 +28,10 @@
     --wash: #1c1c1c;
     --yes: #5fbf7a;
     --part: #d4a94a;
+    --stub: #fd7865;
+    --stub-hover: #fea898;
+    --stub-visited: #c99391;
+    --stub-visited-hover: #dcb5b3;
   }
 }
 
@@ -45,6 +53,13 @@ main.wide { max-width: 1040px; }
 a { color: var(--text); text-underline-offset: 2px; }
 a:hover { color: var(--muted); }
 a:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+
+/* A link to a stub page, in the colors Wikipedia gives a link to a page that
+   has not been written. */
+a.stub { color: var(--stub); }
+a.stub:visited { color: var(--stub-visited); }
+a.stub:hover { color: var(--stub-hover); }
+a.stub:visited:hover { color: var(--stub-visited-hover); }
 
 h1 { font-size: 20px; font-weight: 600; line-height: 1.35; margin-bottom: 4px; color: var(--strong); text-wrap: balance; }
 h2 { font-size: 16px; font-weight: 600; margin-top: 32px; margin-bottom: 8px; color: var(--text); }

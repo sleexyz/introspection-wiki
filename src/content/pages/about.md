@@ -23,7 +23,7 @@ Each paper page is drafted by an AI model (Claude) from the paper's full text. W
 
 Every page says what it was written from and whether a person has reviewed it. Until then, treat specifics as a pointer to the paper, not a substitute for it. If you find an error, [open an issue](https://github.com/sleexyz/introspection-wiki/issues).
 
-A page marked *stub* has only bibliographic details and a one-line description.
+A page marked *stub* has only bibliographic details and a one-line description. On the HTML pages, a link to a stub is red.
 
 ## Tiers
 

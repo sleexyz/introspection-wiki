@@ -1,0 +1,13 @@
+---
+// A link to a paper page. A stub gets the class that colors it red, so a
+// reader can tell before following it that there is no summary behind it.
+import type { Paper } from '../lib/wiki';
+
+interface Props {
+  paper: Paper;
+}
+
+const { paper } = Astro.props;
+---
+
+<a href={`/papers/${paper.id}`} class:list={{ stub: paper.data.status === 'stub' }}><slot /></a>

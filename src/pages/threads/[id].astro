@@ -1,4 +1,5 @@
 ---
+import PaperLink from '../../components/PaperLink.astro';
 import Base from '../../layouts/Base.astro';
 import { isoDate, loadWiki, longDate, type Thread } from '../../lib/wiki';
 
@@ -32,7 +33,7 @@ const jsonld = {
     {
       papers.map((p) => (
         <p class="byline">
-          About: <a href={`/papers/${p.id}`}>{p.data.title}</a>
+          About: <PaperLink paper={p}>{p.data.title}</PaperLink>
         </p>
       ))
     }

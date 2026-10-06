@@ -1,4 +1,5 @@
 ---
+import PaperLink from '../components/PaperLink.astro';
 import Base from '../layouts/Base.astro';
 import { EVIDENCE_LABELS, citeAs, loadWiki } from '../lib/wiki';
 
@@ -33,7 +34,7 @@ const wiki = await loadWiki();
             return (
               <tr>
                 <td>
-                  <a href={`/papers/${p.id}`}>{citeAs(p)}</a>
+                  <PaperLink paper={p}>{citeAs(p)}</PaperLink>
                   <br />
                   <span class="note">{p.data.title}</span>
                 </td>

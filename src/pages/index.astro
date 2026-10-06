@@ -1,4 +1,5 @@
 ---
+import PaperLink from '../components/PaperLink.astro';
 import Base from '../layouts/Base.astro';
 import { SITE, TIERS, citeAs, frontier, loadWiki } from '../lib/wiki';
 
@@ -36,7 +37,7 @@ const jsonld = { '@type': 'WebSite', name: SITE.name, url: SITE.url, description
             <ul class="entries">
               {list.map((p) => (
                 <li>
-                  <a href={`/papers/${p.id}`}>{p.data.title}</a>{' '}
+                  <PaperLink paper={p}>{p.data.title}</PaperLink>{' '}
                   <span class="meta">
                     {citeAs(p)}
                     {p.data.status === 'stub' && ' · stub'}
