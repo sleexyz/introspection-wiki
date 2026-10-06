@@ -21,6 +21,10 @@ import { ARROW, esc, inline, untoned } from './experiment.mjs';
  *       - { from: f1, to: e2, why: So what changed inside the model? }
  *     ```
  *
+ * An experiment node can carry a `sketch`: a small schematic of what the
+ * experiment does, built from three shapes (see sketchSvg). A finding node can
+ * carry a `figure`: the paper's own key graph for that result.
+ *
  * Nodes are drawn top to bottom in the order given, and every arrow points
  * down the page. An arrow between neighbors is a short one between them, with
  * its `why` beside it. An arrow that skips over other nodes runs down a rail in
@@ -38,7 +42,10 @@ export const NODE_KINDS = /** @type {const} */ ({
 export const MAP_FENCE = /^```map\n([\s\S]*?)\n```$/gm;
 
 /**
- * @typedef {{ id: string, kind: keyof typeof NODE_KINDS, n?: number, title?: string, text?: string, value?: string, href?: string }} Node
+ * @typedef {{ src: string, alt: string, caption?: string }} Figure
+ * @typedef {{ alt: string, rows: any[] }} Sketch
+ * @typedef {{ id: string, kind: keyof typeof NODE_KINDS, n?: number, title?: string, text?: string, value?: string, href?: string,
+ *   sketch?: Sketch, figure?: Figure }} Node
  * @typedef {{ from: number, to: number, why?: string, motivates: boolean }} Edge
  * @typedef {{ nodes: Node[], edges: Edge[], symbols: Record<string, string> }} ExperimentMap
  */
@@ -57,6 +64,14 @@ export function parseMap(source) {
     if (index.has(node.id)) fail(`two nodes share the id "${node.id}"`);
     if (!(node.kind in NODE_KINDS)) fail(`node "${node.id}" has kind "${node.kind}"; must be one of ${Object.keys(NODE_KINDS).join(', ')}`);
     if (!node.title && !node.text) fail(`node "${node.id}" is empty`);
+    if (node.figure && !(node.figure.src && node.figure.alt)) fail(`the figure on node "${node.id}" needs a src and alt text`);
+    if (node.sketch) {
+      if (!node.sketch.alt) fail(`the sketch on node "${node.id}" needs alt text`);
+      for (const r of node.sketch.rows ?? []) {
+        const type = SKETCH_ROWS.find((t) => t in r);
+        if (!type) fail(`the sketch on node "${node.id}" has a row that is not one of ${SKETCH_ROWS.join(', ')}`);
+      }
+    }
     index.set(node.id, i);
   });
 
@@ -70,6 +85,85 @@ export function parseMap(source) {
   });
 
   return /** @type {ExperimentMap} */ ({ nodes: raw.nodes, edges, symbols: raw.symbols ?? {} });
+}
+
+/**
+ * A sketch is a short stack of rows, each one of three shapes, drawn small and
+ * in outline so that it hints at the experiment without competing with it:
+ *
+ *   strip  a bar divided into ranges: layers trained or frozen, kept or removed.
+ *          { n: 40, parts: [{ to: 20, style: on, label: trained }, { to: 40, style: off, label: frozen }], cut: 20 }
+ *   axis   a line with marked points: checkpoints along training, values swept.
+ *          { label: training steps, marks: [{ at: 0.22, label: "1000", tone: unfaithful }] }
+ *   bars   two small profiles, one above the line and one below, to show whether
+ *          they line up. { up: [1, 3, 9, 2], down: [1, 3, 8, 2], label: same weights, tone: faithful }
+ *
+ * A row may also be `note`: a line of small text. Colors follow the diagrams:
+ * a `track` or a `tone` on a part, a mark or a row.
+ */
+const SKETCH_ROWS = /** @type {const} */ (['strip', 'axis', 'bars', 'note']);
+const SK_W = 168;
+
+/** @param {Sketch} sketch */
+function sketchSvg(sketch) {
+  const attrs = (/** @type {any} */ o) => (o?.tone ? ` data-tone="${o.tone}"` : '') + (o?.track ? ` data-track="${o.track}"` : '');
+  const f = (/** @type {number} */ n) => Math.round(n * 10) / 10;
+  const text = (/** @type {number} */ x, /** @type {number} */ y, /** @type {string} */ s, /** @type {string} */ anchor = 'start', extra = '') =>
+    `<text class="sk-text" x="${f(x)}" y="${f(y)}" text-anchor="${anchor}"${extra}>${esc(s)}</text>`;
+  let y = 2;
+  const out = [];
+  for (const row of sketch.rows ?? []) {
+    if (row.note) {
+      out.push(text(0, y + 9, typeof row.note === 'string' ? row.note : row.note.text, 'start', attrs(row.note)));
+      y += 14;
+    } else if (row.strip) {
+      const { n, parts = [], cut, label } = row.strip;
+      const x = (/** @type {number} */ i) => (i / n) * SK_W;
+      let from = 0;
+      for (const part of parts) {
+        const w = x(part.to) - x(from);
+        out.push(`<rect class="sk-part sk-${part.style ?? 'on'}" x="${f(x(from) + 0.5)}" y="${y + 0.5}" width="${f(w - 1)}" height="9" rx="1.5"${attrs(part)}/>`);
+        if (part.label) out.push(text(x(from) + w / 2, y + 20, part.label, 'middle', attrs(part)));
+        from = part.to;
+      }
+      if (cut !== undefined) out.push(`<path class="sk-cut" d="M${f(x(cut))} ${y - 2}v14"/>`);
+      y += parts.some((/** @type {any} */ p) => p.label) ? 26 : 14;
+      if (label) {
+        out.push(text(0, y + 7, label));
+        y += 13;
+      }
+    } else if (row.axis) {
+      const { marks = [], label } = row.axis;
+      out.push(`<path class="sk-axis" d="M0 ${y + 5}H${SK_W - 5}"/><path class="sk-axis" d="M${SK_W - 8} ${y + 2}l4 3-4 3"/>`);
+      for (const mark of marks) {
+        const mx = mark.at * (SK_W - 10);
+        out.push(`<circle class="sk-dot" cx="${f(mx)}" cy="${y + 5}" r="3.2"${attrs(mark)}/>`);
+        if (mark.label) out.push(text(mx, y + 19, mark.label, 'middle', attrs(mark)));
+      }
+      y += 24;
+      if (label) {
+        out.push(text(0, y + 7, label));
+        y += 13;
+      }
+    } else if (row.bars) {
+      const { up = [], down = [], label } = row.bars;
+      const count = Math.max(up.length, down.length);
+      const peak = Math.max(...up, ...down, 1);
+      const bw = Math.min(9, (SK_W * 0.62) / count);
+      const mid = y + 13;
+      up.forEach((/** @type {number} */ v, /** @type {number} */ i) => {
+        const h = (v / peak) * 12;
+        out.push(`<rect class="sk-bar" x="${f(i * bw)}" y="${f(mid - h)}" width="${f(bw - 1.5)}" height="${f(h)}" data-track="behavior"/>`);
+      });
+      down.forEach((/** @type {number} */ v, /** @type {number} */ i) => {
+        const h = (v / peak) * 12;
+        out.push(`<rect class="sk-bar" x="${f(i * bw)}" y="${mid + 1}" width="${f(bw - 1.5)}" height="${f(h)}" data-track="report"/>`);
+      });
+      if (label) out.push(text(count * bw + 6, mid + 3, label, 'start', attrs(row.bars)));
+      y += 30;
+    }
+  }
+  return `<svg class="sk" viewBox="0 0 ${SK_W} ${y}" width="${SK_W}" height="${y}" role="img" aria-label="${esc(sketch.alt)}">${out.join('')}</svg>`;
 }
 
 const nodeName = (/** @type {Node} */ node, /** @type {ExperimentMap} */ m) => {
@@ -119,13 +213,23 @@ export function mapHtml(m) {
         .join('');
       const title = node.title ? (node.href ? `<a href="${esc(node.href)}">${t(node.title)}</a>` : t(node.title)) : '';
       const label = node.kind === 'experiment' ? `Experiment ${node.n ?? ''}` : NODE_KINDS[node.kind];
-      return (
-        `<div class="xm-node xm-${node.kind}" style="grid-column: ${rails + 1}; grid-row: ${row(i)}">` +
+      // A sketch sits beside an experiment's words; a figure sits under a
+      // finding's, since a graph needs the width.
+      const words =
         `<div class="xp-kind">${esc(label)}</div>` +
         (title ? `<div class="xm-title">${title}</div>` : '') +
         (node.value ? `<div class="xp-value">${t(node.value)}</div>` : '') +
         (node.text ? `<div class="xm-text">${t(node.text)}</div>` : '') +
-        arrivals +
+        arrivals;
+      const figure = node.figure
+        ? `<a class="xm-figure" href="${esc(node.figure.src)}"><img src="${esc(node.figure.src)}" alt="${esc(node.figure.alt)}" loading="lazy">` +
+          (node.figure.caption ? `<span class="xm-figure-caption">${esc(node.figure.caption)}</span>` : '') +
+          `</a>`
+        : '';
+      return (
+        `<div class="xm-node xm-${node.kind}${node.sketch ? ' xm-with-sketch' : ''}" style="grid-column: ${rails + 1}; grid-row: ${row(i)}">` +
+        (node.sketch ? `<div class="xm-words">${words}</div><div class="xm-sketch">${sketchSvg(node.sketch)}</div>` : words) +
+        figure +
         `</div>`
       );
     })
@@ -160,6 +264,8 @@ export function mapText(m) {
   m.nodes.forEach((node, i) => {
     const head = node.kind === 'experiment' ? `Experiment ${node.n ?? ''}` : NODE_KINDS[node.kind];
     out.push(`- **${head}.** ${[node.title, node.value, node.text].filter(Boolean).join('. ')}`);
+    if (node.sketch) out.push(`  - Sketch: ${node.sketch.alt}`);
+    if (node.figure) out.push(`  - ![${node.figure.alt}](${node.figure.src}${node.figure.caption ? ` "${node.figure.caption}"` : ''})`);
     for (const e of m.edges.filter((edge) => edge.from === i)) {
       out.push(`  - ${e.motivates ? 'motivated' : 'showed'} → ${name(m.nodes[e.to])}${e.why ? ` ("${e.why}")` : ''}`);
     }

@@ -113,6 +113,15 @@ and carries a `why`: the question the result raised, or what it supplied. Take
 the motivations from the paper's own transitions ("to pursue this hypothesis,
 we turn to…"). An experiment motivated by two findings gets both edges.
 
+Give each experiment node a `sketch`: a small schematic of what the experiment
+does, built only from the shapes the renderer knows (`strip` for layers or
+items that are on, off, kept or removed; `axis` for points along a run or a
+sweep; `bars` for two profiles that do or do not line up; `note` for a line of
+text). It shows the manipulation, not the result, and it needs `alt` text.
+Give each finding node a `figure` when the paper has a graph of that result:
+cut it with `just figure`, and write `alt` text that carries what it shows and
+a `caption` with its figure number.
+
 **An experiment diagram** (a fenced block tagged `experiment`,
 `src/lib/experiment.mjs`) follows these rules:
 

@@ -172,16 +172,103 @@ The same five experiments again, drawn as diagrams. The map shows how each led t
 ```map
 nodes:
   - { id: q, kind: question, text: "A model's claims about itself cannot be checked from its behavior alone. Is there something inside the model that separates a report that reads off the real process from one that only happens to be right?" }
-  - { id: e1, kind: experiment, n: 1, title: "Train on decisions, then ask about them", text: "Can a model trained only to decide also state how it decides?", href: "#1-train-on-decisions-then-ask-about-them" }
-  - { id: f1, kind: finding, value: "{unfaithful|0.25} → {faithful|0.83}", text: "Yes, but late. Faithfulness arrives long after the task is learned, which leaves two checkpoints that behave alike: an {unfaithful|unfaithful} one at step 1000 and a {faithful|faithful} one at step 3000." }
-  - { id: e2, kind: experiment, n: 2, title: "Find where each checkpoint keeps its preferences", text: "Remove adapter layers and see when behavior breaks.", href: "#2-find-where-each-checkpoint-keeps-its-preferences" }
-  - { id: f2, kind: finding, value: "5 to 6 layers earlier", text: "The {faithful|faithful} checkpoint keeps its preference information earlier in the network." }
-  - { id: e3, kind: experiment, n: 3, title: "Force the preferences into early layers", text: "Train only the first k layers of a model that never reports faithfully.", href: "#3-force-the-preferences-into-early-layers" }
-  - { id: f3, kind: finding, value: "0.74", text: "Faithfulness, once training is confined to the first 20 layers. It falls sharply when later layers are trained too." }
-  - { id: e4, kind: experiment, n: 4, title: "Tell the two kinds of model apart without reading the report", text: "Score every adapter weight for deciding and for reporting, and compare the two.", href: "#4-tell-the-two-kinds-of-model-apart-without-reading-the-report" }
-  - { id: f4, kind: finding, value: "{unfaithful|0.08} vs {faithful|0.34}", text: "Attribution similarity. {faithful|Faithful} models use more of the same weights for both tasks." }
-  - { id: e5, kind: experiment, n: 5, title: "Check the attribution scores by intervening", text: "Switch on only the weights that matter for one task and test the other.", href: "#5-check-the-attribution-scores-by-intervening" }
-  - { id: f5, kind: finding, value: "8 to 12× fewer", text: "Weight matrices needed by {faithful|faithful} adapters to recover the same share of the effect." }
+  - id: e1
+    kind: experiment
+    n: 1
+    title: "Train on decisions, then ask about them"
+    text: "Can a model trained only to decide also state how it decides?"
+    href: "#1-train-on-decisions-then-ask-about-them"
+    sketch:
+      alt: "A training run on decisions only, with two checkpoints marked: step 1000, which becomes the unfaithful model, and step 3000, which becomes the faithful one."
+      rows:
+        - axis:
+            label: "training on decisions only"
+            marks:
+              - { at: 0.24, label: "step 1000", tone: unfaithful }
+              - { at: 0.72, label: "step 3000", tone: faithful }
+  - id: f1
+    kind: finding
+    value: "{unfaithful|0.25} → {faithful|0.83}"
+    text: "Yes, but late. Faithfulness arrives long after the task is learned, which leaves two checkpoints that behave alike: an {unfaithful|unfaithful} one at step 1000 and a {faithful|faithful} one at step 3000."
+    figure:
+      src: "/figures/atkinson2026-identifying-introspection/fig1b-training.png"
+      caption: "Figure 1b of the paper."
+      alt: "Training curves for Qwen3-32B trained only on decisions. Decision performance rises quickly and levels off near 0.9, while faithfulness dips, then climbs late. Step 1000 is marked as the unfaithful model, good at the task and bad at introspection, and step 3000 as the faithful model, good at both."
+  - id: e2
+    kind: experiment
+    n: 2
+    title: "Find where each checkpoint keeps its preferences"
+    text: "Remove adapter layers and see when behavior breaks."
+    href: "#2-find-where-each-checkpoint-keeps-its-preferences"
+    sketch:
+      alt: "Two bars standing for the adapter's 64 layers. In the first, the layers before a cut are removed; in the second, the layers after it."
+      rows:
+        - strip: { n: 64, cut: 40, parts: [{ to: 40, style: off, label: "removed" }, { to: 64, style: on, label: "kept" }] }
+        - strip: { n: 64, cut: 40, parts: [{ to: 40, style: on, label: "kept" }, { to: 64, style: off, label: "removed" }] }
+  - id: f2
+    kind: finding
+    value: "5 to 6 layers earlier"
+    text: "The {faithful|faithful} checkpoint keeps its preference information earlier in the network."
+    figure:
+      src: "/figures/atkinson2026-identifying-introspection/fig3-ablation.png"
+      caption: "Figure 3 of the paper."
+      alt: "Two panels plotting a correlation against the ablated layer, for the early and the late checkpoint, with earlier layers ablated (solid lines) or later layers ablated (dashed lines). Left: the correlation between target and reported preferences. Right: the correlation between target and behavioral preferences, with midpoints marked at layers 35 and 40 for the late checkpoint and 41 and 45 for the early one."
+  - id: e3
+    kind: experiment
+    n: 3
+    title: "Force the preferences into early layers"
+    text: "Train only the first k layers of a model that never reports faithfully."
+    href: "#3-force-the-preferences-into-early-layers"
+    sketch:
+      alt: "A bar standing for the model's 40 layers: the first 20 carry trained adapters and the last 20 are frozen."
+      rows:
+        - strip: { n: 40, cut: 20, parts: [{ to: 20, style: on, label: "trained" }, { to: 40, style: off, label: "frozen" }], label: "here k = 20, of 40 layers" }
+  - id: f3
+    kind: finding
+    value: "0.74"
+    text: "Faithfulness, once training is confined to the first 20 layers. It falls sharply when later layers are trained too."
+    figure:
+      src: "/figures/atkinson2026-identifying-introspection/fig4-freezing.png"
+      caption: "Figure 4 of the paper."
+      alt: "Two panels of training curves for Qwen3-14B with adapters on only the first k layers, for k from 5 to 35. Left: decision performance, which rises for every k of 10 or more. Right: faithfulness, which rises for k of 10, 15 and 20 and ends below zero for k of 25, 30 and 35."
+  - id: e4
+    kind: experiment
+    n: 4
+    title: "Tell the two kinds of model apart without reading the report"
+    text: "Score every adapter weight for deciding and for reporting, and compare the two."
+    href: "#4-tell-the-two-kinds-of-model-apart-without-reading-the-report"
+    sketch:
+      alt: "Two pairs of small profiles over the adapter's weights, deciding above the line and reporting below. In the unfaithful model the two peak in different places; in the faithful model they line up."
+      rows:
+        - bars: { up: [1, 1, 1, 1, 2, 3, 9, 4, 1], down: [1, 2, 9, 4, 2, 1, 1, 1, 1], label: "different weights", tone: unfaithful }
+        - bars: { up: [1, 1, 2, 9, 4, 2, 1, 1, 1], down: [1, 1, 2, 8, 4, 2, 1, 1, 1], label: "same weights", tone: faithful }
+  - id: f4
+    kind: finding
+    value: "{unfaithful|0.08} vs {faithful|0.34}"
+    text: "Attribution similarity. {faithful|Faithful} models use more of the same weights for both tasks."
+    figure:
+      src: "/figures/atkinson2026-identifying-introspection/fig5cd-attribution.png"
+      caption: "Figure 5c and 5d of the paper."
+      alt: "Left: importance by layer for deciding (solid line) and reporting (dashed line). In the unfaithful model deciding peaks at layer 49 and reporting at layer 38, 11 layers apart; in the faithful model both peak at layer 38. Right: attribution similarity against faithfulness, one dot per model. Unfaithful models average 0.08 and faithful models 0.34."
+  - id: e5
+    kind: experiment
+    n: 5
+    title: "Check the attribution scores by intervening"
+    text: "Switch on only the weights that matter for one task and test the other."
+    href: "#5-check-the-attribution-scores-by-intervening"
+    sketch:
+      alt: "A row of the adapter's weight matrices with only the few highest-ranked switched on. They are ranked on one task and tested on the other."
+      rows:
+        - strip: { n: 16, parts: [{ to: 4, style: on, label: "top k on" }, { to: 16, style: off, label: "zeroed" }] }
+        - note: "ranked on one task, tested on the other"
+  - id: f5
+    kind: finding
+    value: "8 to 12× fewer"
+    text: "Weight matrices needed by {faithful|faithful} adapters to recover the same share of the effect."
+    figure:
+      src: "/figures/atkinson2026-identifying-introspection/fig6-cross-task-patching.png"
+      caption: "Figure 6 of the paper."
+      alt: "Two panels showing the fraction of the full adapter's effect recovered as more of its weight matrices are switched on, from 1 to 256. For the same selection method, the faithful adapters' curves sit above the unfaithful adapters' over nearly the whole range, and attribution-ranked selection (solid lines) recovers more than random selection (dotted lines)."
   - { id: c, kind: claim, text: "In this setting, grounding has a physical signature: a report and the behavior it describes run through the same weights, and that can be measured without reading the report." }
 edges:
   - { from: q, to: e1, why: "Build a setting where the true preferences are known" }

@@ -13,8 +13,16 @@ The map is a directed graph, read top to bottom. Its nodes are the experiments a
 ```map
 nodes:
   - { id: q, kind: question, text: "The question the paper starts from." }
-  - { id: e1, kind: experiment, n: 1, title: "An experiment", text: "What it does, in a line." }
-  - { id: f1, kind: finding, value: "0.83", text: "What it showed, with the number." }
+  - id: e1
+    kind: experiment
+    n: 1
+    title: "An experiment"
+    text: "What it does, in a line."
+    sketch:
+      alt: "A bar divided into a trained part and a frozen part."
+      rows:
+        - strip: { n: 40, cut: 20, parts: [{ to: 20, style: on, label: "trained" }, { to: 40, style: off, label: "frozen" }] }
+  - { id: f1, kind: finding, value: "0.83", text: "What it showed, with the number. The paper's own graph of the result goes here when there is one." }
   - { id: e2, kind: experiment, n: 2, title: "The experiment that result called for" }
   - { id: f2, kind: finding, text: "What that one showed." }
   - { id: c, kind: claim, text: "What the paper concludes from them together." }
@@ -30,6 +38,8 @@ edges:
 - A **solid** arrow means *showed*: an experiment and its result, or a result and the conclusion it supports.
 - A **dashed** arrow means *motivated*: a result that raised the question the next experiment answers, or supplied something it needed. The reason is written beside the arrow.
 - An arrow that skips over other nodes runs down the left margin, and the node it reaches says where it came from. An experiment motivated by two earlier results collects both.
+
+Beside each experiment is a small sketch of what it does: a bar for layers that are trained, frozen or removed; a line with marked points for checkpoints or swept values; a pair of small profiles for two things that do or do not line up. A sketch is a schematic drawn by this wiki, not a plot of data. Under each result is the paper's own graph of it, where the paper has one, with its figure number.
 
 ## The rows of an experiment diagram
 

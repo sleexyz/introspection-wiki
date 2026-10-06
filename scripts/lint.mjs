@@ -44,7 +44,10 @@ const links = (file, body) => {
   for (const [fence, check] of [[EXPERIMENT_FENCE, parseExperiment], [MAP_FENCE, parseMap]]) {
     for (const [, source] of body.matchAll(fence)) {
       try {
-        check(source);
+        const parsed = check(source);
+        for (const node of parsed.nodes ?? []) {
+          if (node.figure && !fs.existsSync(path.join(ROOT, 'public', node.figure.src))) say(file, `map figure ${node.figure.src} is not in public/`);
+        }
       } catch (err) {
         say(file, err.message);
       }
