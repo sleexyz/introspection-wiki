@@ -20,6 +20,7 @@ export const GET = async () => {
     '- [Index](/): every page in the wiki, grouped',
     '- [About](/about): how pages are written, and what the tiers and evidence-card labels mean',
     '- [Papers table](/papers): every paper with its evidence card, side by side',
+    '- [Reading the diagrams](/diagrams): the notation used for every experiment diagram',
     '',
   ];
   for (const { tier, label } of TIERS) {

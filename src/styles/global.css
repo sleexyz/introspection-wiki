@@ -12,6 +12,9 @@
   --wash: #fafafa;
   --yes: #1a7f37;
   --part: #8a6100;
+  /* Diagram tracks: what the model does, and what it says about itself. */
+  --behavior: #1f6391;
+  --report: #a4500f;
   --stub: #bf3c2c;
   --stub-hover: #9f3526;
   --stub-visited: #9f5555;
@@ -28,6 +31,8 @@
     --wash: #1c1c1c;
     --yes: #5fbf7a;
     --part: #d4a94a;
+    --behavior: #7db8e3;
+    --report: #e3a268;
     --stub: #fd7865;
     --stub-hover: #fea898;
     --stub-visited: #c99391;
@@ -150,6 +155,134 @@ footer a { color: var(--muted); }
 figure { margin: 20px 0 24px; }
 figure img { display: block; max-width: 100%; height: auto; background: #fff; border: 1px solid var(--rule); border-radius: 4px; }
 figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
+
+/* Experiment diagrams (src/lib/experiment.mjs). Stages run down the page, one
+   row each, named in the left margin; lanes are columns. A cell is a tinted
+   panel holding one or more boxes, and a panel that spans the lanes is shared
+   by them. Everything is ordinary text in a grid, so it wraps, selects, and
+   restacks on a narrow screen. */
+.xp { margin: 20px 0 36px; }
+.xp-head { margin-bottom: 14px; }
+.xp-name { display: block; font-size: 14px; color: var(--strong); }
+.xp-question { display: block; font-size: 14px; font-style: italic; color: var(--muted); }
+
+.xp-grid {
+  display: grid;
+  grid-template-columns: 58px repeat(var(--lanes), minmax(0, 1fr));
+  column-gap: 12px;
+}
+.xp-row { display: contents; }
+.xp-row > * { grid-row: var(--row); }
+
+.xp-stage {
+  grid-column: 1;
+  padding-top: 12px;
+  text-align: right;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.xp-lane, .xp-lane-tag {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.xp-lane { text-align: center; padding-bottom: 6px; }
+.xp-lane-tag { display: none; }
+
+[data-track='behavior'] { --track: var(--behavior); }
+[data-track='report'] { --track: var(--report); }
+[data-track='truth'] { --track: var(--muted); }
+.xp-lane[data-track], .xp-lane-tag[data-track] { color: var(--track); }
+
+.xp-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 8px;
+  background: var(--wash);
+  border-radius: 8px;
+}
+.xp-cell.xp-wide { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+
+.xp-item {
+  flex: 1 1 190px;
+  min-width: 0;
+  padding: 7px 10px 8px;
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: 5px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.xp-cell:not(.xp-wide) > .xp-item { flex: 0 0 auto; }
+.xp-item[data-track] { border-left: 3px solid var(--track); }
+.xp-kind {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 2px;
+  font-size: 10px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.xp-item[data-track] .xp-kind { color: var(--track); }
+.xp-title { font-weight: 600; color: var(--strong); }
+.xp-value { font-size: 19px; font-weight: 600; line-height: 1.3; color: var(--strong); font-variant-numeric: tabular-nums; }
+.xp-quote {
+  margin: 2px 0;
+  padding: 0;
+  border: 0;
+  color: var(--text);
+  font-family: 'SF Mono', 'Fira Code', ui-monospace, monospace;
+  font-size: 12px;
+}
+.xp-quote::before { content: '\201C'; }
+.xp-quote::after { content: '\201D'; }
+.xp-tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0 0; padding: 0; list-style: none; font-size: 10.5px; }
+.xp-tags li { margin: 0; padding: 0 7px; border: 1px solid var(--rule); border-radius: 999px; color: var(--muted); }
+.xp code { padding: 0; background: none; font-size: 12.5px; }
+.xp-sym { font-weight: 600; color: var(--track); }
+.xp-sym[data-track='truth'] { color: inherit; text-decoration: underline dashed; text-underline-offset: 3px; }
+
+/* One shape cue per kind of box, on top of its icon and label. */
+.xp-k-truth { border-style: dashed; }
+.xp-k-model { border-color: var(--muted); }
+.xp-k-change, .xp-k-result { background: transparent; border-color: transparent; }
+.xp-k-change[data-track], .xp-k-result[data-track] { border-left-color: var(--track); }
+.xp-k-prompt { border-radius: 12px 12px 12px 3px; }
+.xp-k-reply { border-radius: 12px 12px 3px 12px; }
+.xp-cell:not(.xp-wide) > .xp-k-reply { margin-left: 28px; }
+.xp-k-read { border-style: dotted; }
+.xp-k-measure { border-radius: 16px; }
+.xp-k-judge { border-style: double; border-width: 3px; }
+
+.xp-arrow { display: flex; align-items: center; justify-content: center; gap: 6px; height: 28px; color: var(--faint); }
+.xp-via { font-size: 11.5px; font-style: italic; color: var(--muted); }
+
+.xp figcaption { margin: 12px 0 0 70px; }
+.xp-finding { color: var(--text); font-size: 13.5px; }
+.xp-foot { display: block; margin-top: 4px; font-size: 12px; color: var(--faint); }
+.xp-foot a { color: var(--muted); }
+
+@media (max-width: 620px) {
+  /* Lanes stack: each cell names its lane, and one arrow joins the stages. */
+  .xp-grid, .xp-row { display: block; }
+  .xp-lanes { display: none; }
+  .xp-stage { padding: 0 0 4px; text-align: left; }
+  .xp-stage:empty { display: none; }
+  .xp-cell { margin-bottom: 6px; }
+  .xp-cell.xp-wide { flex-direction: column; }
+  .xp-cell > .xp-item { flex: 0 0 auto; }
+  .xp-lane-tag { display: block; }
+  .xp-conn { display: flex; justify-content: center; }
+  .xp-conn .xp-arrow + .xp-arrow { display: none; }
+  .xp figcaption { margin-left: 0; }
+}
 
 /* Page furniture */
 .kicker { font-size: 12px; color: var(--faint); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px; }

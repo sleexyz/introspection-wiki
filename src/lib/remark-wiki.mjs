@@ -1,8 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { experimentHtml, parseExperiment } from './experiment.mjs';
 
 /**
- * Two block-level conventions for page bodies, and one for links.
+ * Three block-level conventions for page bodies, and one for links.
  *
  * 1. A post from an imported thread, embedded where it is discussed:
  *
@@ -19,10 +20,14 @@ import path from 'node:path';
  *    renders as <figure> with the title as its caption. The alt text is the
  *    description a reader without the image gets, so it carries the content.
  *
- * Both are plain lines of text, so the markdown twin of a page can rewrite the
- * same source for a reader that only gets text — see expandPosts in markdown.ts.
+ * 3. An experiment diagram. A fenced block tagged `experiment`, holding YAML
+ *    in the notation defined in experiment.mjs, renders as the diagram.
  *
- * 3. A link to a paper page that is still a stub gets class="stub", which
+ * All three are plain text in the source, so the markdown twin of a page can
+ * rewrite the same source for a reader that only gets text — see expandPosts
+ * and expandExperiments in markdown.ts.
+ *
+ * 4. A link to a paper page that is still a stub gets class="stub", which
  *    colors it red. Templates do the same for their own links with PaperLink.
  */
 
@@ -87,6 +92,9 @@ export default function remarkWiki() {
   return (tree) => {
     markStubLinks(tree);
     tree.children = tree.children.map((node) => {
+      if (node.type === 'code' && node.lang === 'experiment') {
+        return { type: 'html', value: experimentHtml(parseExperiment(node.value)) };
+      }
       if (node.type !== 'paragraph' || node.children.length !== 1) return node;
       const [only] = node.children;
       if (only.type === 'text') {

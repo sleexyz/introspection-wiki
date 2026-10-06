@@ -11,6 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parse } from 'yaml';
+import { EXPERIMENT_FENCE, parseExperiment } from '../src/lib/experiment.mjs';
 import { LEVEL_VALUES, METHOD_VALUES, STANCE_VALUES, STATUS_VALUES, TIER_VALUES } from '../src/lib/vocab.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
@@ -18,12 +19,12 @@ const CONTENT = path.join(ROOT, 'src/content');
 const ids = (dir, ext) =>
   new Set(fs.readdirSync(path.join(CONTENT, dir)).filter((f) => f.endsWith(ext)).map((f) => f.slice(0, -ext.length)));
 const known = { papers: ids('papers', '.md'), concepts: ids('concepts', '.md'), threads: ids('threads', '.json') };
-const STATIC_PAGES = new Set(['', 'papers', 'frontier', 'about']);
+const STATIC_PAGES = new Set(['', 'papers', 'frontier', ...ids('pages', '.md')]);
 const threadLength = (id) => JSON.parse(fs.readFileSync(path.join(CONTENT, 'threads', `${id}.json`), 'utf8')).tweets.length;
 
 const files = process.argv.length > 2
   ? process.argv.slice(2).map((f) => path.resolve(f))
-  : ['papers', 'concepts', 'threads'].flatMap((dir) =>
+  : ['papers', 'concepts', 'threads', 'pages'].flatMap((dir) =>
       fs.readdirSync(path.join(CONTENT, dir)).map((f) => path.join(CONTENT, dir, f)));
 
 let problems = 0;
@@ -38,6 +39,14 @@ const refs = (file, field, list, kind) => {
   for (const id of list ?? []) if (!known[kind].has(id)) say(file, `${field} names ${kind.slice(0, -1)} "${id}", which does not exist`);
 };
 const links = (file, body) => {
+  // Experiment diagrams: the YAML must parse and use the fixed vocabulary.
+  for (const [, source] of body.matchAll(EXPERIMENT_FENCE)) {
+    try {
+      parseExperiment(source);
+    } catch (err) {
+      say(file, err.message);
+    }
+  }
   // Embedded thread posts: "::post <thread-id> <n>" alone on a line.
   for (const [line, id, n] of body.matchAll(/^::post\b[ \t]*(\S*)[ \t]*(\S*).*$/gm)) {
     if (!known.threads.has(id)) say(file, `"${line}" names thread "${id}", which does not exist`);

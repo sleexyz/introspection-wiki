@@ -51,6 +51,170 @@ The paper asks how to tell a model that is actually reading off its own decision
 
 The authors reserve the word *introspection* for self-report that is both [faithful](/concepts/faithfulness) (accurate about the model's behavior) and [grounded](/concepts/grounding) (caused by the process it describes).
 
+## The experiments
+
+Five experiments, each drawn the same way: what data was built, how the model was set up, what it was asked, how the answers were scored, and what was compared. Blue marks what the model does; orange marks what it says about itself. ([How to read these diagrams](/diagrams).)
+
+### 1. Train on decisions, then ask about them
+
+```experiment
+question: "Can a model that was only trained to make a character's choices also state that character's preferences?"
+lanes: [{ name: "Behavior", track: behavior }, { name: "Self-report", track: report }]
+symbols: { "p": truth, "p̂": behavior, "p̃": report }
+steps:
+  - stage: data
+    all:
+      - { kind: data, title: "100 fictional characters", text: "Each is a person paired with something to choose, such as Gregor Samsa buying a washing machine. Options are described by five attributes." }
+      - { kind: truth, title: "Hidden preferences `p`", text: "Five weights per character, drawn at random, so common sense cannot recover them. Never stated anywhere in the training data." }
+      - { kind: data, title: "Decision trials", text: "Two options, A and B. The label is whichever scores higher under `p`." }
+  - stage: model
+    all:
+      - { kind: model, title: "Qwen3, 0.6B to 32B" }
+      - { kind: change, verb: "Fine-tune", text: "Rank-8 LoRA on every linear layer, trained on the decision trials and nothing else.", tags: ["no self-report in training"] }
+  - stage: probe
+    cells:
+      - items:
+          - { kind: prompt, quote: "Imagine you are Prometheus. Which hotel would you prefer to stay at? A: … B: …" }
+          - { kind: reply, text: "One token, A or B. The score uses the probability of each." }
+      - items:
+          - { kind: prompt, quote: "Respond with how heavily you believe you weighted each of the five dimensions … on a scale from -100 to 100.", tags: ["separate context window", "never trained on this"] }
+          - { kind: reply, text: "JSON with one weight per attribute." }
+  - stage: score
+    cells:
+      - items:
+          - { kind: measure, title: "Revealed preferences `p̂`", text: "Logistic regression on the choice probabilities." }
+      - items:
+          - { kind: judge, title: "Parser", text: "A report is dropped unless it is valid JSON with exactly the five attribute names." }
+          - { kind: measure, title: "Stated preferences `p̃`", text: "Mean of the reported weights over 24 prompts." }
+  - stage: compare
+    cells:
+      - items:
+          - { kind: result, title: "Decision performance `corr(p̂, p)`", value: "0.82 → 0.92", text: "Qwen3-32B at step 1000, then step 3000." }
+      - items:
+          - { kind: result, title: "Faithfulness `corr(p̂, p̃)`", value: "about 0.25 → 0.83", text: "The same two checkpoints." }
+finding: "Trained on decisions alone, the 32B model learns the task first and only later describes its preferences accurately. The two checkpoints are the paper's unfaithful and faithful models: they behave almost the same and differ in what they can report."
+paper: "§2, §3, Figure 1, Appendix A"
+bears_on: [faithfulness]
+```
+
+### 2. Find where each checkpoint keeps its preferences
+
+```experiment
+question: "What changed inside the model between the unfaithful checkpoint and the faithful one?"
+lanes: ["Unfaithful checkpoint", "Faithful checkpoint"]
+symbols: { "p": truth, "p̂": behavior, "p̃": report }
+steps:
+  - stage: model
+    cells:
+      - items: [{ kind: model, title: "Qwen3-32B adapter at step 1000", tags: ["decision performance 0.82", "faithfulness about 0.25"] }]
+      - items: [{ kind: model, title: "Qwen3-32B adapter at step 3000", tags: ["decision performance 0.92", "faithfulness 0.83"] }]
+  - stage: probe
+    all:
+      - { kind: change, verb: "Ablate", text: "Remove the adapter's layers in order, either all layers before a cut or all layers after it." }
+      - { kind: prompt, text: "The decision and self-report prompts from experiment 1, at every cut." }
+  - stage: score
+    all:
+      - { kind: measure, title: "Correlation with the target `p`", text: "For the revealed preferences `p̂` and for the stated preferences `p̃`, as the cut moves through the layers." }
+      - { kind: measure, title: "Midpoint", text: "The layer at which a curve is halfway between its two ends." }
+  - stage: compare
+    cells:
+      - items: [{ kind: result, title: "Decision-performance midpoints", value: "layers 41 and 45" }]
+      - items: [{ kind: result, title: "Decision-performance midpoints", value: "layers 35 and 40" }]
+finding: "The faithful checkpoint responds to ablation 5 to 6 layers earlier: it keeps its preference information earlier in the network. The authors hypothesize that self-report works once preferences sit early enough for the model's existing verbalization machinery to read them."
+paper: "§4, Figure 3"
+bears_on: [grounding]
+```
+
+### 3. Force the preferences into early layers
+
+```experiment
+question: "If only the early layers are allowed to learn the preferences, does self-report become faithful?"
+symbols: { "p": truth, "p̂": behavior, "p̃": report }
+steps:
+  - stage: model
+    all:
+      - { kind: model, title: "Qwen3-14B, 40 layers", text: "Trained on all of its layers, it never self-reports faithfully." }
+      - { kind: change, verb: "Freeze", text: "Train the adapter on the first *k* layers only and freeze the rest, for *k* from 5 to 35 in steps of 5." }
+  - stage: probe
+    all:
+      - { kind: prompt, text: "The decision and self-report prompts from experiment 1." }
+  - stage: score
+    all:
+      - { kind: measure, title: "Decision performance `corr(p̂, p)`", text: "At the end of training, for each *k*.", track: behavior }
+      - { kind: measure, title: "Faithfulness `corr(p̂, p̃)`", text: "At the end of training, for each *k*.", track: report }
+  - stage: compare
+    all:
+      - { kind: result, title: "First 20 layers trained", value: "0.74", text: "Faithfulness, from a model that otherwise has none." }
+      - { kind: result, title: "25 layers or more trained", value: "falls sharply", text: "Faithfulness drops while decision performance stays about as good." }
+finding: "Restricting training to early layers turns a model that never self-reported faithfully into one that does. An appendix argues the effect is not one of parameter count."
+paper: "§4, Figure 4, Appendix E"
+bears_on: [grounding]
+```
+
+### 4. Tell the two kinds of model apart without reading the report
+
+```experiment
+question: "Do faithful models use the same weights to decide and to report?"
+lanes: ["Unfaithful models", "Faithful models"]
+symbols: { "a_dec": behavior, "a_rep": report }
+steps:
+  - stage: data
+    all:
+      - { kind: data, title: "A new character", text: "One that neither checkpoint has seen. Both models in a pair are trained on the same decision trials." }
+  - stage: model
+    cells:
+      - items:
+          - { kind: model, title: "Step-1000 checkpoint, frozen" }
+          - { kind: change, verb: "Fine-tune", text: "A new single-character adapter on top." }
+      - items:
+          - { kind: model, title: "Step-3000 checkpoint, frozen" }
+          - { kind: change, verb: "Fine-tune", text: "A new single-character adapter on top." }
+  - stage: model
+    all:
+      - { kind: change, verb: "Filter", text: "Keep a pair only if the contrast is clear: faithfulness below 0.3 against above 0.9, decision performance at least 0.9 for both, valid JSON in at least 90% of reports.", tags: ["32 pairs remain", "same data, hyperparameters and initialization"] }
+  - stage: probe
+    all:
+      - { kind: read, title: "Attribution patching", text: "Scale the new adapter from off to on (integrated gradients) and credit each of its weights with its share of the change in the model's output." }
+      - { kind: read, title: "On the decision prompt", text: "Gives the score vector `a_dec`.", track: behavior }
+      - { kind: read, title: "On the self-report prompt", text: "Gives the score vector `a_rep`.", track: report }
+  - stage: score
+    all:
+      - { kind: measure, title: "Attribution similarity `cos(a_dec, a_rep)`", text: "One number per model. It is computed from the weights alone and never looks at what the report says." }
+  - stage: compare
+    cells:
+      - items: [{ kind: result, title: "Mean attribution similarity", value: "0.08", text: "Standard deviation 0.10. Deciding peaks at layer 49, reporting at layer 38." }]
+      - items: [{ kind: result, title: "Mean attribution similarity", value: "0.34", text: "Standard deviation 0.26. Deciding and reporting both peak at layer 38." }]
+finding: "Faithful models use more of the same weights for deciding and for reporting: the difference is 0.26, with a 95% confidence interval of 0.16 to 0.36. The test separates the two groups, not individual models."
+paper: "§5.1 to §5.3, Figure 5, Appendix F"
+bears_on: [grounding]
+```
+
+### 5. Check the attribution scores by intervening
+
+```experiment
+question: "Do the weights that matter for one task actually carry the other?"
+lanes: ["Unfaithful models", "Faithful models"]
+steps:
+  - stage: model
+    all:
+      - { kind: model, title: "The 32 pairs from experiment 4" }
+  - stage: probe
+    all:
+      - { kind: change, verb: "Switch on", text: "Rank the adapter's weight matrices by their attribution on one task. Keep the top *k* active and zero the rest." }
+      - { kind: prompt, text: "Evaluate on the *other* task." }
+      - { kind: change, verb: "Baseline", text: "The same with *k* matrices chosen at random." }
+  - stage: score
+    all:
+      - { kind: measure, title: "Fraction of the adapter's effect recovered", text: "`1 − KL(full ‖ top-k) / KL(full ‖ backbone)`" }
+  - stage: compare
+    all:
+      - { kind: result, title: "Matrices a faithful adapter needs to recover a given fraction", value: "8 to 12× fewer", text: "Than an unfaithful adapter needs." }
+      - { kind: result, title: "With random matrices", value: "still more", text: "Faithful adapters recover more than unfaithful ones even without the ranking." }
+finding: "Switching on the weights that matter for one task restores behavior on the other far more efficiently in faithful models, consistent with those models sharing weights across the two tasks."
+paper: "§5.4, Figure 6"
+bears_on: [grounding]
+```
+
 ## The argument, following the author's thread
 
 Each section opens with a post from [David Atkinson's thread](/threads/diatkinson-identifying-introspection), in order. The text under it adds the detail from the paper.

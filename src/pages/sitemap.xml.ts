@@ -1,16 +1,16 @@
-import { getEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import { SITE, frontier, isoDate, loadWiki } from '../lib/wiki';
 
 export const GET = async () => {
   const wiki = await loadWiki();
-  const about = (await getEntry('pages', 'about'))!;
+  const pages = await getCollection('pages');
   const newest = (dates: Date[]) => isoDate(new Date(Math.max(...dates.map((d) => d.getTime()))));
   const latest = newest(wiki.papers.map((p) => p.data.updated));
   const urls: [string, string][] = [
     ['/', latest],
     ['/papers', latest],
     ['/frontier', frontier.generated],
-    ['/about', isoDate(about.data.updated)],
+    ...pages.map((p): [string, string] => [`/${p.id}`, isoDate(p.data.updated)]),
     ...wiki.papers.map((p): [string, string] => [`/papers/${p.id}`, isoDate(p.data.updated)]),
     ...wiki.concepts.map((c): [string, string] => [`/concepts/${c.id}`, isoDate(c.data.updated)]),
     ...wiki.threads.map((t): [string, string] => [`/threads/${t.id}`, isoDate(t.data.date)]),

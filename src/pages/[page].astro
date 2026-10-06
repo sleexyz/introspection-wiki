@@ -1,0 +1,21 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+// Standalone pages: /about, /diagrams. One file in src/content/pages each.
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+  return pages.map((page) => ({ params: { page: page.id }, props: { page } }));
+}
+
+const { page } = Astro.props as { page: CollectionEntry<'pages'> };
+const { Content, headings } = await render(page);
+---
+
+<Base title={page.data.title} description={page.data.summary} path={`/${page.id}`} headings={headings}>
+  <article>
+    <h1>{page.data.title}</h1>
+    <p class="lede">{page.data.summary}</p>
+    <Content />
+  </article>
+</Base>

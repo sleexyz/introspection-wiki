@@ -28,6 +28,8 @@ Cloudflare Worker serves them and returns markdown to clients that ask for it.
   edit. `triage.json` (candidate key -> `{triage, note}`) and `leads.json` are
   edited by hand and survive a recrawl.
 - `public/figures/<paper-id>/`: figures cut from papers by `scripts/figure.mjs`.
+- `src/lib/experiment.mjs`: the experiment diagram notation: parser, HTML
+  renderer and the outline used in markdown twins.
 - `src/lib/remark-wiki.mjs`: the `::post` and figure conventions used in page
   bodies. It also gives a body link to a stub the class that colors it red.
 - `src/components/PaperLink.astro`: a link to a paper page, red when the page is
@@ -91,6 +93,40 @@ Use `src/content/papers/atkinson2026-identifying-introspection.md` as the model.
 Ids are `<first-author><year>-<short-title>`. Internal links are site-relative
 with no extension and no trailing slash: `/papers/<id>`, `/concepts/<id>`.
 A link to a page that does not exist fails the build.
+
+## Drawing an experiment
+
+Every experiment a paper runs gets a diagram, and every diagram uses the one
+notation in `src/lib/experiment.mjs`, explained to readers at `/diagrams`
+(`src/content/pages/diagrams.md`). Do not draw an experiment any other way: the
+value is that a reader who has learned one diagram can read them all.
+
+A diagram is YAML in a fenced block tagged `experiment`. The seed paper has
+five to copy from. The rules:
+
+- **Five stages, always in this order, skipping any that do not apply:** `data`
+  (what was built, and what only the experimenters know), `model` (which model,
+  and what was done to it), `probe` (what it is asked, or what is read from
+  inside it), `score` (how outputs become numbers: a regression, a parser, a
+  judge model with its rubric), `compare` (the contrast that carries the claim,
+  with the result). A stage may repeat when two things happen in sequence.
+- **Lanes are the things compared**: behavior against self-report, or one
+  condition against another. Put what the lanes share in a cell that spans them
+  (`all:`), so that reading across a row shows exactly what differs.
+- **Ten kinds of box**: `data`, `truth`, `model`, `change` (with a `verb`),
+  `prompt`, `reply`, `read`, `measure`, `judge`, `result`. Quote real prompt
+  text in `quote`. Put the number in `value`.
+- **Two colors, one meaning**: `track: behavior` for what the model does,
+  `track: report` for what it says about itself. Declare the paper's symbols
+  under `symbols` so a formula in backticks shows which sides it joins.
+- **Tags** are for conditions a reader needs to interpret the result
+  ("separate context window", "never trained on this"), not for decoration.
+- Keep boxes to a title and a sentence. Put the conclusion in `finding`, the
+  sections it came from in `paper`, and the properties it tests in `bears_on`.
+- Every number and quoted prompt follows the same sourcing rule as the prose.
+
+Put the diagrams in a section called "The experiments", after "In brief", one
+`###` heading per experiment. `just lint` checks the notation.
 
 ## Style
 

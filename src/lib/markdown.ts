@@ -1,4 +1,5 @@
 import { getEntry } from 'astro:content';
+import { EXPERIMENT_FENCE, experimentText, parseExperiment } from './experiment.mjs';
 import { POST_LINE } from './remark-wiki.mjs';
 import {
   SITE,
@@ -53,6 +54,10 @@ function expandPosts(body: string, threads: Thread[]): string {
   });
 }
 
+/** An experiment diagram is YAML in the source; in the twin it becomes an outline. */
+const expandExperiments = (body: string) =>
+  body.replace(EXPERIMENT_FENCE, (_, source: string) => experimentText(parseExperiment(source)));
+
 export const mdResponse = (body: string) =>
   new Response(body.trimEnd() + '\n', { headers: { 'Content-Type': 'text/markdown; charset=utf-8' } });
 
@@ -97,7 +102,7 @@ export async function paperMarkdown(p: Paper): Promise<string> {
     if (e.note) out.push(e.note, '');
   }
 
-  out.push(expandPosts(p.body?.trim() ?? '', wiki.threads), '');
+  out.push(expandExperiments(expandPosts(p.body?.trim() ?? '', wiki.threads)), '');
 
   const threads = wiki.threads.filter((t) => d.threads.includes(t.id) || t.data.papers.includes(p.id));
   if (threads.length) {
@@ -120,7 +125,7 @@ export async function conceptMarkdown(c: Concept): Promise<string> {
   const papers = wiki.papers.filter((p) => p.data.concepts.includes(c.id));
   const out = [`# ${c.data.title}`, '', `> ${c.data.summary}`, ''];
   if (c.data.aliases.length) out.push(`Also called: ${c.data.aliases.join(', ')}.`, '');
-  out.push(c.body?.trim() ?? '', '');
+  out.push(expandExperiments(c.body?.trim() ?? ''), '');
   if (papers.length) out.push('## Papers tagged with this concept', '', ...papers.map(paperLine), '');
   out.push(footer(`/concepts/${c.id}`));
   return absolutize(out.join('\n'));
@@ -174,6 +179,7 @@ export async function indexMarkdown(): Promise<string> {
     `- [All papers as a table](/papers): every page with its evidence card`,
     `- [Frontier](/frontier): ${frontier.candidates.length} candidate papers not yet in the wiki`,
     `- [About](/about)`,
+    `- [Reading the diagrams](/diagrams): the notation every experiment diagram uses`,
     `- [Everything in one file](/llms-full.txt)`,
     `- Data: [papers.json](/data/papers.json), [graph.json](/data/graph.json), [frontier.json](/data/frontier.json), [references.bib](/references.bib)`,
     '',
@@ -249,5 +255,5 @@ export async function frontierMarkdown(): Promise<string> {
 
 export async function pageMarkdown(id: string): Promise<string> {
   const page = (await getEntry('pages', id))!;
-  return absolutize([`# ${page.data.title}`, '', `> ${page.data.summary}`, '', page.body?.trim() ?? '', '', footer(`/${id}`)].join('\n'));
+  return absolutize([`# ${page.data.title}`, '', `> ${page.data.summary}`, '', expandExperiments(page.body?.trim() ?? ''), '', footer(`/${id}`)].join('\n'));
 }

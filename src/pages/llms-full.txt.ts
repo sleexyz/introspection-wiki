@@ -8,6 +8,7 @@ export const GET = async () => {
   const docs = await Promise.all([
     indexMarkdown(),
     pageMarkdown('about'),
+    pageMarkdown('diagrams'),
     papersMarkdown(),
     ...wiki.concepts.map(conceptMarkdown),
     ...wiki.papers.map(paperMarkdown),
