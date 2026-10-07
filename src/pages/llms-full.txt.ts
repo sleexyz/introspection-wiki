@@ -2,7 +2,7 @@ import { conceptMarkdown, indexMarkdown, pageMarkdown, paperMarkdown, papersMark
 import { loadWiki } from '../lib/wiki';
 
 // The whole wiki in one fetch: every markdown twin, in reading order. The
-// frontier is left out — it is a long list of papers the wiki has not read.
+// candidates page is left out — it is a long list of papers the wiki has not read.
 export const GET = async () => {
   const wiki = await loadWiki();
   const docs = await Promise.all([

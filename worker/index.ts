@@ -20,6 +20,10 @@ export default {
 		const paper = url.pathname.match(/^\/pdf\/([a-z0-9-]+)\.pdf$/);
 		if (paper) return relay(paper[1], request, env);
 
+		// The candidates page was called the frontier before it took in the stubs.
+		const frontier = url.pathname.match(/^\/frontier(\.md|\.html|\/index\.md)?$/);
+		if (frontier) return Response.redirect(new URL(`/candidates${frontier[1] ?? ''}`, url).href, 301);
+
 		// An outline had a page of its own while the format was on trial. It is the paper page now.
 		const outline = url.pathname.match(/^\/outlines\/(.+)$/);
 		if (outline) return Response.redirect(new URL(`/papers/${outline[1]}`, url).href, 301);

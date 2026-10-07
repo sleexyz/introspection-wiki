@@ -18,6 +18,7 @@ import {
   type Concept,
   type Paper,
   type Thread,
+  type Wiki,
 } from './wiki';
 
 // The markdown twin of every page. These are written for a reader that only
@@ -208,8 +209,8 @@ export async function indexMarkdown(): Promise<string> {
   out.push(
     '## More',
     '',
-    `- [All papers as a table](/papers): what each paper studies, its methods and its models`,
-    `- [Frontier](/frontier): ${frontier.candidates.length} candidate papers not yet in the wiki`,
+    `- [Papers as a table](/papers): what each paper with a page studies, its methods and its models`,
+    `- [Candidates](/candidates): ${candidatesSummary(wiki)}`,
     `- [About](/about)`,
     `- [Reading the diagrams](/diagrams): the notation every experiment diagram uses`,
     `- [Everything in one file](/llms-full.txt)`,
@@ -225,18 +226,18 @@ export async function papersMarkdown(): Promise<string> {
   const out = [
     '# Papers',
     '',
-    `> Every paper page in the ${SITE.name}: what it studies, its methods and its models.`,
+    `> Every paper with a page in the ${SITE.name}: what it studies, its methods and its models.`,
     '',
     '| Paper | Tier | Reports on | Methods | Models |',
     '|---|---|---|---|---|',
   ];
-  for (const p of wiki.papers) {
+  const stubs = wiki.papers.filter((p) => p.data.status === 'stub').length;
+  for (const p of wiki.papers.filter((p) => p.data.status !== 'stub')) {
     const e = p.data.setup;
-    const cells = e
-      ? [e.reports_on, e.methods.join(', '), e.models.join(', ') || 'n/a']
-      : ['(stub)', '', ''];
+    const cells = e ? [e.reports_on, e.methods.join(', '), e.models.join(', ') || 'n/a'] : ['not recorded', '', ''];
     out.push(`| [${citeAs(p)}: ${p.data.title}](/papers/${p.id}) | ${p.data.tier} | ${cells.join(' | ')} |`);
   }
+  if (stubs) out.push('', `${stubs} more papers are accepted and waiting for a page. They are listed with the [candidates](/candidates).`);
   out.push('', footer('/papers'));
   return absolutize(out.join('\n'));
 }
@@ -254,21 +255,38 @@ export function candidateByline(c: Candidate): string {
   return [authors, c.year].filter(Boolean).join(', ');
 }
 
-export async function frontierMarkdown(): Promise<string> {
+/** What the candidates page holds, in a sentence: the stubs, and the papers the crawl found. */
+export function candidatesSummary(wiki: Wiki): string {
+  const stubs = wiki.papers.filter((p) => p.data.status === 'stub').length;
+  const waiting = stubs ? `${stubs} accepted and waiting to be written, and ` : '';
+  return `Papers that do not have a page yet: ${waiting}${frontier.candidates.length} one citation away from the wiki.`;
+}
+
+export async function candidatesMarkdown(): Promise<string> {
   const wiki = await loadWiki();
   const short = (id: string) => (wiki.paper.has(id) ? citeAs(wiki.paper.get(id)!) : id);
-  const out = [
-    '# Frontier',
+  const stubs = wiki.papers.filter((p) => p.data.status === 'stub');
+  const out = ['# Candidates', '', `> ${candidatesSummary(wiki)}`, ''];
+  if (stubs.length) {
+    out.push(
+      `## Stubs (${stubs.length})`,
+      '',
+      'Papers accepted into the wiki whose pages are still to be written. Each has its bibliographic details and a one-line description so far.',
+      '',
+      ...stubs.map((p) => `- [${citeAs(p)}: ${p.data.title}](/papers/${p.id}) (${p.data.tier}): ${p.data.summary}`),
+      '',
+    );
+  }
+  out.push(
+    `## One citation away (${frontier.candidates.length})`,
     '',
-    `> ${frontier.candidates.length} papers one citation away from the wiki that do not have a page yet.`,
+    `Papers that have not been accepted. The crawler looked at the references and citers of every paper page and saw ${frontier.neighbors_seen} distinct neighbors. A neighbor is listed here if it connects to at least ${frontier.min_score} wiki papers, or if someone added it as a lead. The triage labels are suggestions, made from each candidate's title and its place in the citation graph and not from reading it. A candidate becomes a page only after a person accepts it. Last crawled ${frontier.generated}. Source: ${frontier.source}.`,
     '',
-    `The crawler looked at the references and citers of every paper page and saw ${frontier.neighbors_seen} distinct neighbors. A neighbor is listed here if it connects to at least ${frontier.min_score} wiki papers, or if someone added it as a lead. The triage labels are suggestions, made from each candidate's title and its place in the citation graph and not from reading it. A candidate becomes a page only after a person accepts it. Last crawled ${frontier.generated}. Source: ${frontier.source}.`,
-    '',
-  ];
+  );
   for (const triage of TRIAGE_ORDER) {
     const list = frontier.candidates.filter((c) => (TRIAGE_LABELS[c.triage] ? c.triage : 'unreviewed') === triage);
     if (!list.length) continue;
-    out.push(`## ${TRIAGE_LABELS[triage]} (${list.length})`, '');
+    out.push(`### ${TRIAGE_LABELS[triage]} (${list.length})`, '');
     for (const c of list) {
       const title = c.url ? `[${c.title}](${c.url})` : c.title;
       const links = [
@@ -279,7 +297,7 @@ export async function frontierMarkdown(): Promise<string> {
     }
     out.push('');
   }
-  out.push(footer('/frontier'));
+  out.push(footer('/candidates'));
   return absolutize(out.join('\n'));
 }
 

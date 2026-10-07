@@ -17,13 +17,14 @@ Cloudflare Worker serves them and returns markdown to clients that ask for it.
     just figure page|crop ...                # the same by hand
     just anchor <paper-id>                   # place a page's locators and quotations in the PDF, and check the page
     just thread <post-url> <thread-id> [paper-id ...]   # import a thread from X
-    just crawl      # recrawl citations and rebuild the frontier
+    just crawl      # recrawl citations and rebuild the candidates
 
 ## Layout
 
 - `src/content/papers/<id>.md`: one page per paper. Schema in `src/content.config.ts`.
   A full page has `format: outline`. The rest are stubs (`status: stub`):
   bibliographic details and a one-line `summary`, waiting to be written.
+  The site lists stubs at `/candidates`, not in the table at `/papers`.
 - `src/content/archive/<id>.md`: the page a paper had in the format the wiki
   started with, served at `/archive/<id>` and linked from the paper's page.
   Do not edit.
@@ -35,8 +36,9 @@ Cloudflare Worker serves them and returns markdown to clients that ask for it.
 - `src/data/anchors/<paper-id>.json`: written by `scripts/anchor.mjs`. Do not
   edit. Where each locator and quotation of a page sits in the paper's PDF.
 - `src/data/frontier.json`, `edges.json`: written by `scripts/crawl.mjs`. Do not
-  edit. `triage.json` (candidate key -> `{triage, note}`) and `leads.json` are
-  edited by hand and survive a recrawl.
+  edit. The frontier is the papers one citation away from the wiki, shown at
+  `/candidates` under the stubs. `triage.json` (candidate key ->
+  `{triage, note}`) and `leads.json` are edited by hand and survive a recrawl.
 - `public/figures/<paper-id>/`: figures cut from papers by `scripts/figure.mjs`.
 - `scripts/pdf.mjs`: reads a paper's PDF: its words and where its sections,
   figures, tables and footnotes start. `paper.mjs`, `anchor.mjs` and
@@ -548,8 +550,9 @@ paper's place in the wiki, not its quality.
 
 ## Adding papers
 
-New papers come from the frontier, or from the maintainer directly. `just
-crawl` rebuilds the frontier; record a suggested `add`, `maybe` or `skip` with
+New papers come from the frontier, the papers one citation away that
+`/candidates` lists, or from the maintainer directly. `just crawl` rebuilds
+the frontier; record a suggested `add`, `maybe` or `skip` with
 a one-line reason in `src/data/triage.json`. A candidate becomes a page only
 after the maintainer accepts it. A paper the maintainer hands over is accepted:
 write its page as above.

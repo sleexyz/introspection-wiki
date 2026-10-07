@@ -9,7 +9,7 @@ export const GET = async () => {
   const urls: [string, string][] = [
     ['/', latest],
     ['/papers', latest],
-    ['/frontier', frontier.generated],
+    ['/candidates', frontier.generated],
     ...pages.map((p): [string, string] => [`/${p.id}`, isoDate(p.data.updated)]),
     ...wiki.papers.map((p): [string, string] => [`/papers/${p.id}`, isoDate(p.data.updated)]),
     ...wiki.concepts.map((c): [string, string] => [`/concepts/${c.id}`, isoDate(c.data.updated)]),

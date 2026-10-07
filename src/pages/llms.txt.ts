@@ -1,5 +1,5 @@
-import { absolutize } from '../lib/markdown';
-import { SITE, TIERS, citeAs, frontier, loadWiki } from '../lib/wiki';
+import { absolutize, candidatesSummary } from '../lib/markdown';
+import { SITE, TIERS, citeAs, loadWiki } from '../lib/wiki';
 
 // The index an agent reads first: https://llmstxt.org. An H1, a blockquote, some
 // orientation, then H2 sections of links. "Optional" is the spec's name for the
@@ -19,7 +19,7 @@ export const GET = async () => {
     '',
     '- [Index](/): every page in the wiki, grouped',
     '- [About](/about): how pages are written and how the wiki is organized',
-    '- [Papers table](/papers): every paper with what it studies, its methods and its models, side by side',
+    '- [Papers table](/papers): every paper that has a page, with what it studies, its methods and its models, side by side',
     '- [Reading the diagrams](/diagrams): the notation used for every experiment diagram',
     '',
   ];
@@ -42,8 +42,8 @@ export const GET = async () => {
     '',
     '## Optional',
     '',
-    `- [Frontier](/frontier): ${frontier.candidates.length} candidate papers one citation away that have no page yet`,
-    '- [frontier.json](/data/frontier.json): the same candidates as data',
+    `- [Candidates](/candidates): ${candidatesSummary(wiki)}`,
+    '- [frontier.json](/data/frontier.json): the candidates one citation away, as data',
   );
   return new Response(absolutize(out.join('\n')) + '\n', { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 };

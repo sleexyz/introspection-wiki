@@ -22,7 +22,7 @@ const CONTENT = path.join(ROOT, 'src/content');
 const ids = (dir, ext) =>
   new Set(fs.readdirSync(path.join(CONTENT, dir)).filter((f) => f.endsWith(ext)).map((f) => f.slice(0, -ext.length)));
 const known = { papers: ids('papers', '.md'), archive: ids('archive', '.md'), concepts: ids('concepts', '.md'), threads: ids('threads', '.json') };
-const STATIC_PAGES = new Set(['', 'papers', 'frontier', ...ids('pages', '.md')]);
+const STATIC_PAGES = new Set(['', 'papers', 'candidates', ...ids('pages', '.md')]);
 // How many characters the headings of a table can have between them and still fit the page.
 const TABLE_HEADINGS = 90;
 const threadLength = (id) => JSON.parse(fs.readFileSync(path.join(CONTENT, 'threads', `${id}.json`), 'utf8')).tweets.length;

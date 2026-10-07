@@ -4,11 +4,14 @@ import Base from '../layouts/Base.astro';
 import { citeAs, loadWiki } from '../lib/wiki';
 
 const wiki = await loadWiki();
+// A stub has nothing to put in the table. The stubs are listed with the candidates.
+const written = wiki.papers.filter((p) => p.data.status !== 'stub');
+const stubs = wiki.papers.length - written.length;
 ---
 
-<Base title="Papers" path="/papers" description="Every paper page in the wiki: what it studies, its methods and its models." wide>
+<Base title="Papers" path="/papers" description="Every paper with a page in the wiki: what it studies, its methods and its models." wide>
   <h1>Papers</h1>
-  <p class="lede">Every paper page: what it studies, its methods and its models.</p>
+  <p class="lede">Every paper with a page: what it studies, its methods and its models.</p>
   <div class="scroll">
     <table class="matrix">
       <thead>
@@ -22,7 +25,7 @@ const wiki = await loadWiki();
       </thead>
       <tbody>
         {
-          wiki.papers.map((p) => {
+          written.map((p) => {
             const e = p.data.setup;
             return (
               <tr>
@@ -40,7 +43,7 @@ const wiki = await loadWiki();
                   </Fragment>
                 ) : (
                   <td colspan="3" class="not-addressed">
-                    stub: no summary yet
+                    not recorded
                   </td>
                 )}
               </tr>
@@ -50,4 +53,12 @@ const wiki = await loadWiki();
       </tbody>
     </table>
   </div>
+  {
+    stubs > 0 && (
+      <p class="note">
+        {stubs} more papers are accepted and waiting for a page. They are listed with the{' '}
+        <a href="/candidates#stubs">candidates</a>.
+      </p>
+    )
+  }
 </Base>

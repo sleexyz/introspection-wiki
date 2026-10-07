@@ -4,11 +4,12 @@ import Base from '../layouts/Base.astro';
 import { SITE, TIERS, citeAs, frontier, loadWiki } from '../lib/wiki';
 
 const wiki = await loadWiki();
+const stubCount = wiki.papers.filter((p) => p.data.status === 'stub').length;
 const headings = [
   ...TIERS.filter(({ tier }) => wiki.papers.some((p) => p.data.tier === tier)).map(({ tier, label }) => ({ depth: 2, slug: tier, text: label })),
   { depth: 2, slug: 'concepts', text: 'Concepts' },
   { depth: 2, slug: 'threads', text: 'Threads' },
-  { depth: 2, slug: 'frontier', text: 'Frontier' },
+  { depth: 2, slug: 'candidates', text: 'Candidates' },
   { depth: 2, slug: 'for-language-models', text: 'For language models' },
 ];
 const jsonld = { '@type': 'WebSite', name: SITE.name, url: SITE.url, description: SITE.description, license: 'https://creativecommons.org/licenses/by/4.0/' };
@@ -89,10 +90,11 @@ const jsonld = { '@type': 'WebSite', name: SITE.name, url: SITE.url, description
     }
   </ul>
 
-  <h2 id="frontier">Frontier</h2>
+  <h2 id="candidates">Candidates</h2>
   <p>
-    <a href="/frontier">{frontier.candidates.length} candidate papers</a> sit one citation away from the pages above and
-    have not been added yet.
+    The <a href="/candidates">candidates</a> are the papers without a page yet:
+    the {stubCount} stubs above, and {frontier.candidates.length} papers that sit one citation away from the wiki and have
+    not been added.
   </p>
 
   <h2 id="for-language-models">For language models</h2>

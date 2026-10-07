@@ -37,7 +37,7 @@ paper *args:
 anchor *args:
     node scripts/anchor.mjs {{args}}
 
-# Recrawl citations one hop out from every paper page and rebuild the frontier.
+# Recrawl citations one hop out from every paper page and rebuild the candidates (src/data/frontier.json).
 crawl *args:
     node scripts/crawl.mjs {{args}}
 

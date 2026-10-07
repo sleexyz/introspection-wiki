@@ -1,7 +1,7 @@
 ---
 title: "About this wiki"
 summary: "What the wiki covers, how its pages are written, and what the labels on them mean."
-updated: 2026-10-06
+updated: 2026-10-07
 ---
 
 ## What it covers
@@ -51,9 +51,9 @@ The earlier pages, now archived, open with the same short block, so a page can b
 
 The wiki does not yet label papers by which property they establish, or by whether they come out for or against introspection. Those judgments, and the question of whether [privileged access](/concepts/privileged-access) is something separate from grounding, are still open. The [papers table](/papers) shows the setups side by side.
 
-## The frontier
+## Candidates
 
-The [frontier](/frontier) lists papers that are one citation away from the wiki and do not have a page. A crawler collects the references and citers of every paper page; anything connected to two or more pages is listed. Each candidate gets a suggested triage label. A candidate becomes a page only after a person accepts it.
+The [candidates](/candidates) page lists the papers that do not have a page yet. First come the stubs: papers accepted into the wiki whose pages are still to be written. The [papers table](/papers) leaves them out. Then come papers that are one citation away from the wiki and have not been accepted. A crawler collects the references and citers of every paper page; anything connected to two or more pages is listed. Each of these gets a suggested triage label, and becomes a page only after a person accepts it.
 
 ## For language models
 
