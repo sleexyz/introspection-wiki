@@ -774,5 +774,13 @@
  "t:withoutspecificcountermeasurestheeasiestpathtotransformativeailikelyleadstoaitakeover": {
   "triage": "skip",
   "note": "AI safety or control work without a self-report question"
+ },
+ "s2:ca2f1088d3e581b2c6c75cf0ebc96506d620f64d": {
+  "triage": "skip",
+  "note": "General critique of large language models, not about self-report"
+ },
+ "s2:685418141037ca44bb60b0b09d40fe521ec9e734": {
+  "triage": "skip",
+  "note": "Model release cited as a tool"
  }
 }
