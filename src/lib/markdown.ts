@@ -92,8 +92,11 @@ export async function paperMarkdown(p: Paper): Promise<string> {
     const q = d.questions;
     // A takeaway sits under the question it answers, marked so that a reader
     // scanning for them can find them.
-    const boxed = (n: { takeaways: { title: string; text: string; kind: string }[] }, indent: string) =>
-      n.takeaways.map((k) => `${indent}- KEY TAKEAWAY${k.kind === 'method' ? ' (new method)' : ''}: **${k.title}** ${k.text}`);
+    const boxed = (n: { takeaways: { title: string; text: string; why?: string; kind: string }[] }, indent: string) =>
+      n.takeaways.flatMap((k) => [
+        `${indent}- KEY TAKEAWAY${k.kind === 'method' ? ' (new method)' : ''}: **${k.title}** ${k.text}`,
+        ...(k.why ? [`${indent}  - Why it matters: ${k.why}`] : []),
+      ]);
     out.push('### Questions and key takeaways', '', `**Q: ${q.q}**`, '', q.a, '', ...boxed(q, ''), '');
     for (const node of q.sub) {
       out.push(`- **Q: ${node.q}** ${node.a}`, ...boxed(node, '  '));

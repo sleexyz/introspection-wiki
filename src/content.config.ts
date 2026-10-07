@@ -6,7 +6,7 @@ import { METHOD_VALUES, STATUS_VALUES, TIER_VALUES } from './lib/vocab.mjs';
 // A question the paper asked and the answer it got. `see` links the experiment
 // that answered it. The tree is deliberately shallow: the leading question, the
 // questions it breaks into, and one more level under those.
-const takeaway = z.object({ title: z.string(), text: z.string(), kind: z.enum(['finding', 'method']).default('finding') });
+const takeaway = z.object({ title: z.string(), text: z.string(), why: z.string().optional(), kind: z.enum(['finding', 'method']).default('finding') });
 const answered = z.object({ q: z.string(), a: z.string(), see: z.string().optional(), takeaways: z.array(takeaway).default([]) });
 const questions = answered.extend({ sub: z.array(answered.extend({ sub: z.array(answered).default([]) })).default([]) });
 

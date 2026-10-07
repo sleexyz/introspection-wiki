@@ -403,11 +403,7 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
 .xm-key-line.xm-motivates { border-top-style: dashed; }
 .xm .xp-foot { display: inline; }
 
-/* Key takeaways, the first thing on a paper page. */
-.takeaways { margin: 0 0 4px; padding-left: 18px; }
-.takeaways li { margin-bottom: 8px; }
-.takeaways strong { color: var(--strong); }
-.takeaways strong a { color: inherit; }
+/* The mark on a takeaway that is a method the paper introduces. */
 .tag {
   margin: 0 2px 0 4px;
   padding: 0 7px;
@@ -420,13 +416,26 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
   white-space: nowrap;
   vertical-align: 1px;
 }
-.takeaways .xp-tone { font-weight: 600; }
 
 /* A key takeaway, boxed under the question it answers: the part of the tree
    meant to be read by someone who reads nothing else. */
 .takeaway { margin: 8px 0 2px; padding: 9px 12px 10px; border: 1px solid var(--muted); border-radius: 6px; background: var(--wash); }
 .takeaway strong { color: var(--strong); }
 .takeaway .xp-tone { font-weight: 600; }
+.takeaway p { margin: 0; }
+/* Below a dashed rule, why the point matters beyond the paper. The dashed
+   rule is the same signal as on a drafter's note: past it, the text is the
+   wiki's reading and not the paper's result. */
+.takeaway .takeaway-why { margin-top: 9px; padding-top: 8px; border-top: 1px dashed var(--faint); }
+.why-label {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
 
 /* Questions and answers: the paper at a glance. The leading question sits at
    the root; the questions it breaks into hang off a line beneath it. */

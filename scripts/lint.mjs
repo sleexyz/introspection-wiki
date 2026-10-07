@@ -121,6 +121,11 @@ for (const file of files) {
     const root = fm.questions;
     const check = (node, where) => {
       if (!node.q || !node.a) say(file, `questions: ${where} needs both a question (q) and an answer (a)`);
+      for (const k of node.takeaways ?? []) {
+        if (!k.title || !k.text) say(file, `questions: a takeaway under ${where} needs a title and text`);
+        else if (!k.why) say(file, `questions: the takeaway "${k.title}" needs \`why\`: why it matters beyond the paper`);
+        if (k.kind && !['finding', 'method'].includes(k.kind)) say(file, `questions: takeaway kind "${k.kind}" must be finding or method`);
+      }
     };
     check(root, 'the leading question');
     for (const node of root.sub ?? []) {

@@ -64,10 +64,17 @@ introductory prose: the page goes straight from "At a glance" into the map.
      "faithful"; "a point in training", not "a checkpoint"). The title is the
      point in plain words. For a new method, say first the general class of
      problem it addresses, then the general shape of the solution, then what
-     it did here with the number. One experiment does not generalize by
-     itself, so say what might carry over and mark it as a possibility. End
-     with a takeaway that states the limits and the general idea they leave
-     standing.
+     it did here with the number. End with a takeaway that states the limits.
+     Each takeaway also has `why`, drawn inside the box under the label "Why
+     it matters": two to four sentences on why the point matters beyond the
+     paper. What would it change for the field, or for someone relying on
+     models, if it holds more widely? What might carry over to other
+     settings? This is the one place on a page that looks past what the paper
+     showed, so keep the line visible. `text` holds only what the paper did
+     and found. In `why`, attribute what the authors say about significance
+     to them, phrase the rest as a possibility with its condition ("if this
+     holds beyond one task"), and say what is still missing. One experiment
+     does not generalize by itself.
    - `questions`: the question the paper set out to answer, with its answer,
      and beneath it the questions it broke that into, each with its answer and
      the key number. A shallow tree: the leading question, then at most two
