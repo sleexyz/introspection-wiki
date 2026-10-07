@@ -36,5 +36,10 @@ expect "papers.json"                       '"papers"'                     "$base
 expect "graph.json"                        '"edges"'                      "$base/data/graph.json"
 expect "references.bib"                    "@"                            "$base/references.bib"
 expect "unknown page is a 404"             " 404"                         "$base/no-such-page"
+expect "an earlier version is kept"        "earlier version"              "$base/archive/atkinson2026-identifying-introspection"
+expect "old outline address redirects"     " 301"                         "$base/outlines/atkinson2026-identifying-introspection"
+expect "the reader's papers are listed"    "atkinson2026"                 "$base/pdf/sources.json"
+expect "a visitor to a PDF is sent on"     " 302"                         "$base/pdf/atkinson2026-identifying-introspection.pdf"
+expect "the reader is given the PDF"       "content-type: application/pdf" -H "Sec-Fetch-Site: same-origin" -H "Sec-Fetch-Dest: empty" -o /dev/null "$base/pdf/atkinson2026-identifying-introspection.pdf"
 
 exit $fail
