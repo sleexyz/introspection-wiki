@@ -77,6 +77,7 @@ Follow these steps in order. Each ends in something that can be checked.
 ### 1. Fetch the paper and take stock
 
 Choose the id: `<first-author><year>-<short-title>`, lower case, hyphenated.
+The paper's abstract page gives the three parts.
 
     just paper <paper-id> <pdf-url>
 
@@ -87,8 +88,9 @@ each figure. Keep the inventory; steps 3 and 6 use it.
 
 Work from the latest version of the paper and from that version only. For an
 arXiv paper the script prints the link of the version it fetched
-(`https://arxiv.org/pdf/2610.00827v1`). That link, with its version, is the
-page's `links.pdf`: the page stores positions in this exact file.
+(`https://arxiv.org/pdf/2610.00827v1`) and the date it was first posted. That
+link, with its version, is the page's `links.pdf`: the page stores positions
+in this exact file.
 
 If the inventory lists no sections, the PDF has no named destinations and
 locators cannot be placed in it. Stop and say so.
@@ -96,10 +98,10 @@ locators cannot be placed in it. Stop and say so.
 ### 2. Read it, and find the authors' threads
 
 Read `paper.txt` in full, appendices included. Read the figures too: look at
-each page that has one (`just figure page <paper-id> <page>` writes an image
-of the page).
+each page that has one. `just figure page <paper-id> <page> 200` writes an
+image of the page large enough to read the small print in a figure.
 
-Search for the authors' own threads about the paper on X. A thread is the
+Search the web for the authors' own threads about the paper on X. A thread is the
 authors' own short statement of the paper, which step 3 needs. Import each
 with `just thread <post-url> <thread-id> <paper-id>`, then write its `title`
 and `summary` and describe every image in `alt`. If you find none, go on
@@ -114,7 +116,11 @@ conclusion, and the authors' threads. Those statements show what the authors
 take their claims to be.
 
 1. Line up every short statement of the whole paper. What recurs is a claim.
-   What survives down to the title leads. There are one to three.
+   What survives down to the title leads. There are one to three. Where the
+   paper numbers its own questions or contributions, start from those, and
+   merge two that rest on the same experiments. A result that recurs in the
+   introduction, a figure and the discussion is a claim even if the abstract
+   leaves it out.
 2. Give each sentence of the abstract and each paragraph of the introduction
    the job it does.
 3. For each section: the question it opens with, what it reports, what it hands
@@ -122,20 +128,52 @@ take their claims to be.
 4. For each claim: the key experiments, its strength in the authors' words, and
    what is new. For each control, robustness check and hedge: the objection it
    answers.
-5. Take the words each part gets from the inventory.
+5. Take the words each part gets from the inventory. It counts sub-sections
+   too, which shows how much text the leading claim's own evidence gets.
 6. Account for every section, figure, table, appendix and footnote in the
    inventory.
 
-### 4. Write the page
+### 4. Cut the figures
 
-**Frontmatter.** `title`, `authors`, `year`, `date` (first posted) and `venue`
-from the paper. `tier` is the maintainer's call: propose one and say why.
+The page shows the paper's main-text figures, each where it is used: the
+figure of the setup with what the paper starts from, and every result figure
+under the claim it supports, after the sentence that states the result. Cut
+them before writing, since the page cannot be checked without them. A figure
+whose panels belong to different parts of the page may be cut into pieces.
+
+    just figure auto <paper-id> <figure-number> <name>
+
+Open the result and check the edges: nothing clipped, no caption or body text
+included. If a side is off, or only one panel is wanted, cut it by hand with
+the box `auto` printed, adjusted:
+
+    just figure crop <paper-id> <page> <x> <y> <w> <h> <name>
+
+Place it with an image on its own line, with a caption that says which figure
+of the paper it is:
+
+    ![What the figure shows, in words.](/figures/<paper-id>/<name>.png "Figure 2 of the paper: what it plots.")
+
+The alt text is what a reader without the image gets, including every language
+model reading the markdown twin, so it must carry the content: axes, groups,
+and the pattern the figure is there to show. Describe only what is visible.
+Figures belong to the paper's authors; never present one as the wiki's own.
+
+### 5. Write the page
+
+**Frontmatter.** `title`, `authors`, `year`, `date` (the day it was first
+posted, as arXiv gives it) and `venue` from the paper; a preprint's venue is
+"arXiv". `tier` is the maintainer's call: propose one and say why.
 `status: full`, `reviewed: false` (a person flips it), `format: outline`.
 `links`: `arxiv` (the id), `pdf` (the exact file from step 1), and `project`
 or `code` if the paper gives them. `cites`: the id of every paper in its
-reference list that has a page here. `concepts`: the concept pages it bears
-on. `threads`: the threads from step 2. `setup`: what the model reports on,
-the methods (from `src/lib/vocab.mjs`) and the models. `sources`: what you
+reference list that has a page here. `concepts`: the concept pages whose term
+the paper itself uses; a tag is a label, so leave it empty when the paper
+uses none of them. `threads`: the threads from step 2. `setup`: what the model
+reports on, the methods and the models. The methods come from
+`src/lib/vocab.mjs`: take the nearest, with `behavioral` for anything done by
+prompting, in-context examples included, and `fine-tuning` for any training of
+weights. Do not add a value. `sources`: what you
 read. `added`, `updated`. There is no `questions` and no `terms`.
 
 `summary` is one or two plain sentences that summarize the paper as the
@@ -166,7 +204,8 @@ outline has it: the claims, in order. It is not a description of the page.
    cites; `### The body, section by section`, each section's job, how it
    opens, what it hands on, and what would be missing without it;
    `### The appendices`, a table with the job of each; and a last table of
-   where each claim appears, from the title to the threads.
+   where each claim appears, from the title to the threads. Leave out a row
+   the paper has nothing for: no thread, no list of contributions.
 
 Rules:
 
@@ -199,35 +238,26 @@ way that can be:
   `Abstract`. Use these forms whatever the paper itself writes ("Fig. 3",
   "Sec. 4", "§ 4"). `Abstract` works even where the paper prints no such
   heading.
+- A locator is read wherever one of these forms appears, so do not use them
+  for anything else. The paper's own "Prompt B.1" or "Table B.2" is not taken
+  for a section, but "B.1" alone is. A range places only its first number:
+  write "Tables 4, 5, 6 and 7", not "Tables 4 to 7".
 - Quote exactly, between straight double quotes, with nothing else inside
   them. A quotation is matched to the paper on its letters and digits alone,
-  so line breaks and hyphenation do not matter, but a changed word does.
+  so line breaks, page breaks and hyphenation do not matter, but a changed
+  word does. It cannot run across a figure, table or footnote that interrupts
+  the sentence in the PDF.
+- Double quotes are for the paper's words and the threads' words only. For
+  anything else, your own phrase or a term, use italics. Where the paper's
+  sentence has quotation marks of its own, write those as single quotes.
+- Write a symbol so that its letters and digits are the paper's: `p_e` for a
+  p with a subscript e.
+- Quote enough words that the passage occurs once in the paper. A single word
+  such as "suggesting" occurs many times and can be placed anywhere.
 - Put a quotation's locator next to it (`"…" (§4)`). Where the same words
-  occur twice in the paper, the nearest locator decides which is meant.
-
-### 5. Cut the figures
-
-Show the paper's main-text figures, each where it is used: the figure of the
-setup with what the paper starts from, and every result figure under the claim
-it supports, after the sentence that states the result.
-
-    just figure auto <paper-id> <figure-number> <name>
-
-Open the result and check the edges: nothing clipped, no caption or body text
-included. If a side is off, or only one panel is wanted, cut it by hand with
-the box `auto` printed, adjusted:
-
-    just figure crop <paper-id> <page> <x> <y> <w> <h> <name>
-
-Place it with an image on its own line, with a caption that says which figure
-of the paper it is:
-
-    ![What the figure shows, in words.](/figures/<paper-id>/<name>.png "Figure 2 of the paper: what it plots.")
-
-The alt text is what a reader without the image gets, including every language
-model reading the markdown twin, so it must carry the content: axes, groups,
-and the pattern the figure is there to show. Describe only what is visible.
-Figures belong to the paper's authors; never present one as the wiki's own.
+  occur twice in the paper, the nearest locator in the same block decides
+  which is meant.
+- Write each paragraph, list item and table row on one line of the source.
 
 ### 6. Place the page in the paper, and check it
 
@@ -236,16 +266,20 @@ Figures belong to the paper's authors; never present one as the wiki's own.
 This finds every locator and quotation of the page in the PDF and writes
 `src/data/anchors/<paper-id>.json`. It stops with an error on a quotation that
 is in neither the paper nor its threads, or a locator the paper does not have:
-fix the page and run it again until it passes. It also lists parts of the
-paper the page never mentions, and numbers on the page that are in neither the
-paper nor its threads. Clear both lists, or be able to say why an entry stays.
+fix the page and run it again until it passes. It also prints three lists to
+look at: quotations whose words occur more than once in the paper, with the
+place each was put, since a quotation in the wrong place raises no error;
+parts of the paper the page never mentions; and numbers on the page that are
+in neither the paper nor its threads. Go through all three. An entry may stay
+if you can say why.
 
     just lint
 
 ### 7. Tie it into the wiki
 
 Run `just crawl` so that citations to and from the new page are picked up, and
-triage any new candidates it finds (see "Adding papers"). Semantic Scholar may
+triage any new candidates it finds (see "Adding papers"); after editing
+`triage.json`, `just crawl --offline` folds the labels into the frontier. Semantic Scholar may
 not know a paper posted in the last few weeks; then `cites` in the frontmatter
 is all there is, and that is fine.
 
@@ -258,8 +292,8 @@ be beside the page. Click a quotation and a locator in every part of the page
 and see that the paper goes to the right words. Look at each figure.
 
 Do not commit or deploy unless the maintainer has asked. Hand over with: the
-tier you propose, whether you found a thread, anything in the two lists of
-step 6 that you left, and anything you could not check.
+tier you propose, whether you found a thread, anything in the lists of step 6
+that you left, and anything you could not check.
 
 ### Rewriting a page from the earlier format
 

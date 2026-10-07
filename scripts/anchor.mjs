@@ -14,7 +14,9 @@
 // four things. Two stop it with an error:
 //   - a quotation that is in neither the paper nor its threads;
 //   - a locator the paper does not have ("Figure 9" in a paper with eight).
-// Two are listed for the writer to look at:
+// Three are listed for the writer to look at:
+//   - quotations whose words occur more than once in the paper, with the place
+//     each was put, since the wrong place raises no error;
 //   - parts of the paper the page never mentions;
 //   - numbers on the page that are in neither the paper nor its threads.
 //
@@ -26,7 +28,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { parse } from 'yaml';
-import { MIN_QUOTE, skeleton, tokenize } from '../src/lib/cite.mjs';
+import { MIN_QUOTE, choose, skeleton, tokenize, withHints } from '../src/lib/cite.mjs';
 import { numbers, readPdf } from './pdf.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
@@ -56,6 +58,7 @@ const pdf = readPdf(file);
 // so is a note, which is the drafting model's.
 const body = rest.join('---');
 const quoted = new Map();
+const hinted = [];
 const located = new Set();
 const figures = new Set();
 const stated = new Set();
@@ -65,8 +68,11 @@ for (const line of body.split('\n')) {
     continue;
   }
   let prose = '';
-  for (const t of tokenize(line)) {
-    if (t.type === 'quote' && t.key.length >= MIN_QUOTE) quoted.set(t.key, t.text);
+  for (const t of withHints(tokenize(line))) {
+    if (t.type === 'quote' && t.key.length >= MIN_QUOTE) {
+      quoted.set(t.key, t.text);
+      hinted.push(t);
+    }
     if (t.type === 'loc') located.add(t.dest);
     if (t.type === 'text') prose += t.text;
   }
@@ -126,6 +132,15 @@ const name = (key) => {
   const [kind, n] = key.split(':');
   return { sec: `§${n}`, app: `Appendix ${n}`, fig: `Figure ${n}`, tab: `Table ${n}`, fn: `footnote ${n}`, abstract: 'Abstract' }[kind];
 };
+// The same choice remark-wiki.mjs makes when it builds the page.
+const repeated = hinted
+  .filter((t) => quotes[t.key]?.length > 1)
+  .map((t) => {
+    const [[page, , y]] = choose(quotes[t.key], pdf.dests[t.hint]);
+    return `  ${t.text} is ${quotes[t.key].length} times in the paper; put in ${name(pdf.section(page, y) ?? 'abstract')}, p. ${page}${t.hint ? `, by ${name(t.hint)}` : ', the first'}`;
+  });
+if (repeated.length) console.log(`\nquotations whose words occur more than once. Check each is where you mean; quote more words if it is not:\n${[...new Set(repeated)].join('\n')}`);
+
 const unmentioned = Object.keys(pdf.dests)
   .filter((k) => !located.has(k) && !figures.has(k))
   .sort((a, b) => pdf.starts[a] - pdf.starts[b]);

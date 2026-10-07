@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 // Cut a figure out of a paper's PDF.
 //
-//   node scripts/figure.mjs page <paper-id> <page>
+//   node scripts/figure.mjs page <paper-id> <page> [dpi]
 //       Renders the page at 72 dpi to data/raw/papers/<paper-id>/pages/p<page>.png.
 //       Open it and read off the figure's box. At 72 dpi one pixel is one PDF
-//       point, so a US-letter page is 612 x 792.
+//       point, so a US-letter page is 612 x 792. To read small print in a
+//       figure, give a dpi (200 is enough); the file is then p<page>@<dpi>.png,
+//       and boxes are still measured on the 72-dpi one.
 //
 //   node scripts/figure.mjs crop <paper-id> <page> <x> <y> <width> <height> <name>
 //       Cuts that box (in the 72-dpi page's pixels) at 220 dpi and writes
@@ -58,8 +60,10 @@ const cairo = (args, out) => execFileSync('pdftocairo', ['-png', '-singlefile', 
 if (mode === 'page') {
   const dir = path.join(ROOT, 'data/raw/papers', paperId, 'pages');
   fs.mkdirSync(dir, { recursive: true });
-  cairo(['-r', '72'], path.join(dir, `p${page}`));
-  console.log(path.join(dir, `p${page}.png`));
+  const dpi = /^\d+$/.test(rest[0] ?? '') ? rest[0] : '72';
+  const name = dpi === '72' ? `p${page}` : `p${page}@${dpi}`;
+  cairo(['-r', dpi], path.join(dir, name));
+  console.log(path.join(dir, `${name}.png`));
 } else if (mode === 'crop') {
   const [x, y, w, h] = rest.slice(0, 4).map(Number);
   const name = rest[4];

@@ -28,6 +28,7 @@ export const round = (n) => Math.round(n * 10) / 10;
  *   starts: Record<string, number>,  the index in `words` at which each begins
  *   rects: (from: number, to: number) => number[][],
  *   find: (key: string) => number[][][],
+ *   section: (page: number, y: number) => string | undefined,
  * }}
  */
 export function readPdf(file) {
@@ -51,6 +52,18 @@ export function readPdf(file) {
   const second = (line) => words[line.words[1]]?.t;
   const text = (line) => line.words.map((i) => words[i].t).join(' ');
 
+  // A page number, and a running head or foot that repeats from page to page,
+  // sit in the stream of words wherever a sentence runs over a page break. They
+  // are left out of the text that quotations are matched against.
+  const pageLines = (p) => lines.filter((l) => l.p === p && l.words.length).sort((a, b) => a.y0 - b.y0);
+  const edges = heights.flatMap((_, i) => [pageLines(i + 1)[0], pageLines(i + 1).at(-1)]).filter(Boolean);
+  const seen = new Map();
+  for (const l of edges) seen.set(skeleton(text(l)), (seen.get(skeleton(text(l))) ?? 0) + 1);
+  for (const l of edges) {
+    const number = l.words.length === 1 && /^\d+$/.test(first(l));
+    if (number || seen.get(skeleton(text(l))) >= 3) for (const i of l.words) words[i].aside = true;
+  }
+
   // The left edge of the text block: where most lines start.
   const begins = new Map();
   for (const l of lines) begins.set(Math.round(l.x0), (begins.get(Math.round(l.x0)) ?? 0) + 1);
@@ -66,6 +79,7 @@ export function readPdf(file) {
   const dests = {};
   const titles = {};
   const starts = {};
+  const ends = {};
   const set = (key, line, top = line.y0, title = text(line)) => {
     if (dests[key]) return;
     dests[key] = [line.p, round(top), round(line.y1 - top)];
@@ -122,13 +136,23 @@ export function readPdf(file) {
     const size = new Map();
     for (const l of before) size.set(l.block, (size.get(l.block) ?? 0) + l.words.length);
     const [longest, count] = [...size].sort((a, b) => b[1] - a[1])[0] ?? [];
-    if (count > 40) set('abstract', before.find((l) => l.block === longest));
+    if (count > 40) {
+      set('abstract', before.find((l) => l.block === longest));
+      ends.abstract = before.findLast((l) => l.block === longest).words.at(-1) + 1;
+    }
   }
+
+  /** The section a place on a page falls in: the last heading at or before it. */
+  const section = (page, y) =>
+    Object.keys(dests)
+      .filter((k) => /^(sec|app|abstract)/.test(k) && (dests[k][0] < page || (dests[k][0] === page && dests[k][1] <= y + 2)))
+      .sort((a, b) => starts[b] - starts[a])[0];
 
   // The paper as one string of letters and digits, and the word each came from.
   let doc = '';
   const owner = [];
   words.forEach((w, i) => {
+    if (w.aside) return;
     const s = skeleton(w.t);
     doc += s;
     for (let k = 0; k < s.length; k++) owner.push(i);
@@ -139,6 +163,7 @@ export function readPdf(file) {
     const out = [];
     for (let i = from; i <= to; i++) {
       const w = words[i];
+      if (w.aside) continue;
       const last = out.at(-1);
       if (last?.line === w.line) {
         last.x0 = Math.min(last.x0, w.x0);
@@ -163,37 +188,44 @@ export function readPdf(file) {
   // (arXiv stamps its identifier up the side of the first page).
   const edge = (values, share) => values.sort((a, b) => a - b)[Math.floor((values.length - 1) * share)];
   const crop = [round(edge(words.map((w) => w.x0), 0.004)), round(edge(words.map((w) => w.x1), 0.996))];
-  return { pages: heights.length, words, lines, crop, margin, dests, titles, starts, rects, find };
+  return { pages: heights.length, words, lines, crop, margin, dests, titles, starts, ends, rects, find, section };
 }
 
 /** The numbers in a run of text that are worth checking: any with two digits or more, a decimal point or a percent sign. */
 export const numbers = (text) => (text.match(/\d+(?:\.\d+)?%?/g) ?? []).filter((n) => /[.%]/.test(n) || n.length > 1);
 
 /**
- * How many words each numbered section has, and its share of the main text
- * (the abstract through the last numbered section). The inside of a figure is
- * left out; captions and tables are counted. Good to a percent or two.
+ * How many words each numbered section has, and for a top-level section its
+ * share of the main text (the abstract through the last numbered section).
+ * A sub-section's count runs to the next heading of any level. The inside of
+ * a figure is left out; captions and tables are counted. Good to a percent or
+ * two.
  */
 export function shares(pdf) {
-  const { words, lines, dests, starts, titles } = pdf;
-  const heads = Object.keys(dests)
-    .filter((k) => k === 'abstract' || /^sec:\d+$/.test(k))
+  const { words, lines, dests, starts, ends, titles } = pdf;
+  const all = Object.keys(dests)
+    .filter((k) => k === 'abstract' || k.startsWith('sec:'))
     .sort((a, b) => starts[a] - starts[b]);
-  if (!heads.length) return [];
+  const top = all.filter((k) => !k.includes('.'));
+  if (!top.length) return [];
   // The main text ends where the references, the acknowledgments or the appendices begin.
-  const after = starts[heads.at(-1)];
+  const after = starts[top.at(-1)];
   const back = lines.find(
     (l) => l.words[0] > after && l.words.length <= 2 && /^(references|bibliography|acknowledge?ments?)$/i.test(words[l.words[0]].t),
   );
   const appendix = Math.min(...Object.keys(dests).filter((k) => k.startsWith('app:')).map((k) => starts[k]), Infinity);
   const end = Math.min(back ? back.words[0] : Infinity, appendix, words.length);
   const figures = Object.entries(dests).filter(([k]) => k.startsWith('fig:'));
-  const inFigure = (w) => figures.some(([, [p, top, h]]) => w.p === p && w.y0 >= top - 1 && w.y1 <= top + h - 6);
-  const count = (from, to) => words.slice(from, to).filter((w) => !inFigure(w) && /[\p{L}]{2}/u.test(w.t)).length;
+  const inFigure = (w) => figures.some(([, [p, top_, h]]) => w.p === p && w.y0 >= top_ - 1 && w.y1 <= top_ + h - 6);
+  const count = (from, to) => words.slice(from, to).filter((w) => !w.aside && !inFigure(w) && /[\p{L}]{2}/u.test(w.t)).length;
+  const next = (list, key) => starts[list[list.indexOf(key) + 1]] ?? end;
 
-  const rows = heads.map((key, i) => ({ key, title: titles[key], words: count(starts[key], i + 1 < heads.length ? starts[heads[i + 1]] : end) }));
-  const main = rows.reduce((sum, r) => sum + r.words, 0);
-  for (const r of rows) r.share = Math.round((100 * r.words) / main);
+  const rows = all.map((key) => {
+    const sub = key.includes('.');
+    return { key, title: titles[key], sub, words: count(starts[key], Math.min(ends[key] ?? Infinity, next(sub ? all : top, key))) };
+  });
+  const main = rows.filter((r) => !r.sub).reduce((sum, r) => sum + r.words, 0);
+  for (const r of rows) if (!r.sub) r.share = Math.round((100 * r.words) / main);
   if (appendix < Infinity) rows.push({ key: 'appendices', title: 'all appendices', words: count(appendix, words.length) });
   return rows;
 }

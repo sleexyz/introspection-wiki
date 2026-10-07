@@ -31,12 +31,13 @@ export const skeleton = (s) =>
 export const MIN_QUOTE = 6;
 
 const TOKEN =
-  /"([^"\n]+)"|“([^”\n]+)”|§(\d+(?:\.\d+){0,2})()|Appendix ([A-Z](?:\.\d+){0,2})()|\b([A-Z]\.\d+(?:\.\d+)?)()\b|(Figure|Table)s? (\d+)[a-d]?((?:(?:,| and|, and) \d+[a-d]?)*)|[Ff]ootnote (\d+)|\bAbstract\b/g;
+  /"([^"\n]+)"|“([^”\n]+)”|§(\d+(?:\.\d+){0,2})()|Appendix ([A-Z](?:\.\d+){0,2})()|(?<!(?:Figure|Fig\.|Table|Tab\.|Prompt|Listing|Algorithm|Equation|Eq\.|Theorem|Lemma|Proposition|Corollary|Definition|Example|Box|Step) )\b([A-Z]\.\d+(?:\.\d+)?)()\b|(Figure|Table)s? (\d+)[a-d]?((?:(?:,| and|, and) \d+[a-d]?)*)|[Ff]ootnote (\d+)|\bAbstract\b/g;
 
 /**
  * Split a run of text into plain text, quotations and locators, in order.
  * A locator's `dest` is its key in the anchors file: "sec:5.1", "app:B.6",
- * "fig:3", "tab:2", "fn:2", "abstract".
+ * "fig:3", "tab:2", "fn:2", "abstract". A bare "B.1" is an appendix section
+ * unless it is the number of something else ("Prompt B.1", "Table B.1").
  *
  * @param {string} text
  * @returns {{ type: 'text' | 'quote' | 'loc', text: string, key?: string, dest?: string }[]}
@@ -87,17 +88,22 @@ export function tokenize(text) {
 
 /**
  * Give each quotation the locator it is cited to: the nearest one in the same
- * run of text, which is the one after it in '"…" (§4)' and the one before it
- * in "Appendix B.2 says …". The same words can occur twice in a paper; the
- * hint says which occurrence is meant.
+ * block (a paragraph, a list item, a table row), which is the one after it in
+ * '"…" (§4)' and the one before it in "Appendix B.2 says …". The same words
+ * can occur twice in a paper; the hint says which occurrence is meant.
+ *
+ * Nearness is counted in quotations and locators, not in characters, so the
+ * answer is the same whether the block is read as markdown or as a tree.
  */
 export function withHints(tokens) {
-  return tokens.map((t, i) => {
+  const cited = tokens.filter((t) => t.type !== 'text');
+  return tokens.map((t) => {
     if (t.type !== 'quote') return t;
-    const after = tokens.findIndex((x, k) => k > i && x.type === 'loc');
-    const before = tokens.findLastIndex((x, k) => k < i && x.type === 'loc');
+    const i = cited.indexOf(t);
+    const after = cited.findIndex((x, k) => k > i && x.type === 'loc');
+    const before = cited.findLastIndex((x, k) => k < i && x.type === 'loc');
     const nearest = after === -1 || (before !== -1 && i - before < after - i) ? before : after;
-    return { ...t, hint: tokens[nearest]?.dest };
+    return { ...t, hint: cited[nearest]?.dest };
   });
 }
 

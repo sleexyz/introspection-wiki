@@ -40,6 +40,7 @@ if (given) {
     let version = arxiv[2];
     const feed = await (await fetch(`https://export.arxiv.org/api/query?id_list=${arxiv[1]}`, { headers: { 'User-Agent': UA } })).text();
     version ??= feed.match(new RegExp(`arxiv\\.org/abs/${arxiv[1].replace('.', '\\.')}(v\\d+)`))?.[1] ?? '';
+    if (!version) console.log('arXiv did not say which version is the latest. Find it on the abstract page and run this again with the versioned link.');
     url = `https://arxiv.org/pdf/${arxiv[1]}${version}`;
     const field = (tag) => [...feed.matchAll(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`, 'g'))].map((m) => m[1].replace(/\s+/g, ' ').trim());
     console.log(`arXiv:${arxiv[1]}${version}`);
@@ -95,7 +96,8 @@ const rows = shares(p);
 if (rows.length) {
   console.log('\nWords, and share of the main text');
   for (const r of rows) {
-    console.log(`  ${(r.key === 'appendices' ? 'Appendices' : locator(r.key)).padEnd(14)} ${String(r.words).padStart(6)}${r.share === undefined ? '' : `  ${String(r.share).padStart(3)}%`}`);
+    const label = `${r.sub ? '  ' : ''}${r.key === 'appendices' ? 'Appendices' : locator(r.key)}`;
+    console.log(`  ${label.padEnd(14)} ${String(r.words).padStart(6)}${r.share === undefined ? '' : `  ${String(r.share).padStart(3)}%`}`);
   }
 }
 if (!ordered.some((k) => k.startsWith('sec'))) {

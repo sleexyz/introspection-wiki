@@ -114,29 +114,50 @@ function anchorsFor(file) {
 
 const UNCITED = new Set(['heading', 'link', 'linkReference', 'code', 'inlineCode', 'html', 'image']);
 
+// A block is one line of the markdown source. A quotation takes its hint from
+// the locators of its whole block, wherever emphasis or a link divides the text.
+const BLOCKS = new Set(['paragraph', 'tableRow']);
+
 /** Give every locator and quotation in the tree's text its place in the paper. */
 function cite(node, anchors) {
   if (!node.children || UNCITED.has(node.type)) return;
-  node.children = node.children.flatMap((child) => {
-    if (child.type !== 'text') {
-      cite(child, anchors);
-      return [child];
-    }
-    return withHints(tokenize(child.value)).map((t) => {
-      const text = { type: 'text', value: t.text };
-      const dest = t.type === 'loc' && anchors.dests[t.dest];
-      if (dest) {
-        const hProperties = { className: ['cite', 'cite-l'], 'data-at': dest.join(','), 'data-kind': t.dest.split(':')[0] };
-        return { type: 'link', url: `${anchors.pdf}#page=${dest[0]}`, children: [text], data: { hProperties } };
+  if (!BLOCKS.has(node.type)) return node.children.forEach((child) => cite(child, anchors));
+
+  const texts = [];
+  const gather = (n) => {
+    if (n.type === 'text') texts.push(n);
+    else if (!UNCITED.has(n.type)) n.children?.forEach(gather);
+  };
+  gather(node);
+  const runs = texts.map((t) => tokenize(t.value));
+  const hinted = withHints(runs.flat());
+  const tokens = new Map(texts.map((t, i) => [t, hinted.splice(0, runs[i].length)]));
+
+  const swap = (n) => {
+    if (!n.children || UNCITED.has(n.type)) return;
+    n.children = n.children.flatMap((child) => {
+      if (child.type !== 'text') {
+        swap(child);
+        return [child];
       }
-      const found = t.type === 'quote' && t.key.length >= MIN_QUOTE && anchors.quotes[t.key];
-      if (found) {
-        const rects = choose(found, anchors.dests[t.hint]).map((r) => r.join(',')).join(';');
-        return { type: 'emphasis', children: [text], data: { hName: 'span', hProperties: { className: ['cite', 'cite-q'], 'data-rects': rects } } };
-      }
-      return text;
+      return tokens.get(child).map(place);
     });
-  });
+  };
+  const place = (t) => {
+    const text = { type: 'text', value: t.text };
+    const dest = t.type === 'loc' && anchors.dests[t.dest];
+    if (dest) {
+      const hProperties = { className: ['cite', 'cite-l'], 'data-at': dest.join(','), 'data-kind': t.dest.split(':')[0] };
+      return { type: 'link', url: `${anchors.pdf}#page=${dest[0]}`, children: [text], data: { hProperties } };
+    }
+    const found = t.type === 'quote' && t.key.length >= MIN_QUOTE && anchors.quotes[t.key];
+    if (found) {
+      const rects = choose(found, anchors.dests[t.hint]).map((r) => r.join(',')).join(';');
+      return { type: 'emphasis', children: [text], data: { hName: 'span', hProperties: { className: ['cite', 'cite-q'], 'data-rects': rects } } };
+    }
+    return text;
+  };
+  swap(node);
 }
 
 /** Width and height from a PNG header, so the page does not shift as it loads. */
