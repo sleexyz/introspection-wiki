@@ -1,47 +1,9 @@
 ---
-// The skimmable summary of a paper: the questions it asked and the answers it
-// got, as a shallow tree with the leading question at the root. Each question
-// links to the experiment that answered it.
-import { inline } from '../lib/experiment.mjs';
-
-export interface Answered {
-  q: string;
-  a: string;
-  see?: string;
-  sub?: Answered[];
-}
+import { questionsHtml, type Answered } from '../lib/questions';
 
 interface Props {
   root: Answered;
 }
-
-const { root } = Astro.props;
-const t = (s: string) => inline(s, {});
 ---
 
-<div class="qa">
-  <p class="qa-q qa-root" set:html={t(root.q)} />
-  <p class="qa-a" set:html={t(root.a)} />
-  {
-    (root.sub?.length ?? 0) > 0 && (
-      <ul class="qa-tree">
-        {root.sub!.map((node) => (
-          <li>
-            <p class="qa-q">{node.see ? <a href={node.see} set:html={t(node.q)} /> : <Fragment set:html={t(node.q)} />}</p>
-            <p class="qa-a" set:html={t(node.a)} />
-            {(node.sub?.length ?? 0) > 0 && (
-              <ul class="qa-tree">
-                {node.sub!.map((leaf) => (
-                  <li>
-                    <p class="qa-q">{leaf.see ? <a href={leaf.see} set:html={t(leaf.q)} /> : <Fragment set:html={t(leaf.q)} />}</p>
-                    <p class="qa-a" set:html={t(leaf.a)} />
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
-      </ul>
-    )
-  }
-</div>
+<div class="qa" set:html={questionsHtml(Astro.props.root)} />

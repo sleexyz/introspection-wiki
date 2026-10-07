@@ -50,8 +50,10 @@ A paper page has these parts, in this order. There is no "In brief" and no
 introductory prose: the page goes straight from "At a glance" into the map.
 
 0. **At a glance**, written in the frontmatter and drawn by the template:
-   - `takeaways`: three to five things a reader should leave with, first on the
-     page. Each has a short `title` stating the point and a sentence or two of
+   - `takeaways`, inside `questions`: three to five points across the tree,
+     each listed under the question it answers and drawn as a box. A reader
+     may scan the tree and read only the boxes, so each box must stand
+     alone; repeating what the answer says is fine. Each has a short `title` stating the point and a sentence or two of
      `text` with the number. Mark a method the paper introduces with
      `kind: method`; a new setup or a new test is often the main contribution.
      Draw them from the abstract, the paper's own list of contributions and

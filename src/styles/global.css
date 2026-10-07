@@ -422,6 +422,12 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
 }
 .takeaways .xp-tone { font-weight: 600; }
 
+/* A key takeaway, boxed under the question it answers: the part of the tree
+   meant to be read by someone who reads nothing else. */
+.takeaway { margin: 8px 0 2px; padding: 9px 12px 10px; border: 1px solid var(--muted); border-radius: 6px; background: var(--wash); }
+.takeaway strong { color: var(--strong); }
+.takeaway .xp-tone { font-weight: 600; }
+
 /* Questions and answers: the paper at a glance. The leading question sits at
    the root; the questions it breaks into hang off a line beneath it. */
 .qa { margin: 0 0 8px; }

@@ -37,9 +37,9 @@ A page marked *stub* has only bibliographic details and a one-line description. 
 
 Every full paper page opens with the same short block, so a page can be skimmed and papers can be compared.
 
-**Key takeaways.** Three to five things a reader should leave with, drawn from the abstract, the paper's own list of contributions and the authors' threads. A method the paper introduces is marked *new method*.
+**Key takeaways.** Three to five boxed points that sit inside the tree of questions, each under the question it answers, so the boxes can be read alone. They are drawn from the abstract, the paper's own list of contributions and the authors' threads. A method the paper introduces is marked *new method*.
 
-**Questions and answers.** The question the paper set out to answer, with its answer, and under it the questions it broke that into. It is a shallow tree: the leading question at the root and at most two levels beneath it. Each question links to the experiment that answered it.
+**Questions and answers.** The tree the takeaways sit in. The question the paper set out to answer, with its answer, and under it the questions it broke that into. It is a shallow tree: the leading question at the root and at most two levels beneath it. Each question links to the experiment that answered it.
 
 **Key terms.** The words the paper's argument turns on, such as *introspection*, *faithful* or *grounded*, as that paper defines them. Papers use these words differently, so the definitions are each paper's own, with where in the paper they come from.
 

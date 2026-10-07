@@ -25,9 +25,8 @@ const citedBy = wiki.citedBy.get(paper.id)!.map((id) => wiki.paper.get(id)!);
 // around the body as well as the body's own headings.
 const section = (slug: string, text: string, show = true) => (show ? [{ depth: 2, slug, text }] : []);
 const headings = [
-  ...section('at-a-glance', 'At a glance', Boolean(d.takeaways.length || d.questions || d.terms.length || d.setup)),
-  ...(d.takeaways.length ? [{ depth: 3, slug: 'key-takeaways', text: 'Key takeaways' }] : []),
-  ...(d.questions ? [{ depth: 3, slug: 'questions', text: 'Questions and answers' }] : []),
+  ...section('at-a-glance', 'At a glance', Boolean(d.questions || d.terms.length || d.setup)),
+  ...(d.questions ? [{ depth: 3, slug: 'questions', text: 'Questions and key takeaways' }] : []),
   ...(d.terms.length ? [{ depth: 3, slug: 'key-terms', text: 'Key terms' }] : []),
   ...(d.setup ? [{ depth: 3, slug: 'setup', text: 'The setup' }] : []),
   ...bodyHeadings,
@@ -75,25 +74,12 @@ const jsonld = {
     </p>
 
     {
-      (d.takeaways.length > 0 || d.questions || d.terms.length > 0 || d.setup) && (
+      (d.questions || d.terms.length > 0 || d.setup) && (
         <section>
           <h2 id="at-a-glance">At a glance</h2>
-          {d.takeaways.length > 0 && (
-            <Fragment>
-              <h3 id="key-takeaways">Key takeaways</h3>
-              <ul class="takeaways">
-                {d.takeaways.map((k) => (
-                  <li>
-                    <strong>{k.see ? <a href={k.see} set:html={inline(k.title, {})} /> : <Fragment set:html={inline(k.title, {})} />}</strong>
-                    {k.kind === 'method' && <span class="tag">new method</span>} <Fragment set:html={inline(k.text, {})} />
-                  </li>
-                ))}
-              </ul>
-            </Fragment>
-          )}
           {d.questions && (
             <Fragment>
-              <h3 id="questions">Questions and answers</h3>
+              <h3 id="questions">Questions and key takeaways</h3>
               <Questions root={d.questions} />
             </Fragment>
           )}

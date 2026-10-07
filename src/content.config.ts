@@ -6,7 +6,8 @@ import { METHOD_VALUES, STATUS_VALUES, TIER_VALUES } from './lib/vocab.mjs';
 // A question the paper asked and the answer it got. `see` links the experiment
 // that answered it. The tree is deliberately shallow: the leading question, the
 // questions it breaks into, and one more level under those.
-const answered = z.object({ q: z.string(), a: z.string(), see: z.string().optional() });
+const takeaway = z.object({ title: z.string(), text: z.string(), kind: z.enum(['finding', 'method']).default('finding') });
+const answered = z.object({ q: z.string(), a: z.string(), see: z.string().optional(), takeaways: z.array(takeaway).default([]) });
 const questions = answered.extend({ sub: z.array(answered.extend({ sub: z.array(answered).default([]) })).default([]) });
 
 const papers = defineCollection({
@@ -46,9 +47,6 @@ const papers = defineCollection({
     // "At a glance", the block at the top of a page: the takeaways (a new
     // method is marked as one), the questions the paper asked with their answers, the terms its argument turns on as the paper
     // itself defines them, and the bare facts of the setup.
-    takeaways: z
-      .array(z.object({ title: z.string(), text: z.string(), kind: z.enum(['finding', 'method']).default('finding'), see: z.string().optional() }))
-      .default([]),
     questions: questions.optional(),
     terms: z
       .array(z.object({ term: z.string(), means: z.string(), where: z.string().optional(), concept: z.string().optional() }))

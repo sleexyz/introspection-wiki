@@ -121,10 +121,7 @@ for (const file of files) {
       }
     }
   }
-  for (const k of fm.takeaways ?? []) {
-    if (!k.title || !k.text) say(file, 'takeaways: each entry needs a title and text');
-    if (k.kind && !['finding', 'method'].includes(k.kind)) say(file, `takeaways: kind "${k.kind}" must be finding or method`);
-  }
+  if (fm.takeaways) say(file, 'takeaways now go inside `questions`, under the question each one answers');
   for (const t of fm.terms ?? []) {
     if (!t.term || !t.means) say(file, 'terms: each entry needs a term and what it means');
     if (t.concept && !known.concepts.has(t.concept)) say(file, `terms: "${t.term}" names concept "${t.concept}", which does not exist`);

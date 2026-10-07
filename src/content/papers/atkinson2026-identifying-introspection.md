@@ -31,30 +31,24 @@ cites:
   - bai2025-explicitly-unbiased
 concepts: [faithfulness, grounding, causal-bypassing, out-of-context-reasoning]
 threads: [diatkinson-identifying-introspection, davidbau-identifying-introspection]
-takeaways:
-  - kind: method
-    title: "A controlled comparison: the same model before and after it can describe itself accurately."
-    text: "The problem: to learn what makes a model's description of itself accurate, you need two models that differ in that and in little else. The approach: teach a model a task whose true description only the experimenter knows, then compare an early and a late point in the same training run. Here a model taught to choose on behalf of characters with hidden preferences states those preferences wrongly at one point ({unfaithful|0.25} agreement with its own choices) and rightly later ({faithful|0.83}), while choosing about equally well. The recipe should transfer to any learned behavior whose ground truth is known."
-    see: "#1-train-on-decisions-then-ask-about-them"
-  - title: "Being good at a task does not mean a model can say how it does it."
-    text: "The model was trained only to make choices. An accurate account of how it chooses appeared on its own, but only after three times as much of the same training, and only in the largest model tried. Skill and self-knowledge arrive separately, so one cannot be read off the other."
-  - title: "Where a model stores what it learned affects whether it can report it."
-    text: "The model that describes itself accurately keeps the learned preferences 5 to 6 layers earlier in the network, and forcing a model to learn in its early layers made an inaccurate one accurate. The suggestion is that knowledge has to sit where the model's existing machinery for putting things into words can reach it. If that holds more widely, it is a lever for building models that can report on themselves."
-  - kind: method
-    title: "A way to check a self-report without knowing the right answer."
-    text: "The problem: verifying what a model says about itself normally needs an independent ground truth, which does not exist for claims about its internal reasoning. The approach: check where the statement comes from, not what it says, by measuring how far the parts of the network that produce a behavior are also the parts that produce the description of it. Here that overlap is {faithful|0.34} in accurate models against {unfaithful|0.08} in inaccurate ones, and switching those parts on and off bears it out. Because the test never reads the statement, the idea could extend to self-reports that nobody can check."
-    see: "#4-tell-the-two-kinds-of-model-apart-without-reading-the-report"
-  - title: "One narrow experiment, pointing at a general possibility."
-    text: "Everything here is simple numeric preferences, learned by small add-on modules in one family of models, and the test tells groups of models apart, not single ones. What may carry over is the principle: an accurate self-report and a made-up one differ physically inside the model, so the difference can in principle be found without trusting what the model says."
 questions:
   q: "Is there something inside a model that separates a self-report that reads off the real process from one that only happens to be right?"
   a: "In this setting, yes. {faithful|Faithful} models run deciding and reporting through the same weights and {unfaithful|unfaithful} models do not, and that overlap can be measured without reading the report."
   sub:
     - q: "Does faithful self-report appear when a model is trained only to decide?"
       a: "Yes, but late, and only in the largest model. Faithfulness goes from about {unfaithful|0.25} at step 1000 to {faithful|0.83} at step 3000 while decision performance barely moves. Those two checkpoints become the contrast pair for everything after."
+      takeaways:
+        - title: "A controlled comparison: the same model before and after it can describe itself accurately."
+          text: "The problem: to learn what makes a model's description of itself accurate, you need two models that differ in that and in little else. The approach: teach a model a task whose true description only the experimenter knows, then compare an early and a late point in the same training run. Here a model taught to choose on behalf of characters with hidden preferences states those preferences wrongly at one point ({unfaithful|0.25} agreement with its own choices) and rightly later ({faithful|0.83}), while choosing about equally well. The recipe should transfer to any learned behavior whose ground truth is known."
+          kind: method
+        - title: "Being good at a task does not mean a model can say how it does it."
+          text: "The model was trained only to make choices. An accurate account of how it chooses appeared on its own, but only after three times as much of the same training, and only in the largest model tried. Skill and self-knowledge arrive separately, so one cannot be read off the other."
       see: "#1-train-on-decisions-then-ask-about-them"
     - q: "Does something measurable change inside the model when it appears?"
       a: "Yes. The preference information moves to earlier layers."
+      takeaways:
+        - title: "Where a model stores what it learned affects whether it can report it."
+          text: "The model that describes itself accurately keeps the learned preferences 5 to 6 layers earlier in the network, and forcing a model to learn in its early layers made an inaccurate one accurate. The suggestion is that knowledge has to sit where the model's existing machinery for putting things into words can reach it. If that holds more widely, it is a lever for building models that can report on themselves."
       sub:
         - q: "Where does each checkpoint keep its preferences?"
           a: "The {faithful|faithful} one keeps them 5 to 6 layers earlier."
@@ -64,6 +58,10 @@ questions:
           see: "#3-force-the-preferences-into-early-layers"
     - q: "Can that difference tell faithful models from unfaithful ones?"
       a: "Yes, as groups, and without reading what the models say."
+      takeaways:
+        - title: "A way to check a self-report without knowing the right answer."
+          text: "The problem: verifying what a model says about itself normally needs an independent ground truth, which does not exist for claims about its internal reasoning. The approach: check where the statement comes from, not what it says, by measuring how far the parts of the network that produce a behavior are also the parts that produce the description of it. Here that overlap is {faithful|0.34} in accurate models against {unfaithful|0.08} in inaccurate ones, and switching those parts on and off bears it out. Because the test never reads the statement, the idea could extend to self-reports that nobody can check."
+          kind: method
       sub:
         - q: "Do faithful models use the same weights to decide and to report?"
           a: "More of them. Attribution similarity averages {faithful|0.34} against {unfaithful|0.08}."
@@ -73,6 +71,9 @@ questions:
           see: "#5-check-the-attribution-scores-by-intervening"
     - q: "How far does this go?"
       a: "Not far yet. The task is linear preferences over five attributes, the models are LoRA adapters, and the test separates groups of models, not individual ones."
+      takeaways:
+        - title: "One narrow experiment, pointing at a general possibility."
+          text: "Everything here is simple numeric preferences, learned by small add-on modules in one family of models, and the test tells groups of models apart, not single ones. What may carry over is the principle: an accurate self-report and a made-up one differ physically inside the model, so the difference can in principle be found without trusting what the model says."
 terms:
   - term: "Introspection"
     means: "Self-report that is both faithful and grounded. The authors reserve the word for reports with both properties."

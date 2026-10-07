@@ -85,18 +85,17 @@ export async function paperMarkdown(p: Paper): Promise<string> {
   }
   out.push('');
 
-  if (d.takeaways.length || d.questions || d.terms.length || d.setup) out.push('## At a glance', '');
-  if (d.takeaways.length) {
-    out.push('### Key takeaways', '');
-    for (const k of d.takeaways) out.push(`- **${k.title}**${k.kind === 'method' ? ' (New method.)' : ''} ${k.text}`);
-    out.push('');
-  }
+  if (d.questions || d.terms.length || d.setup) out.push('## At a glance', '');
   if (d.questions) {
     const q = d.questions;
-    out.push('### Questions and answers', '', `**${q.q}**`, '', q.a, '');
+    // A takeaway sits under the question it answers, marked so that a reader
+    // scanning for them can find them.
+    const boxed = (n: { takeaways: { title: string; text: string; kind: string }[] }, indent: string) =>
+      n.takeaways.map((k) => `${indent}- KEY TAKEAWAY${k.kind === 'method' ? ' (new method)' : ''}: **${k.title}** ${k.text}`);
+    out.push('### Questions and key takeaways', '', `**${q.q}**`, '', q.a, '', ...boxed(q, ''), '');
     for (const node of q.sub) {
-      out.push(`- **${node.q}** ${node.a}`);
-      for (const leaf of node.sub) out.push(`  - **${leaf.q}** ${leaf.a}`);
+      out.push(`- **${node.q}** ${node.a}`, ...boxed(node, '  '));
+      for (const leaf of node.sub) out.push(`  - **${leaf.q}** ${leaf.a}`, ...boxed(leaf, '    '));
     }
     out.push('');
   }
