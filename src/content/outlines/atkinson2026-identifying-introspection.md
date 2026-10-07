@@ -210,23 +210,23 @@ Each by the job it does.
 | A.2 | Both prompts in full; parsing rules; footnote 4 | Detail to replicate |
 | A.3 | The logistic regression for p̂ | Detail to replicate |
 | A.4 | 24 self-report prompts and 16 decisions per character | Detail to replicate |
-| B | Training hyperparameters for the multi-character adapters | Detail to replicate |
+| Appendix B | Training hyperparameters for the multi-character adapters | Detail to replicate |
 | B.1 | Table 1: layers per model size | Detail to replicate |
 | B.2 | How the 32B run was tuned: 15 random draws | Detail to replicate |
 | B.3 | Figure 7: the 32B run evaluated with reasoning on | Extra result |
 | B.4 | The freezing conditions | Detail to replicate |
 | B.5 | Evaluation on 32 or 100 characters | Detail to replicate |
 | B.6 | Figure 8: the Gemma-4 sweep and layer ablation | Check: a second model family |
-| C | Single-character adapters: rank 2, 24 steps | Detail to replicate |
+| Appendix C | Single-character adapters: rank 2, 24 steps | Detail to replicate |
 | C.1 | The test without selection filters | Check: selection |
-| D | A speculative account of negative faithfulness | Loose end from §3 |
-| E | Figure 9: freezing the early layers instead | Check: parameter count |
-| F | The attribution formula | Detail to replicate |
+| Appendix D | A speculative account of negative faithfulness | Loose end from §3 |
+| Appendix E | Figure 9: freezing the early layers instead | Check: parameter count |
+| Appendix F | The attribution formula | Detail to replicate |
 | F.1 | Table 2: the gap at 1 to 7 integration steps | Check: the estimator |
 | F.2 | The loss | Detail to replicate |
 | F.3 | Which token positions enter the loss | Detail to replicate |
-| G | Figure 10: similarity against faithfulness within one backbone | Extra result |
-| H | AI usage statement | Disclosure |
+| Appendix G | Figure 10: similarity against faithfulness within one backbone | Extra result |
+| Appendix H | AI usage statement | Disclosure |
 
 > **Note from Claude:** By my count of the PDF's text, with captions left out, the main text is about 3,860 words and the appendices about 2,300. Within the main text: abstract 6%, §1 17%, §2 10%, §3 7%, §4 8%, §5 33%, §6 9%, §7 7%, §8 4%. The test of §5 gets as much text as the abstract, introduction and background together.
 

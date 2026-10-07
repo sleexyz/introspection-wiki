@@ -1,7 +1,9 @@
 ---
 import { render } from 'astro:content';
 import PaperLink from '../../components/PaperLink.astro';
+import PaperPane from '../../components/PaperPane.astro';
 import Base from '../../layouts/Base.astro';
+import { getAnchors } from '../../lib/anchors';
 import { loadWiki, primaryLink, venueLine, type Outline } from '../../lib/wiki';
 
 // A paper's outline, worked back from the finished paper. A trial format: kept
@@ -18,6 +20,10 @@ const wiki = await loadWiki();
 const paper = wiki.paper.get(outline.id)!;
 const { Content, headings } = await render(outline);
 const title = `Outline: ${paper.data.title}`;
+// With the paper's PDF and the places in it, the page shows the paper beside the outline.
+const anchors = getAnchors(outline.id);
+const pdf = paper.data.links.pdf;
+const reader = Boolean(anchors && pdf);
 const jsonld = {
   '@type': 'Article',
   name: title,
@@ -26,7 +32,7 @@ const jsonld = {
 };
 ---
 
-<Base title={title} description={d.summary} path={`/outlines/${outline.id}`} jsonld={jsonld} headings={headings}>
+<Base title={title} description={d.summary} path={`/outlines/${outline.id}`} jsonld={jsonld} headings={headings} reader={reader}>
   <article>
     <p class="kicker">Outline · trial format</p>
     <h1>{paper.data.title}</h1>
@@ -39,4 +45,5 @@ const jsonld = {
     </p>
     <Content />
   </article>
+  {reader && <PaperPane id={outline.id} href={pdf!} crop={anchors!.crop} />}
 </Base>

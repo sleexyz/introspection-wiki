@@ -62,14 +62,14 @@ The site is built to be read by machines as well as people.
 - [/robots.txt](/robots.txt) allows all crawlers and sets the content signals `search=yes, ai-input=yes, ai-train=yes`.
 - [/sitemap.xml](/sitemap.xml) and an Atom feed at [/feed.xml](/feed.xml).
 
-Pages are static HTML and need no JavaScript. The only script on the site loads X's embeds on thread pages, and those pages carry the post text without it.
+Pages are static HTML and read without JavaScript. Scripts add three things: X's embeds on thread pages, the marker in a page's contents list, and the paper shown beside an outline. The text of every page is there without them.
 
 ## Sources and credit
 
 - Citation data comes from the [Semantic Scholar](https://www.semanticscholar.org) API, with reference lists from arXiv's HTML renderings where Semantic Scholar has none.
 - Threads are embedded from X using its official embed markup. The wiki does not host images or other media from posts; the figure descriptions under each post are its own.
 - Figures are reproduced from the papers they illustrate, for commentary, and remain the property of those papers' authors. Each is captioned with the figure number it has in the paper. If you are an author and want one removed, [open an issue](https://github.com/sleexyz/introspection-wiki/issues).
-- Paper PDFs are linked, not hosted.
+- Paper PDFs are linked, not hosted. Where a page shows a paper beside its text, the file is fetched from where the authors host it and passed to the reader's browser; the wiki keeps no copy of its own, and Cloudflare's cache holds one for a day.
 
 ## License
 

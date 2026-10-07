@@ -1,7 +1,20 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import fs from 'node:fs';
 import { unified } from '@astrojs/markdown-remark';
 import remarkWiki from './src/lib/remark-wiki.mjs';
+
+// The reader on an outline page gets the paper's PDF from /pdf/<paper-id>.pdf,
+// which the Worker relays in production (worker/index.ts). `astro dev` runs no
+// Worker, so the dev server relays the same addresses to the same places.
+const anchored = fs.existsSync('src/data/anchors') ? fs.readdirSync('src/data/anchors') : [];
+const papers = Object.fromEntries(
+  anchored.flatMap((file) => {
+    const { pdf } = JSON.parse(fs.readFileSync(`src/data/anchors/${file}`, 'utf8'));
+    const { origin, pathname } = new URL(pdf);
+    return [[`/pdf/${file.replace(/\.json$/, '')}.pdf`, { target: origin, changeOrigin: true, rewrite: () => pathname }]];
+  }),
+);
 
 export default defineConfig({
   site: 'https://introspection.infinite.fun',
@@ -16,6 +29,8 @@ export default defineConfig({
   // Inline thread posts and figures in page bodies. Astro's default Markdown
   // processor does not run remark plugins, so this opts into the unified one.
   markdown: { processor: unified({ remarkPlugins: [remarkWiki] }) },
+
+  vite: { server: { proxy: papers } },
 
   devToolbar: { enabled: false },
 });

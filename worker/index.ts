@@ -17,6 +17,9 @@ export default {
 		const url = new URL(request.url);
 		if (request.method !== 'GET' && request.method !== 'HEAD') return env.ASSETS.fetch(request);
 
+		const paper = url.pathname.match(/^\/pdf\/([a-z0-9-]+)\.pdf$/);
+		if (paper) return relay(paper[1], request, env);
+
 		if (url.pathname.endsWith('.md')) {
 			return markdown(await assetAt(markdownAlias(url.pathname) ?? url.pathname, request, env));
 		}
@@ -38,6 +41,35 @@ export default {
 		return new Response(response.body, { status: response.status, headers });
 	},
 } satisfies ExportedHandler<Env>;
+
+/**
+ * The paper beside an outline. The reader on an outline page draws the paper's
+ * PDF itself, and a browser will not let a page read a file from another site
+ * unless that site says it may, which the hosts of most papers do not. So the
+ * reader asks here, and this fetches the file from where the paper page links
+ * it and passes it on. The site keeps no copy of its own; Cloudflare's cache
+ * holds one for a day. Only the reader is served this way: anyone who opens
+ * the address is sent to the authors' copy.
+ */
+async function relay(id: string, request: Request, env: Env): Promise<Response> {
+	const listed = await assetAt('/pdf/sources.json', request, env);
+	const source = listed.ok ? ((await listed.json()) as Record<string, string>)[id] : undefined;
+	if (!source) return new Response('No such paper\n', { status: 404 });
+
+	const fromReader = request.headers.get('Sec-Fetch-Site') === 'same-origin' && request.headers.get('Sec-Fetch-Dest') === 'empty';
+	if (!fromReader) return Response.redirect(source, 302);
+
+	const upstream = await fetch(source, { cf: { cacheEverything: true, cacheTtl: 86400 } });
+	if (!upstream.ok) return new Response('The paper could not be fetched\n', { status: 502 });
+	return new Response(upstream.body, {
+		headers: {
+			'Content-Type': 'application/pdf',
+			'Cache-Control': 'public, max-age=86400',
+			'X-Robots-Tag': 'noindex',
+			Link: `<${source}>; rel="canonical"`,
+		},
+	});
+}
 
 /** A page URL has no file extension: /, /papers, /papers/foo. */
 function isPage(pathname: string): boolean {

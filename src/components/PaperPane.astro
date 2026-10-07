@@ -1,0 +1,381 @@
+---
+// The paper, beside its outline. On a wide screen the paper's PDF sits in a
+// pane on the right and follows the reader down the outline: whatever passage
+// the outline is discussing is scrolled into view and marked, and a click on
+// any locator or quotation goes to it. The outline is the guide and the paper
+// is the evidence, so the pane only ever moves in answer to the outline.
+//
+// The page works without any of this. On a narrow screen, or with scripts
+// off, there is no pane, and each locator is a plain link to that page of the
+// PDF. The places come from src/data/anchors/<paper-id>.json (written by
+// scripts/anchor.mjs) and reach this script as data attributes that
+// remark-wiki.mjs put on the page: `data-at="page,y,height"` on a locator,
+// `data-rects="page,x,y,w,h;…"` on a quotation, in PDF points from the top
+// left of the page. The PDF itself comes through the Worker (worker/index.ts).
+interface Props {
+  /** The paper's id; the PDF is fetched from /pdf/<id>.pdf. */
+  id: string;
+  /** Where the PDF really lives, for the link out. */
+  href: string;
+  /** The band of the page that holds text, left and right, in points. */
+  crop: number[];
+}
+
+const { id, href, crop } = Astro.props;
+---
+
+<aside class="paper" id="paper" aria-label="The paper" data-src={`/pdf/${id}.pdf`} data-crop={crop.join(',')}>
+  <div class="paper-grip" role="separator" aria-orientation="vertical" title="Drag to resize. Double-click to reset."></div>
+  <header class="paper-bar">
+    <span class="paper-page" aria-live="polite">Loading the paper…</span>
+    <span class="paper-tools">
+      <button type="button" class="paper-follow" hidden>Follow the outline</button>
+      <a href={href}>PDF</a>
+      <button type="button" class="paper-hide">Hide</button>
+    </span>
+  </header>
+  <div class="paper-view">
+    <div class="paper-scroll" tabindex="0">
+      <div class="pdfViewer"></div>
+      <div class="paper-marks"></div>
+    </div>
+    <p class="paper-down" hidden>The paper could not be shown here. <a href={href}>Open the PDF</a>.</p>
+  </div>
+</aside>
+<button type="button" class="paper-show">Paper</button>
+
+<script>
+  import workerUrl from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
+
+  /** A place in the paper that something in the outline points at. */
+  type Anchor = { el: HTMLElement; kind: string; page: number; y: number; h: number; rects: number[][] };
+
+  const root = document.documentElement;
+  const pane = document.getElementById('paper');
+  if (pane) reader(pane);
+
+  function reader(pane: HTMLElement) {
+    const part = <T extends HTMLElement>(selector: string) => pane.querySelector<T>(selector)!;
+    const scroller = part<HTMLDivElement>('.paper-scroll');
+    const marks = part('.paper-marks');
+    const where = part('.paper-page');
+    const resume = part<HTMLButtonElement>('.paper-follow');
+    const [cropLeft, cropRight] = pane.dataset.crop!.split(',').map(Number);
+    const wide = matchMedia('(min-width: 1100px)');
+    const still = matchMedia('(prefers-reduced-motion: reduce)');
+    const layout: (width?: number) => number = (window as any).paperLayout;
+    const isOpen = () => wide.matches && root.classList.contains('paper-open');
+
+    const saved: { hidden?: boolean; width?: number } = (() => {
+      try {
+        return JSON.parse(localStorage.getItem('paper-pane') || '{}');
+      } catch {
+        return {};
+      }
+    })();
+    const save = (change: object) => {
+      Object.assign(saved, change);
+      try {
+        localStorage.setItem('paper-pane', JSON.stringify(saved));
+      } catch {}
+    };
+
+    // Every locator and quotation, and the blocks of the outline they sit in.
+    // A block (a paragraph, a list item, a table row, a figure) leads the
+    // paper to one place: its first quotation, or failing that its first
+    // locator. The others in the block are reached by clicking them.
+    const anchors = new Map<Element, Anchor>();
+    const blocks: { el: Element; lead: Anchor }[] = [];
+    const blockOf = new Map<Element, { el: Element; lead: Anchor }>();
+    for (const el of document.querySelectorAll<HTMLElement>('article .cite')) {
+      let anchor: Anchor;
+      if (el.dataset.rects) {
+        const rects = el.dataset.rects.split(';').map((r) => r.split(',').map(Number));
+        const [page, , y] = rects[0];
+        const last = rects.filter((r) => r[0] === page).at(-1)!;
+        anchor = { el, kind: 'quote', page, y, h: last[2] + last[4] - y, rects };
+      } else {
+        const [page, y, h] = el.dataset.at!.split(',').map(Number);
+        anchor = { el, kind: el.dataset.kind!, page, y, h, rects: [] };
+      }
+      anchors.set(el, anchor);
+      const within = el.closest('li, tr, figure, p') ?? el;
+      const block = blockOf.get(within);
+      if (!block) {
+        blockOf.set(within, { el: within, lead: anchor });
+        blocks.push(blockOf.get(within)!);
+      } else if (block.lead.kind !== 'quote' && anchor.kind === 'quote') block.lead = anchor;
+    }
+
+    let viewer: any = null;
+    let started = false;
+    let ready = false;
+    let unit = 1; // screen pixels to a PDF point
+    let keepLeft = 0; // the sideways scroll that hides the page's margins
+    let active: Anchor | null = null; // what is marked now
+    let led: Anchor | null = null; // the last place the outline led the paper to
+    let paused = false; // the reader has gone off to read the paper on their own
+    let syncedAt = 0; // where the paper was scrolled to when it last followed
+    let ours = 0; // until when a scroll of the paper is our own doing
+
+    async function load() {
+      if (started) return;
+      started = true;
+      try {
+        const lib = await import('pdfjs-dist/legacy/build/pdf.mjs');
+        // The viewer reads the library from here when it is first imported.
+        (globalThis as any).pdfjsLib = lib;
+        const [ui] = await Promise.all([import('pdfjs-dist/legacy/web/pdf_viewer.mjs'), import('pdfjs-dist/legacy/web/pdf_viewer.css')]);
+        lib.GlobalWorkerOptions.workerSrc = workerUrl;
+        const eventBus = new ui.EventBus();
+        const linkService = new ui.PDFLinkService({ eventBus, externalLinkTarget: ui.LinkTarget.BLANK });
+        viewer = new ui.PDFViewer({
+          container: scroller,
+          viewer: scroller.querySelector<HTMLDivElement>('.pdfViewer')!,
+          eventBus,
+          linkService,
+          removePageBorders: true,
+          textLayerMode: 1,
+          annotationMode: lib.AnnotationMode.ENABLE,
+        });
+        linkService.setViewer(viewer);
+        const doc = await lib.getDocument({ url: pane.dataset.src! }).promise;
+        const page = (n: number) => (where.textContent = `p. ${n} of ${doc.numPages}`);
+        eventBus.on('pagechanging', (e: { pageNumber: number }) => page(e.pageNumber));
+        eventBus.on('pagesinit', () => {
+          ready = true;
+          page(1);
+          fit();
+          // Wait for the new scale to be laid out before measuring against it.
+          requestAnimationFrame(() => (active ? goTo(active, true) : follow(true)));
+        });
+        viewer.setDocument(doc);
+        linkService.setDocument(doc, null);
+      } catch (error) {
+        // With no viewer, clicks fall through and each locator is a link again.
+        console.error(error);
+        viewer = null;
+        where.textContent = '';
+        part('.paper-down').hidden = false;
+      }
+    }
+
+    /**
+     * Size the page so that its band of text, with a little margin, fills the
+     * pane, and scroll sideways so that the margins outside the band are what
+     * is cut off. Text ends up about a third larger than fitting the sheet.
+     */
+    function fit() {
+      if (!ready) return;
+      const pad = 14;
+      const band = cropRight - cropLeft + pad * 2;
+      const room = scroller.clientWidth;
+      unit = Math.min(room / band, 1.7);
+      viewer.currentScale = (unit * 72) / 96;
+      requestAnimationFrame(() => {
+        const sheet = viewer.getPageView(0).div.offsetWidth;
+        keepLeft = Math.max(0, Math.min(((cropLeft + cropRight) / 2) * unit - room / 2, sheet - room));
+        scroller.scrollLeft = keepLeft;
+        draw();
+      });
+    }
+
+    /** The top left corner of a page, in the scroller's own coordinates. */
+    function corner(page: number) {
+      const sheet = (viewer.getPageView(page - 1).div as HTMLElement).getBoundingClientRect();
+      const frame = scroller.getBoundingClientRect();
+      return { left: sheet.left - frame.left + scroller.scrollLeft, top: sheet.top - frame.top + scroller.scrollTop };
+    }
+
+    /** Mark the active place: a highlight over a quotation, a bar in the margin beside anything else. */
+    function draw(flash = false) {
+      marks.replaceChildren();
+      if (!ready || !active) return;
+      const box = (cls: string, page: number, x: number, y: number, w: number, h: number) => {
+        const at = corner(page);
+        const el = document.createElement('div');
+        el.className = cls;
+        el.style.cssText = `left:${at.left + x * unit}px;top:${at.top + y * unit}px;width:${w * unit}px;height:${h * unit}px`;
+        marks.append(el);
+      };
+      for (const [page, x, y, w, h] of active.rects) box('paper-hl', page, x - 2, y - 1.5, w + 4, h + 3);
+      if (!active.rects.length) {
+        box('paper-edge', active.page, cropLeft - 11, active.y - 2, 3, active.h + 4);
+        // A heading or a footnote is one line, so it can be tinted too. A figure is left clean.
+        if (active.kind !== 'fig' && active.kind !== 'tab') {
+          box('paper-hl paper-line', active.page, cropLeft - 3, active.y - 2, cropRight - cropLeft + 6, active.h + 4);
+        }
+      }
+      marks.classList.remove('paper-flash');
+      if (flash) {
+        void marks.offsetWidth;
+        marks.classList.add('paper-flash');
+      }
+    }
+
+    /**
+     * Mark a place and bring it into view. If it is already on screen the
+     * paper does not move. A short way is scrolled; a long way is cut to, since
+     * scrolling through ten pages tells the reader nothing.
+     */
+    function goTo(anchor: Anchor, flash = false) {
+      if (active !== anchor) {
+        active?.el.classList.remove('is-on');
+        anchor.el.classList.add('is-on');
+        active = anchor;
+      }
+      if (!ready) return;
+      const top = corner(anchor.page).top + anchor.y * unit;
+      const bottom = top + Math.max(anchor.h, 8) * unit;
+      const view = scroller.clientHeight;
+      const from = scroller.scrollTop;
+      const seen = top >= from + 10 && bottom <= from + view - 10;
+      syncedAt = from;
+      if (!seen) {
+        // A quotation lands a third of the way down, with what comes before it
+        // above. A figure lands whole. A heading lands near the top.
+        const lead = anchor.kind === 'quote' ? Math.min(view * 0.3, 240) : anchor.kind === 'fig' || anchor.kind === 'tab' ? 16 : 72;
+        const to = Math.max(0, Math.min(top - lead, scroller.scrollHeight - view));
+        const far = Math.abs(to - from) > view * 1.5;
+        // A tab nobody is looking at runs no animation, so a scroll there would never arrive.
+        const cut = far || still.matches || document.hidden;
+        ours = performance.now() + (cut ? 150 : 1000);
+        syncedAt = to;
+        if (far) {
+          pane.classList.remove('paper-cut');
+          void pane.offsetWidth;
+          pane.classList.add('paper-cut');
+        }
+        scroller.scrollTo({ top: to, behavior: cut ? 'auto' : 'smooth' });
+      }
+      draw(flash || !seen);
+    }
+
+    /**
+     * The place the outline is talking about: the lead of the last block above
+     * the reading line. At the top of the page nothing has reached the line
+     * yet, and the first block on screen stands in, so that the two panes are
+     * joined from the start.
+     */
+    function reading() {
+      const line = innerHeight * 0.36;
+      let lead: Anchor | null = null;
+      for (const block of blocks) {
+        const top = block.el.getBoundingClientRect().top;
+        if (top > line && (lead || top > innerHeight)) break;
+        lead = block.lead;
+        if (top > line) break;
+      }
+      return lead;
+    }
+
+    /**
+     * Take the paper to where the outline is. Only a change of block moves it,
+     * so a place the reader clicked stays put until they read on.
+     */
+    function follow(force = false) {
+      if (!isOpen() || !ready || paused) return;
+      const lead = reading();
+      if (!force && lead === led) return;
+      led = lead;
+      if (lead) goTo(lead);
+    }
+
+    // The paper follows once the outline comes to rest, not at every step of a scroll.
+    let settling = 0;
+    addEventListener(
+      'scroll',
+      () => {
+        clearTimeout(settling);
+        settling = window.setTimeout(follow, 140);
+      },
+      { passive: true },
+    );
+
+    document.addEventListener('click', (event) => {
+      const anchor = anchors.get((event.target as Element).closest?.('.cite') as Element);
+      if (!anchor || !isOpen() || !viewer) return;
+      // A modified click still opens the PDF itself, and a drag selects text.
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || !getSelection()?.isCollapsed) return;
+      event.preventDefault();
+      paused = false;
+      resume.hidden = true;
+      // The click answers for this stretch of the outline, even if a scroll has not yet settled.
+      led = reading();
+      goTo(anchor, true);
+    });
+
+    // Reading on in the paper a little is still following. Going somewhere else
+    // in it is not, and then the paper stays where the reader took it until
+    // they ask it to follow again or click a place in the outline.
+    scroller.addEventListener(
+      'scroll',
+      () => {
+        if (Math.abs(scroller.scrollLeft - keepLeft) > 1) scroller.scrollLeft = keepLeft;
+        if (!ready || paused || performance.now() < ours) return;
+        if (Math.abs(scroller.scrollTop - syncedAt) > scroller.clientHeight * 1.5) {
+          paused = true;
+          resume.hidden = false;
+        }
+      },
+      { passive: true },
+    );
+    resume.addEventListener('click', () => {
+      paused = false;
+      resume.hidden = true;
+      follow(true);
+    });
+
+    function show() {
+      if (!isOpen()) return;
+      layout(saved.width);
+      load();
+      requestAnimationFrame(() => {
+        fit();
+        requestAnimationFrame(() => follow(true));
+      });
+    }
+    part('.paper-hide').addEventListener('click', () => {
+      root.classList.remove('paper-open', 'toc-fits');
+      active?.el.classList.remove('is-on');
+      active = led = null;
+      save({ hidden: true });
+    });
+    document.querySelector('.paper-show')!.addEventListener('click', () => {
+      root.classList.add('paper-open');
+      save({ hidden: false });
+      show();
+    });
+
+    // The edge of the pane drags. A wider pane is a larger page.
+    const grip = part('.paper-grip');
+    grip.addEventListener('pointerdown', (down) => {
+      grip.setPointerCapture(down.pointerId);
+      root.classList.add('paper-dragging');
+      const move = (e: PointerEvent) => (saved.width = layout(innerWidth - e.clientX));
+      const up = () => {
+        grip.removeEventListener('pointermove', move);
+        root.classList.remove('paper-dragging');
+        save({ width: saved.width });
+        fit();
+      };
+      grip.addEventListener('pointermove', move);
+      grip.addEventListener('pointerup', up, { once: true });
+      grip.addEventListener('pointercancel', up, { once: true });
+    });
+    grip.addEventListener('dblclick', () => {
+      save({ width: undefined });
+      layout();
+      fit();
+    });
+
+    let resizing = 0;
+    addEventListener('resize', () => {
+      clearTimeout(resizing);
+      resizing = window.setTimeout(show, 160);
+    });
+    wide.addEventListener('change', show);
+
+    if (isOpen()) load();
+  }
+</script>

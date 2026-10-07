@@ -23,6 +23,11 @@
   --stub-hover: #9f3526;
   --stub-visited: #9f5555;
   --stub-visited-hover: #854848;
+  /* The one color that joins the outline to the paper beside it: what is
+     marked on the left is what is marked on the right. */
+  --mark: #ffe066;
+  --mark-tint: color-mix(in srgb, #ffd53d 55%, transparent);
+  --mark-edge: #e3ad00;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -43,6 +48,7 @@
     --stub-hover: #fea898;
     --stub-visited: #c99391;
     --stub-visited-hover: #dcb5b3;
+    --mark-tint: color-mix(in srgb, #ffd53d 30%, transparent);
   }
 }
 
@@ -537,4 +543,120 @@ blockquote.twitter-tweet p { font-size: 14px; }
 @media (max-width: 560px) {
   body { padding: 24px 16px; }
   .card th { width: 46%; }
+}
+
+/* Locators and quotations on an outline page (remark-wiki.mjs). A locator is
+   a link to that page of the PDF, underlined in dots so that a paragraph full
+   of them stays quiet, and without the arrow other outside links carry. A
+   quotation looks like any other until the paper is beside it. */
+a.cite-l { text-decoration: underline dotted var(--faint); text-underline-offset: 3px; }
+a.cite-l:hover { color: inherit; text-decoration-style: solid; }
+a.cite.cite-l[href]::after { content: none; }
+.cite.is-on {
+  background: var(--mark-tint);
+  box-shadow: 0 0 0 2px var(--mark-tint);
+  border-radius: 2px;
+  text-decoration-color: transparent;
+}
+figure.cite.is-on { background: none; box-shadow: none; }
+figure.cite.is-on img { outline: 3px solid var(--mark-edge); outline-offset: 2px; }
+
+/* The paper beside its outline (PaperPane.astro). A pane fixed to the right
+   of a wide screen, the text in what is left. --pane-w is set before first
+   paint by the script in Base.astro, which also says, with .toc-fits, whether
+   the contents rail still has room. Narrower than 1100px there is no pane and
+   the page is as it was. */
+.paper, .paper-show { display: none; }
+
+@media (min-width: 1100px) {
+  html.paper-open body { padding-right: calc(var(--pane-w) + 24px); }
+  html.paper-open:not(.toc-fits) main.reader { max-width: 680px; }
+  html.paper-open:not(.toc-fits) main.reader .page { margin-left: 0; }
+  html.paper-open:not(.toc-fits) main.reader .toc { display: none; }
+  html.paper-open .paper { display: flex; }
+  html:not(.paper-open) .paper-show { display: block; }
+  html.paper-open .cite-q, html.paper-open figure.cite { cursor: pointer; }
+  html.paper-open .cite-q:not(.is-on):hover { background: color-mix(in srgb, var(--mark-tint) 45%, transparent); border-radius: 2px; }
+}
+
+.paper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  width: var(--pane-w);
+  flex-direction: column;
+  background: var(--wash);
+  border-left: 1px solid var(--rule);
+}
+.paper-grip { position: absolute; top: 0; bottom: 0; left: -5px; z-index: 2; width: 9px; cursor: col-resize; touch-action: none; }
+.paper-grip::after { content: ''; position: absolute; top: 0; bottom: 0; left: 4px; width: 1px; background: transparent; }
+.paper-grip:hover::after, html.paper-dragging .paper-grip::after { left: 3px; width: 3px; background: var(--faint); }
+html.paper-dragging { cursor: col-resize; user-select: none; -webkit-user-select: none; }
+html.paper-dragging .paper-view { pointer-events: none; }
+
+.paper-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 34px;
+  padding: 0 14px;
+  font-size: 12px;
+  color: var(--faint);
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+.paper-tools { display: inline-flex; align-items: center; gap: 14px; }
+.paper-bar a, .paper-bar button { padding: 0; border: 0; background: none; font: inherit; color: var(--muted); text-decoration: none; cursor: pointer; }
+.paper-bar a:hover, .paper-bar button:hover { color: var(--text); }
+.paper-bar .paper-follow { padding: 1px 8px; border-radius: 999px; color: var(--strong); background: var(--mark-tint); }
+
+/* The scroller is PDF.js's container, which has to be absolutely positioned.
+   It never scrolls sideways by hand: the script holds it where the page's
+   margins are the part cut off. */
+.paper-view { position: relative; flex: 1 1 auto; min-height: 0; }
+.paper-scroll { position: absolute; inset: 0; overflow: hidden auto; outline: none; }
+.paper .pdfViewer .page { margin-bottom: 8px; box-shadow: 0 0 0 1px var(--rule); }
+.paper-down { padding: 24px 20px; font-size: 13px; color: var(--muted); }
+
+/* What the outline is pointing at. Marks sit in a layer of their own over
+   the pages; multiply lets the ink show through like a highlighter. */
+.paper-marks { position: absolute; top: 0; left: 0; pointer-events: none; }
+.paper-hl { position: absolute; border-radius: 2px; background: var(--mark); mix-blend-mode: multiply; }
+.paper-line { opacity: 0.55; }
+.paper-edge { position: absolute; border-radius: 2px; background: var(--mark-edge); }
+.paper-flash > * { animation: paper-flash 0.9s ease-out; }
+@keyframes paper-flash { from { background: #ffc21a; box-shadow: 0 0 0 3px #ffc21a; } }
+/* A long way through the paper is cut to, with a blink to say so. */
+.paper-cut .paper-view { animation: paper-cut 0.24s ease-out; }
+@keyframes paper-cut { from { opacity: 0.3; } }
+
+.paper-show {
+  position: fixed;
+  top: 38%;
+  right: 0;
+  z-index: 5;
+  padding: 12px 5px;
+  border: 1px solid var(--rule);
+  border-right: 0;
+  border-radius: 6px 0 0 6px;
+  background: var(--bg);
+  font: inherit;
+  font-size: 12px;
+  color: var(--muted);
+  writing-mode: vertical-rl;
+  cursor: pointer;
+}
+.paper-show:hover { color: var(--text); }
+
+@media (prefers-reduced-motion: reduce) {
+  .paper-flash > *, .paper-cut .paper-view { animation: none; }
+}
+@media print {
+  .paper, .paper-show { display: none !important; }
+  html.paper-open body { padding-right: 24px; }
 }

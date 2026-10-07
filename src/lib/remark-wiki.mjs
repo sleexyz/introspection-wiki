@@ -1,10 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { mapHtml, parseMap } from './experiment-map.mjs';
+import { MIN_QUOTE, choose, tokenize, withHints } from './cite.mjs';
 import { experimentHtml, parseExperiment } from './experiment.mjs';
 
 /**
- * Four block-level conventions for page bodies, and one for links.
+ * Four block-level conventions for page bodies, and two for what sits inside them.
  *
  * 1. A post from an imported thread, embedded where it is discussed:
  *
@@ -41,6 +42,14 @@ import { experimentHtml, parseExperiment } from './experiment.mjs';
  *
  * 5. A link to a paper page that is still a stub gets class="stub", which
  *    colors it red. Templates do the same for their own links with PaperLink.
+ *
+ * 6. On an outline page, every locator ("§5.1", "Figure 3", "Appendix E") and
+ *    every quotation is tied to its place in the paper's PDF. The places come
+ *    from src/data/anchors/<paper-id>.json, written by scripts/anchor.mjs; the
+ *    words are found by cite.mjs, with nothing added to the source. A locator
+ *    becomes a link to that page of the PDF. A quotation becomes a span that
+ *    carries the rectangles its words occupy. The reader beside the outline
+ *    (PaperPane.astro) scrolls the paper to either and marks it there.
  */
 
 const ROOT = path.resolve(import.meta.dirname, '../..');
@@ -95,6 +104,40 @@ function claudeNote(node) {
   return { ...node, data: { hName: 'aside', hProperties: { className: ['claude-note'] } } };
 }
 
+/** The places scripts/anchor.mjs found in an outline's paper, or null for any other page. */
+function anchorsFor(file) {
+  const id = [file?.path, ...(file?.history ?? [])].join(' ').match(/src\/content\/outlines\/([a-z0-9-]+)\.md/)?.[1];
+  const data = id && path.join(ROOT, 'src/data/anchors', `${id}.json`);
+  return data && fs.existsSync(data) ? JSON.parse(fs.readFileSync(data, 'utf8')) : null;
+}
+
+const UNCITED = new Set(['heading', 'link', 'linkReference', 'code', 'inlineCode', 'html', 'image']);
+
+/** Give every locator and quotation in the tree's text its place in the paper. */
+function cite(node, anchors) {
+  if (!node.children || UNCITED.has(node.type)) return;
+  node.children = node.children.flatMap((child) => {
+    if (child.type !== 'text') {
+      cite(child, anchors);
+      return [child];
+    }
+    return withHints(tokenize(child.value)).map((t) => {
+      const text = { type: 'text', value: t.text };
+      const dest = t.type === 'loc' && anchors.dests[t.dest];
+      if (dest) {
+        const hProperties = { className: ['cite', 'cite-l'], 'data-at': dest.join(','), 'data-kind': t.dest.split(':')[0] };
+        return { type: 'link', url: `${anchors.pdf}#page=${dest[0]}`, children: [text], data: { hProperties } };
+      }
+      const found = t.type === 'quote' && t.key.length >= MIN_QUOTE && anchors.quotes[t.key];
+      if (found) {
+        const rects = choose(found, anchors.dests[t.hint]).map((r) => r.join(',')).join(';');
+        return { type: 'emphasis', children: [text], data: { hName: 'span', hProperties: { className: ['cite', 'cite-q'], 'data-rects': rects } } };
+      }
+      return text;
+    });
+  });
+}
+
 /** Width and height from a PNG header, so the page does not shift as it loads. */
 function pngSize(src) {
   const file = path.join(ROOT, 'public', src);
@@ -103,16 +146,21 @@ function pngSize(src) {
   return ` width="${header.readUInt32BE(16)}" height="${header.readUInt32BE(20)}"`;
 }
 
-function figure({ url, alt, title }) {
+function figure({ url, alt, title }, anchors) {
+  // On an outline page a figure of the paper points at itself in the paper.
+  const dest = anchors?.dests[tokenize(title).find((t) => t.type === 'loc' && t.dest.startsWith('fig:'))?.dest];
+  const cited = dest ? ` class="cite cite-f" data-at="${dest.join(',')}" data-kind="fig"` : '';
   return (
-    `<figure><img src="${esc(url)}" alt="${esc(alt ?? '')}"${pngSize(url)} loading="lazy">` +
+    `<figure${cited}><img src="${esc(url)}" alt="${esc(alt ?? '')}"${pngSize(url)} loading="lazy">` +
     `<figcaption>${esc(title)}</figcaption></figure>`
   );
 }
 
 export default function remarkWiki() {
-  return (tree) => {
+  return (tree, file) => {
+    const anchors = anchorsFor(file);
     markStubLinks(tree);
+    if (anchors) cite(tree, anchors);
     tree.children = tree.children.map((node) => {
       if (node.type === 'code' && node.lang === 'experiment') {
         return { type: 'html', value: experimentHtml(parseExperiment(node.value)) };
@@ -128,7 +176,7 @@ export default function remarkWiki() {
         const match = only.value.match(POST_LINE);
         if (match) return { type: 'html', value: post(match[1], Number(match[2])) };
       }
-      if (only.type === 'image' && only.title) return { type: 'html', value: figure(only) };
+      if (only.type === 'image' && only.title) return { type: 'html', value: figure(only, anchors) };
       return node;
     });
   };

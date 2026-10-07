@@ -15,6 +15,7 @@ Cloudflare Worker serves them and returns markdown to clients that ask for it.
     just thread <post-url> <thread-id> [paper-id ...]   # import a thread from X
     just figure page|crop ...                           # cut a figure out of a paper's PDF
     just crawl      # recrawl citations and rebuild the frontier
+    just anchor <paper-id>   # find an outline's locators and quotations in the paper's PDF
 
 ## Layout
 
@@ -25,6 +26,12 @@ Cloudflare Worker serves them and returns markdown to clients that ask for it.
   `/outlines/<paper-id>` and linked from the paper page. Not yet listed in the
   index, `llms.txt`, `llms-full.txt` or the sitemap. See "Reconstructing an
   outline" below.
+- `src/data/anchors/<paper-id>.json`: written by `scripts/anchor.mjs`. Do not
+  edit. Where each locator and quotation of an outline sits in the paper's PDF.
+- `src/lib/cite.mjs`: finds the locators and quotations in an outline's text.
+  The anchor script, the markdown plugin and the linter all use it.
+- `src/components/PaperPane.astro`: the paper shown beside an outline, and the
+  script that keeps it in step with the outline.
 - `src/content/threads/<id>.json`: written by `scripts/thread.mjs`; hand-edit only
   `title`, `summary`, `papers`, `author.name` and each image's `alt`.
 - `src/content/pages/about.md`: the About page, including the public definition of
@@ -44,7 +51,8 @@ Cloudflare Worker serves them and returns markdown to clients that ask for it.
   needs a twin here and a `.md.ts` route beside its `.astro` route.
 - `src/lib/vocab.mjs`: the allowed values for tier, status, methods, shared
   by the schema and the linter.
-- `worker/index.ts`: markdown content negotiation.
+- `worker/index.ts`: markdown content negotiation, and the relay that hands
+  the reader on an outline page the paper's PDF.
 - `data/raw/`: gitignored. Paper PDFs, images from posts, raw API responses.
   This repo is public: never commit or publish anything from there.
 
@@ -289,6 +297,38 @@ Writing the page:
 - The model's own observations, counts and questions go in notes.
 - Every quotation must be findable in its source. Check them by script against
   the extracted text before finishing.
+
+### The paper beside the outline
+
+On a screen at least 1100px wide, an outline page shows the paper's PDF in a
+pane on the right. The pane follows the reader down the outline: the passage
+the outline is discussing is scrolled into view and marked, and a click on any
+locator or quotation goes to it. Nothing is added to the outline's source for
+this. `cite.mjs` reads the locators and quotations out of the prose,
+`scripts/anchor.mjs` finds each in the PDF, and `remark-wiki.mjs` puts the
+positions on the page. So the prose has to be written in a way that can be
+read back:
+
+- Write locators in these forms: `§5`, `§5.1`, `Appendix B`, `Appendix B.6` or
+  `B.6`, `Figure 3`, `Figures 3 and 4`, `Table 2`, `footnote 2`, `Abstract`.
+- Quote exactly, between straight double quotes, with nothing else inside
+  them. A quotation is matched to the paper on its letters and digits alone,
+  so line breaks and hyphenation do not matter, but a changed word does.
+- Put a quotation's locator next to it (`"…" (§4)`). Where the same words
+  occur twice in the paper, the nearest locator decides which is meant.
+- The paper's PDF goes in `data/raw/papers/<paper-id>/paper.pdf` and must be
+  the file the paper page links as `pdf`.
+- After changing a quotation or a locator, run `just anchor <paper-id>` and
+  commit the file it writes. It fails if a quotation is in neither the paper
+  nor its threads. `just lint` says when the file is out of date.
+
+The reader draws the PDF with PDF.js. A browser will not let a page read a
+file from another site unless that site allows it, so the reader gets the file
+from `/pdf/<paper-id>.pdf`: the Worker fetches it from where the paper page
+links it and passes it on, and sends anyone who opens that address to the
+authors' copy. `just dev` relays the same address; `just preview` runs the
+real Worker. Without scripts, or on a narrow screen, there is no pane and each
+locator is a link to that page of the PDF.
 
 ## Style
 

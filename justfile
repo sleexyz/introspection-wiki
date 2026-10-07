@@ -28,6 +28,10 @@ thread *args:
 figure *args:
     node scripts/figure.mjs {{args}}
 
+# Find an outline's locators and quotations in the paper's PDF: just anchor <paper-id>
+anchor *args:
+    node scripts/anchor.mjs {{args}}
+
 # Recrawl citations one hop out from every paper page and rebuild the frontier.
 crawl *args:
     node scripts/crawl.mjs {{args}}

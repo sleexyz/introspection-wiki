@@ -11,6 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parse } from 'yaml';
+import { MIN_QUOTE, tokenize } from '../src/lib/cite.mjs';
 import { MAP_FENCE, parseMap } from '../src/lib/experiment-map.mjs';
 import { EXPERIMENT_FENCE, parseExperiment } from '../src/lib/experiment.mjs';
 import { CLAUDE_NOTE } from '../src/lib/remark-wiki.mjs';
@@ -105,6 +106,20 @@ for (const file of files) {
     const id = path.basename(file, '.md');
     if (!known.papers.has(id)) say(file, `is named for paper "${id}", which does not exist`);
     if (!fm.sources?.length) say(file, 'an outline must list its sources');
+    // The reader beside the outline goes by what scripts/anchor.mjs found. A
+    // quotation or locator added since the last run has no place in the paper.
+    const placed = path.join(ROOT, 'src/data/anchors', `${id}.json`);
+    if (fs.existsSync(placed)) {
+      const anchors = JSON.parse(fs.readFileSync(placed, 'utf8'));
+      const stale = body
+        .split('\n')
+        .filter((line) => !line.startsWith('!['))
+        .flatMap((line) => tokenize(line))
+        .filter((t) =>
+          t.type === 'loc' ? !anchors.dests[t.dest] : t.type === 'quote' && t.key.length >= MIN_QUOTE && !anchors.quotes[t.key] && !anchors.elsewhere.includes(t.key),
+        );
+      for (const t of stale) say(file, `${t.text} has no place in the paper yet; run \`just anchor ${id}\``);
+    }
   }
   if (kind !== 'papers') continue;
 

@@ -17,9 +17,11 @@ interface Props {
   headings?: Heading[];
   /** True when the page embeds posts from X, which need X's widget script. */
   embeds?: boolean;
+  /** True when the page shows a paper beside its text (PaperPane.astro). */
+  reader?: boolean;
 }
 
-const { title, description = SITE.description, path, jsonld, twin = true, wide = false, headings = [], embeds = false } = Astro.props;
+const { title, description = SITE.description, path, jsonld, twin = true, wide = false, headings = [], embeds = false, reader = false } = Astro.props;
 const hasToc = headings.filter((h) => h.depth === 2 || h.depth === 3).length > 1;
 const pageTitle = title ? `${title} | ${SITE.name}` : SITE.name;
 const canonical = SITE.url + (path === '/' ? '/' : path);
@@ -42,9 +44,34 @@ const markdown = path === '/' ? '/index.md' : `${path}.md`;
   <meta property="og:type" content="article">
   <meta property="og:url" content={canonical}>
   {jsonld && <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', ...jsonld })} />}
+  {
+    /* Make room for the paper before the first paint, so the text does not jump
+       when the reader loads. paperLayout sets the pane's width (the reader's
+       own choice if they dragged it) and says whether the contents rail still
+       fits beside the text. */
+    reader && (
+      <script is:inline>
+        window.paperLayout = function (width) {
+          var root = document.documentElement, w = innerWidth;
+          var pane = width ? Math.max(380, Math.min(width, w - 440)) : Math.max(460, Math.min(w - (w >= 1620 ? 1012 : 708), 780));
+          root.style.setProperty('--pane-w', pane + 'px');
+          root.classList.toggle('toc-fits', w - pane >= 1012);
+          return pane;
+        };
+        try {
+          var saved = JSON.parse(localStorage.getItem('paper-pane') || '{}');
+          if (!saved.hidden) document.documentElement.classList.add('paper-open');
+          paperLayout(saved.width);
+        } catch (e) {
+          document.documentElement.classList.add('paper-open');
+          paperLayout();
+        }
+      </script>
+    )
+  }
 </head>
 <body>
-  <main class:list={{ wide, 'with-toc': hasToc }}>
+  <main class:list={{ wide, 'with-toc': hasToc, reader }}>
     <nav class="site-nav" aria-label="Site">
       <span>
         <a href="/">{SITE.name}</a> &middot;
