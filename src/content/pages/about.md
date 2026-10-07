@@ -25,7 +25,7 @@ After the experiments comes the authors' own thread about the paper, where they 
 
 Every page says what it was written from and whether a person has reviewed it. Until then, treat specifics as a pointer to the paper, not a substitute for it. If you find an error, [open an issue](https://github.com/sleexyz/introspection-wiki/issues).
 
-A page marked *stub* has only bibliographic details and a one-line description. On the HTML pages, a link to a stub is red.
+A page marked *stub* has only bibliographic details and a one-line description. On the HTML pages, a link to a stub is red, and a link that leaves the wiki ends in a small arrow.
 
 ## Tiers
 

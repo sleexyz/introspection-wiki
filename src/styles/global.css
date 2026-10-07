@@ -12,6 +12,7 @@
   --wash: #fafafa;
   --yes: #1a7f37;
   --part: #8a6100;
+  --external: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M4.5 2H10v5.5M10 2 2.5 9.5' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   /* Diagram colors, after the seed paper's own figures. Tracks: what the
      model does, and what it says about itself. Tones: the two kinds of model. */
   --behavior: #7d6f12;
@@ -63,6 +64,25 @@ main.wide { max-width: 1040px; }
 a { color: var(--text); text-underline-offset: 2px; }
 a:hover { color: var(--muted); }
 a:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+
+/* A link that leaves the wiki ends in a small arrow, so a reader can tell
+   before following it. Internal links are site-relative, so "starts with http"
+   is the test. The arrow is a mask, not a character: the arrow characters turn
+   into emoji on some phones. Links inside an embedded post are X's own markup
+   and are left as they are. */
+a[href^='http']:not([href^='https://introspection.infinite.fun'])::after {
+  content: '';
+  display: inline-block;
+  width: 0.6em;
+  height: 0.6em;
+  margin-left: 0.18em;
+  vertical-align: 0.08em;
+  background: currentColor;
+  opacity: 0.65;
+  -webkit-mask: var(--external) no-repeat center / contain;
+  mask: var(--external) no-repeat center / contain;
+}
+.twitter-tweet a::after { content: none; }
 
 /* A link to a stub page, in the colors Wikipedia gives a link to a page that
    has not been written. */
