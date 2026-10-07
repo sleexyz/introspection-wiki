@@ -29,23 +29,35 @@ const jsonld = { '@type': 'WebSite', name: SITE.name, url: SITE.url, description
   {
     TIERS.map(({ tier, label, blurb }) => {
       const list = wiki.papers.filter((p) => p.data.tier === tier);
+      // The papers with a page come first. The stubs of the tier are folded away under them until asked for.
+      const stubs = list.filter((p) => p.data.status === 'stub');
+      const written = list.filter((p) => p.data.status !== 'stub');
+      const count = `${stubs.length} ${stubs.length === 1 ? 'stub' : 'stubs'}`;
+      const entries = (papers: typeof list) => (
+        <ul class="entries">
+          {papers.map((p) => (
+            <li>
+              <PaperLink paper={p}>{p.data.title}</PaperLink> <span class="meta">{citeAs(p)}</span>
+              <span class="desc">{p.data.summary}</span>
+            </li>
+          ))}
+        </ul>
+      );
       return (
         list.length > 0 && (
           <section>
             <h2 id={tier}>{label}</h2>
             <p class="note">{blurb}</p>
-            <ul class="entries">
-              {list.map((p) => (
-                <li>
-                  <PaperLink paper={p}>{p.data.title}</PaperLink>{' '}
-                  <span class="meta">
-                    {citeAs(p)}
-                    {p.data.status === 'stub' && ' · stub'}
-                  </span>
-                  <span class="desc">{p.data.summary}</span>
-                </li>
-              ))}
-            </ul>
+            {written.length > 0 && entries(written)}
+            {stubs.length > 0 && (
+              <details class="stubs">
+                <summary>
+                  <span class="closed">Show {count}</span>
+                  <span class="open">Hide {count}</span>
+                </summary>
+                {entries(stubs)}
+              </details>
+            )}
           </section>
         )
       );

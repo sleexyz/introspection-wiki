@@ -523,6 +523,14 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
 .entries .meta { color: var(--faint); font-size: 13px; }
 .entries .desc { display: block; color: var(--muted); }
 
+/* The stubs of a tier on the home page, folded away under the papers that
+   have a page. */
+.stubs > summary { width: fit-content; cursor: pointer; font-size: 13px; color: var(--muted); }
+.stubs > summary:hover { color: var(--text); }
+.stubs[open] > summary { margin-bottom: 10px; }
+.stubs[open] > summary .closed,
+.stubs:not([open]) > summary .open { display: none; }
+
 /* Tables: the evidence card and the papers matrix */
 table { border-collapse: collapse; width: 100%; margin-bottom: 16px; font-size: 13px; }
 th, td { text-align: left; vertical-align: top; padding: 6px 12px 6px 0; border-bottom: 1px solid var(--rule); }
