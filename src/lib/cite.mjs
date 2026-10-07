@@ -4,8 +4,8 @@
  * An outline gives the location of everything it reports, in two forms that
  * this module reads straight out of the prose:
  *
- *   - a locator: "§5.1", "Appendix B.6", "B.6", "Figure 3", "Figures 5c and
- *     5d", "Table 2", "footnote 2", "Abstract";
+ *   - a locator: "§5.1", "Appendix B.6", "B.6", "B.3.1", "Figure 3", "Figures
+ *     5c and 5d", "Table 2", "footnote 2", "Abstract";
  *   - a quotation, between double quotes.
  *
  * scripts/anchor.mjs finds each of them in the paper's PDF and writes the
@@ -31,7 +31,7 @@ export const skeleton = (s) =>
 export const MIN_QUOTE = 6;
 
 const TOKEN =
-  /"([^"\n]+)"|“([^”\n]+)”|§(\d)(?:\.(\d))?|Appendix ([A-H])(?:\.(\d))?|\b([A-H])\.(\d)\b|(Figure|Table)s? (\d+)[a-d]?((?:(?:,| and|, and) \d+[a-d]?)*)|[Ff]ootnote (\d)|\bAbstract\b/g;
+  /"([^"\n]+)"|“([^”\n]+)”|§(\d+(?:\.\d+){0,2})()|Appendix ([A-Z](?:\.\d+){0,2})()|\b([A-Z]\.\d+(?:\.\d+)?)()\b|(Figure|Table)s? (\d+)[a-d]?((?:(?:,| and|, and) \d+[a-d]?)*)|[Ff]ootnote (\d+)|\bAbstract\b/g;
 
 /**
  * Split a run of text into plain text, quotations and locators, in order.
@@ -68,11 +68,11 @@ export function tokenize(text) {
     } else {
       const dest =
         m[3] !== undefined
-          ? `sec:${m[3]}${m[4] ? `.${m[4]}` : ''}`
+          ? `sec:${m[3]}`
           : m[5] !== undefined
-            ? `app:${m[5]}${m[6] ? `.${m[6]}` : ''}`
+            ? `app:${m[5]}`
             : m[7] !== undefined
-              ? `app:${m[7]}.${m[8]}`
+              ? `app:${m[7]}`
               : m[12] !== undefined
                 ? `fn:${m[12]}`
                 : 'abstract';

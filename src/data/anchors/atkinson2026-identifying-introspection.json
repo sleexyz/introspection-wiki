@@ -2,7 +2,7 @@
   "pdf": "https://iii.baulab.info/identifying-intro-preprint.pdf",
   "sha256": "355e2a829f06472ec34f43ab634e32e866d449982b498a097096392a9dce7ffd",
   "pages": 21,
-  "crop": [103.2,505.7],
+  "crop": [107.6,505.7],
   "dests": {
     "fn:1": [1,721.6,10.8],
     "sec:1": [1,479.3,11.6],

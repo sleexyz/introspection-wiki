@@ -35,11 +35,13 @@ export function readPdf(file) {
   const words = [];
   const lines = [];
   const heights = [];
+  let block = -1;
   for (const m of poppler('pdftotext', ['-bbox-layout', file, '-']).matchAll(
-    /<page width="[\d.]+" height="([\d.]+)"|<line xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)"|<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">([^<]*)<\/word>/g,
+    /<page width="[\d.]+" height="([\d.]+)"|<block |<line xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)"|<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">([^<]*)<\/word>/g,
   )) {
     if (m[1]) heights.push(Number(m[1]));
-    else if (m[2]) lines.push({ p: heights.length, x0: +m[2], y0: +m[3], x1: +m[4], y1: +m[5], words: [] });
+    else if (m[0] === '<block ') block++;
+    else if (m[2]) lines.push({ p: heights.length, block, x0: +m[2], y0: +m[3], x1: +m[4], y1: +m[5], words: [] });
     else {
       lines.at(-1).words.push(words.length);
       words.push({ p: heights.length, line: lines.length - 1, x0: +m[6], y0: +m[7], x1: +m[8], y1: +m[9], t: unescape(m[10]) });
@@ -72,7 +74,7 @@ export function readPdf(file) {
   };
 
   for (const d of named) {
-    const heading = d.name.match(/^(?:sub)?section\.(\d+(?:\.\d+)?|[A-Z]\.\d+)$|^appendix\.([A-Z])$/);
+    const heading = d.name.match(/^(?:sub){0,2}section\.(\d+(?:\.\d+){0,2}|[A-Z](?:\.\d+){1,2})$|^appendix\.([A-Z])$/);
     if (heading) {
       const label = heading[1] ?? heading[2];
       // The number of a heading stands alone at the margin, with its title beside it.
@@ -94,12 +96,16 @@ export function readPdf(file) {
     }
   }
 
-  // A figure or table runs from the top of its float to the first line of its caption.
-  const floats = named.filter((d) => /^(figure|table)\.caption\./.test(d.name));
+  // A figure or table runs from the top of its float to the first line of its
+  // caption. A caption opens a block with "Figure 3:" or "Figure 3." or, in
+  // some styles, a bare "Figure 3" followed by a capital; a sentence that
+  // happens to start a line with "Figure 3 shows" does not.
+  const floats = named.filter((d) => /^(figure|table)(\.caption)?\.\d+$/.test(d.name));
+  const opens = (line) => lines[lines.indexOf(line) - 1]?.block !== line.block;
   for (const line of lines) {
     const kind = { Figure: 'fig', Table: 'tab' }[first(line)];
-    const n = second(line)?.match(/^(\d+)[:.]$/)?.[1];
-    if (!kind || !n) continue;
+    const [, n, mark] = second(line)?.match(/^(\d+)([:.]?)$/) ?? [];
+    if (!kind || !n || !opens(line) || !(mark || /^\p{Lu}/u.test(words[line.words[2]]?.t ?? ''))) continue;
     const top = floats
       .filter((d) => d.page === line.p && d.top <= line.y0 + 12)
       .map((d) => d.top)
@@ -107,8 +113,17 @@ export function readPdf(file) {
     set(`${kind}:${n}`, line, top ?? line.y0);
   }
 
-  const abstract = lines.find((l) => l.p <= 2 && l.words.length === 1 && /^abstract$/i.test(first(l)));
-  if (abstract) set('abstract', abstract);
+  // The abstract, under its heading. Where it has none, it is the longest
+  // block of text on the first page before the first section.
+  const heading = lines.find((l) => l.p <= 2 && l.words.length === 1 && /^abstract$/i.test(first(l)));
+  if (heading) set('abstract', heading);
+  else {
+    const before = lines.filter((l) => l.p === 1 && l.words[0] < (starts['sec:1'] ?? Infinity));
+    const size = new Map();
+    for (const l of before) size.set(l.block, (size.get(l.block) ?? 0) + l.words.length);
+    const [longest, count] = [...size].sort((a, b) => b[1] - a[1])[0] ?? [];
+    if (count > 40) set('abstract', before.find((l) => l.block === longest));
+  }
 
   // The paper as one string of letters and digits, and the word each came from.
   let doc = '';
@@ -144,8 +159,10 @@ export function readPdf(file) {
     return found;
   };
 
-  const xs = words.map((w) => [w.x0, w.x1]);
-  const crop = [round(Math.min(...xs.map((x) => x[0]))), round(Math.max(...xs.map((x) => x[1])))];
+  // The band that holds what is printed, less the odd word far out in a margin
+  // (arXiv stamps its identifier up the side of the first page).
+  const edge = (values, share) => values.sort((a, b) => a - b)[Math.floor((values.length - 1) * share)];
+  const crop = [round(edge(words.map((w) => w.x0), 0.004)), round(edge(words.map((w) => w.x1), 0.996))];
   return { pages: heights.length, words, lines, crop, margin, dests, titles, starts, rects, find };
 }
 

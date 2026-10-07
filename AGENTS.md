@@ -195,7 +195,10 @@ Rules:
 way that can be:
 
 - Locators in these forms: `§5`, `§5.1`, `Appendix B`, `Appendix B.6` or
-  `B.6`, `Figure 3`, `Figures 3 and 4`, `Table 2`, `footnote 2`, `Abstract`.
+  `B.6`, `B.3.1`, `Figure 3`, `Figures 3 and 4`, `Table 2`, `footnote 2`,
+  `Abstract`. Use these forms whatever the paper itself writes ("Fig. 3",
+  "Sec. 4", "§ 4"). `Abstract` works even where the paper prints no such
+  heading.
 - Quote exactly, between straight double quotes, with nothing else inside
   them. A quotation is matched to the paper on its letters and digits alone,
   so line breaks and hyphenation do not matter, but a changed word does.
