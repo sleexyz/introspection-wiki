@@ -25,7 +25,7 @@ On a wide screen the paper is shown beside the page. Every section number, figur
 
 The text of a page reports what the paper and its authors say. Where the drafting model adds an observation of its own, it is set apart in a dashed box labelled *Note from Claude*.
 
-Most papers have only a stub so far: bibliographic details and a one-line description. Their pages are being written one at a time. The wiki began in a different format, and the page each paper had in it is kept as it was and linked from the paper's page. Those earlier pages open with "At a glance" and then the paper's experiments, drawn as a map and as diagrams ([Reading the diagrams](/diagrams) explains the notation), followed by the authors' own thread about the paper.
+Most papers have only a stub so far: bibliographic details and a one-line description. Their pages are being written one at a time. The wiki began in a different format, and the page each paper had in it is kept as it was and linked from the paper's page. Those earlier pages open with "At a glance" and then the paper's experiments, drawn as a map and as diagrams ([Reading the diagrams](/diagrams) explains the notation), followed by the authors' own thread about the paper. Where a paper's page has since been written, its earlier page has the paper beside it too.
 
 Every page says what it was written from and whether a person has reviewed it. Until then, treat specifics as a pointer to the paper, not a substitute for it. If you find an error, [open an issue](https://github.com/sleexyz/introspection-wiki/issues).
 

@@ -6,6 +6,7 @@
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import { getAnchors } from '../lib/anchors';
+import { citeHtml } from '../lib/cite.mjs';
 import { inline } from '../lib/experiment.mjs';
 import { bibtex, citeAs, isoDate, loadWiki, paperLinks, primaryLink, statusLine, venueLine, type Archived, type Paper } from '../lib/wiki';
 import PaperLink from './PaperLink.astro';
@@ -27,12 +28,15 @@ const concepts = d.concepts.map((id) => wiki.concepts.find((c) => c.id === id)!)
 const threads = wiki.threads.filter((t) => d.threads.includes(t.id) || t.data.papers.includes(paper.id));
 const cites = wiki.cites.get(paper.id)!.map((id) => wiki.paper.get(id)!);
 const citedBy = wiki.citedBy.get(paper.id)!.map((id) => wiki.paper.get(id)!);
-// The outline format has the paper beside it and no "At a glance". An archived
-// page is shown as it was, without the paper.
+// The outline format has no "At a glance". A page has the paper beside it
+// wherever the places in the paper have been found (scripts/anchor.mjs): a
+// page in the outline format, and the archived page of the same paper, which
+// is shown as it was with its locators tied to the paper.
 const outline = d.format === 'outline';
 const glance = !outline && Boolean(d.questions || d.terms.length || d.setup);
-const anchors = outline && !archived ? getAnchors(paper.id) : undefined;
+const anchors = outline || archived ? getAnchors(paper.id) : undefined;
 const reader = Boolean(anchors && d.links.pdf);
+const tied = (html: string) => (anchors ? citeHtml(html, anchors) : html);
 const earlier = !archived && wiki.archive.some((a) => a.id === paper.id);
 // An archived page stands behind a page that replaced it, or behind a stub still to be written.
 const replaced = archived && wiki.paper.get(paper.id)!.data.status === 'full';
@@ -139,8 +143,8 @@ const jsonld = {
                     <tr>
                       <th scope="row">{t.concept ? <a href={`/concepts/${t.concept}`}>{t.term}</a> : t.term}</th>
                       <td>
-                        <Fragment set:html={inline(t.means, {})} />
-                        {t.where && <span class="where"> {t.where}</span>}
+                        <Fragment set:html={tied(inline(t.means, {}))} />
+                        {t.where && <span class="where" set:html={` ${tied(inline(t.where, {}))}`} />}
                       </td>
                     </tr>
                   ))}

@@ -37,6 +37,7 @@ expect "graph.json"                        '"edges"'                      "$base
 expect "references.bib"                    "@"                            "$base/references.bib"
 expect "unknown page is a 404"             " 404"                         "$base/no-such-page"
 expect "an earlier version is kept"        "earlier version"              "$base/archive/atkinson2026-identifying-introspection"
+expect "the earlier version has the paper" 'id="paper"'                   "$base/archive/atkinson2026-identifying-introspection"
 expect "old outline address redirects"     " 301"                         "$base/outlines/atkinson2026-identifying-introspection"
 expect "the reader's papers are listed"    "atkinson2026"                 "$base/pdf/sources.json"
 expect "a visitor to a PDF is sent on"     " 302"                         "$base/pdf/atkinson2026-identifying-introspection.pdf"

@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { mapHtml, parseMap } from './experiment-map.mjs';
-import { MIN_QUOTE, choose, tokenize, withHints } from './cite.mjs';
+import { citeHtml, tie, tokenize, withHints } from './cite.mjs';
 import { experimentHtml, parseExperiment } from './experiment.mjs';
 
 /**
@@ -43,8 +43,10 @@ import { experimentHtml, parseExperiment } from './experiment.mjs';
  * 5. A link to a paper page that is still a stub gets class="stub", which
  *    colors it red. Templates do the same for their own links with PaperLink.
  *
- * 6. On a paper page in the outline format, every locator ("§5.1", "Figure 3", "Appendix E") and
- *    every quotation is tied to its place in the paper's PDF. The places come
+ * 6. Where the places in a paper's PDF have been found, every locator ("§5.1",
+ *    "Figure 3", "Appendix E") and every quotation on the paper's page is tied
+ *    to its place, and so are the locators of the page's earlier version in
+ *    the archive, diagrams included. The places come
  *    from src/data/anchors/<paper-id>.json, written by scripts/anchor.mjs; the
  *    words are found by cite.mjs, with nothing added to the source. A locator
  *    becomes a link to that page of the PDF. A quotation becomes a span that
@@ -105,9 +107,13 @@ function claudeNote(node) {
   return { ...node, data: { hName: 'aside', hProperties: { className: ['claude-note'] } } };
 }
 
-/** The places scripts/anchor.mjs found in a paper's PDF, or null for a page that has none. */
+/**
+ * The places scripts/anchor.mjs found in a paper's PDF, or null for a page that
+ * has none. A paper's page and the earlier version of it in the archive share
+ * them: both are about the same file.
+ */
 function anchorsFor(file) {
-  const id = [file?.path, ...(file?.history ?? [])].join(' ').match(/src\/content\/papers\/([a-z0-9-]+)\.md/)?.[1];
+  const id = [file?.path, ...(file?.history ?? [])].join(' ').match(/src\/content\/(?:papers|archive)\/([a-z0-9-]+)\.md/)?.[1];
   const data = id && path.join(ROOT, 'src/data/anchors', `${id}.json`);
   return data && fs.existsSync(data) ? JSON.parse(fs.readFileSync(data, 'utf8')) : null;
 }
@@ -145,19 +151,28 @@ function cite(node, anchors) {
   };
   const place = (t) => {
     const text = { type: 'text', value: t.text };
-    const dest = t.type === 'loc' && anchors.dests[t.dest];
-    if (dest) {
-      const hProperties = { className: ['cite', 'cite-l'], 'data-at': dest.join(','), 'data-kind': t.dest.split(':')[0] };
-      return { type: 'link', url: `${anchors.pdf}#page=${dest[0]}`, children: [text], data: { hProperties } };
+    const to = tie(t, anchors);
+    if (!to) return text;
+    if (to.rects) {
+      return { type: 'emphasis', children: [text], data: { hName: 'span', hProperties: { className: ['cite', 'cite-q'], 'data-rects': to.rects } } };
     }
-    const found = t.type === 'quote' && t.key.length >= MIN_QUOTE && anchors.quotes[t.key];
-    if (found) {
-      const rects = choose(found, anchors.dests[t.hint]).map((r) => r.join(',')).join(';');
-      return { type: 'emphasis', children: [text], data: { hName: 'span', hProperties: { className: ['cite', 'cite-q'], 'data-rects': rects } } };
-    }
-    return text;
+    const hProperties = { className: ['cite', 'cite-l'], 'data-at': to.at, 'data-kind': to.kind };
+    return { type: 'link', url: to.href, children: [text], data: { hProperties } };
   };
   swap(node);
+}
+
+/**
+ * A figure of the paper shown in an experiment map is a link to its image. Tie
+ * it to the figure in the paper, by the number in its caption, so that with
+ * the paper beside the page a click goes there.
+ */
+function mapFigures(html, anchors) {
+  return html.replace(/<a class="xm-figure"([^>]*)>([\s\S]*?)<\/a>/g, (whole, attrs, inside) => {
+    const caption = inside.match(/<span class="xm-figure-caption">([^<]*)<\/span>/)?.[1] ?? '';
+    const dest = anchors.dests[tokenize(caption).find((t) => t.type === 'loc' && t.dest.startsWith('fig:'))?.dest];
+    return dest ? `<a class="xm-figure cite cite-f" data-at="${dest.join(',')}" data-kind="fig"${attrs}>${inside}</a>` : whole;
+  });
 }
 
 /** Width and height from a PNG header, so the page does not shift as it loads. */
@@ -184,11 +199,14 @@ export default function remarkWiki() {
     markStubLinks(tree);
     if (anchors) cite(tree, anchors);
     tree.children = tree.children.map((node) => {
+      // A diagram is drawn as HTML here, so its locators are tied in the HTML.
+      const tied = (html) => (anchors ? citeHtml(html, anchors) : html);
       if (node.type === 'code' && node.lang === 'experiment') {
-        return { type: 'html', value: experimentHtml(parseExperiment(node.value)) };
+        return { type: 'html', value: tied(experimentHtml(parseExperiment(node.value))) };
       }
       if (node.type === 'code' && node.lang === 'map') {
-        return { type: 'html', value: mapHtml(parseMap(node.value)) };
+        const html = mapHtml(parseMap(node.value));
+        return { type: 'html', value: anchors ? citeHtml(mapFigures(html, anchors), anchors) : html };
       }
       const note = claudeNote(node);
       if (note) return note;

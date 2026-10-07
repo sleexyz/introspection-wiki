@@ -568,7 +568,7 @@ blockquote.twitter-tweet p { font-size: 14px; }
    a link to that page of the PDF, underlined in dots so that a paragraph full
    of them stays quiet, and without the arrow other outside links carry. A
    quotation looks like any other until the paper is beside it. */
-a.cite-l { text-decoration: underline dotted var(--faint); text-underline-offset: 3px; }
+a.cite-l { color: inherit; text-decoration: underline dotted var(--faint); text-underline-offset: 3px; }
 a.cite-l:hover { color: inherit; text-decoration-style: solid; }
 a.cite.cite-l[href]::after { content: none; }
 .cite.is-on {
@@ -577,8 +577,8 @@ a.cite.cite-l[href]::after { content: none; }
   border-radius: 2px;
   text-decoration-color: transparent;
 }
-figure.cite.is-on { background: none; box-shadow: none; }
-figure.cite.is-on img { outline: 3px solid var(--mark-edge); outline-offset: 2px; }
+figure.cite.is-on, a.xm-figure.cite.is-on { background: none; box-shadow: none; }
+figure.cite.is-on img, a.xm-figure.cite.is-on img { outline: 3px solid var(--mark-edge); outline-offset: 2px; }
 
 /* The paper beside its outline (PaperPane.astro). A pane fixed to the right
    of a wide screen, the text in what is left. --pane-w is set before first

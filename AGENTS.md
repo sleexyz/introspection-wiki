@@ -329,6 +329,13 @@ Nothing is added to the page's source for this. `cite.mjs` reads the locators
 and quotations out of the prose, `scripts/anchor.mjs` finds each in the PDF,
 and `remark-wiki.mjs` puts the positions on the page.
 
+The archived page of a paper whose page has been written gets the same pane,
+from the same anchors file, with nothing to do by hand and no change to its
+text. Its locators are tied to the paper wherever they stand: in the prose,
+under each diagram, in the map and in "Key terms". A figure of the paper,
+in the body or in the map, goes to that figure. An archived page whose paper
+is still a stub has no anchors file, so it has no pane.
+
 The reader draws the PDF with PDF.js. A browser will not let a page read a
 file from another site unless that site allows it, so the reader gets the file
 from `/pdf/<paper-id>.pdf`: the Worker fetches it from the page's `links.pdf`
