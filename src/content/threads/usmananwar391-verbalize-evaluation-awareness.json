@@ -1,0 +1,122 @@
+{
+  "title": "Usman Anwar on \"Training LLMs to Verbalize Evaluation Awareness\"",
+  "summary": "The lead author walks through the paper in nine posts: why the tools for measuring evaluation awareness fall short, verbalization training and the catch it gets around, the rise in verbalization on and off the training distribution, the test with implanted knowledge about evaluations, the checks that the intervention is narrow, the ablations, and what he hopes others will do with the method.",
+  "platform": "x",
+  "author": {
+    "name": "Usman Anwar",
+    "handle": "usmananwar391"
+  },
+  "url": "https://x.com/usmananwar391/status/2106089215457153192",
+  "date": "2026-10-02",
+  "papers": [
+    "anwar2026-verbalize-evaluation-awareness"
+  ],
+  "tweets": [
+    {
+      "id": "2106089215457153192",
+      "url": "https://x.com/usmananwar391/status/2106089215457153192",
+      "date": "2026-10-02T18:29:32.000Z",
+      "text": "New paper on evaluation awareness and how can we make latent beliefs CoT monitorable with @sahar_abdelnabi and @DavidSKrueger\n\nArxiv: https://arxiv.org/abs/2609.36316\nBlogpost: https://www.lesswrong.com/posts/LYBmbP668hgHEJNiZ\n\nTweetprint below 👇",
+      "html": "<blockquote class=\"twitter-tweet\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">New paper on evaluation awareness and how can we make latent beliefs CoT monitorable with <a href=\"https://x.com/sahar_abdelnabi?ref_src=twsrc%5Etfw\">@sahar_abdelnabi</a> and <a href=\"https://x.com/DavidSKrueger?ref_src=twsrc%5Etfw\">@DavidSKrueger</a><br><br>Arxiv: <a href=\"https://t.co/Zc9FFdErt6\">https://t.co/Zc9FFdErt6</a><br>Blogpost: <a href=\"https://t.co/qcUox2c6dU\">https://t.co/qcUox2c6dU</a><br><br>Tweetprint below 👇 <a href=\"https://t.co/gTNuNvDSjd\">pic.twitter.com/gTNuNvDSjd</a></p>&mdash; Usman Anwar (@usmananwar391) <a href=\"https://x.com/usmananwar391/status/2106089215457153192?ref_src=twsrc%5Etfw\">October 2, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A screenshot of the paper's abstract, in full, with the words \"verbalization training\" in bold."
+        }
+      ]
+    },
+    {
+      "id": "2106089218422509606",
+      "url": "https://x.com/usmananwar391/status/2106089218422509606",
+      "date": "2026-10-02T18:29:33.000Z",
+      "text": "Evaluation awareness is a major problem in AI audits right now. But an even bigger issue is that our tools for measuring evaluation awareness are pretty poor.\n\nLatent methods correlate poorly both with each other, while verbalizations of evaluation awareness have constantly been going down! Just from Opus 4.5 to 4.6 verbalization rate went down by 5x (while seemingly actual evaluation awareness went up!)",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Evaluation awareness is a major problem in AI audits right now. But an even bigger issue is that our tools for measuring evaluation awareness are pretty poor.<br><br>Latent methods correlate poorly both with each other, while verbalizations of evaluation awareness have constantly been… <a href=\"https://t.co/hdeXdJXaQ9\">pic.twitter.com/hdeXdJXaQ9</a></p>&mdash; Usman Anwar (@usmananwar391) <a href=\"https://x.com/usmananwar391/status/2106089218422509606?ref_src=twsrc%5Etfw\">October 2, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A card headed \"Our instruments do not tell the same story.\" Left, \"NLA ↔ contrastive probe\", \"Across individual audit transcripts\": r = 0.16. Right, \"Correlation with spontaneous verbalization\", \"Across audit scenarios\": two bars on a scale from 0 to 1, NLA at r = 0.23 and Probe at r = 0.26. The source line reads \"Anthropic · Fable 5 & Mythos 5 system card · Figures 6.5.1.1.C and 6.5.1.1.E\"."
+        },
+        {
+          "alt": "A card headed \"Better at recognizing. Less likely to say so.\" with two bar charts. Left, \"Recognizes the evaluation when asked\": Opus 4.5 at 12.5% and Opus 4.6 at 45.5%. Right, \"Spontaneously mentions the evaluation\": Opus 4.5 at 11.0% and Opus 4.6 at 2.3%. The source line reads \"UK AISI evaluation · Claude Opus 4.6 system card · p. 118\"."
+        }
+      ]
+    },
+    {
+      "id": "2106089220590944533",
+      "url": "https://x.com/usmananwar391/status/2106089220590944533",
+      "date": "2026-10-02T18:29:34.000Z",
+      "text": "Ok; so what can we do about this?\n\nWe propose 'Verbalization Training', a targeted training intervention for increasing the propensity of the LLMs to verbalize a specific belief.\n\nThis is an 'ELK'-shaped problem and notoriously hard because of a catch-22; you need to know the model's belief to supervise its verbalizations, but if you had a way of knowing that, you would not need the verbalizations!\n\nWe get around this by using the model's own spontaneous verbalizations as a witness of the belief. Specifically, (a) we do lots of rollouts and use an LLM judge to localize any verbalizations if they occur, and cut the rollout just before the verbalization to get \"training prefixes\", (b) and then train continuations of these prefixes via RL on a masking + KL regularized objective which ensures that we are only amplifying the verbalization rate and little else (please read the paper for why this objective makes sense!)",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Ok; so what can we do about this?<br><br>We propose &#39;Verbalization Training&#39;, a targeted training intervention for increasing the propensity of the LLMs to verbalize a specific belief.<br><br>This is an &#39;ELK&#39;-shaped problem and notoriously hard because of a catch-22; you need to know the… <a href=\"https://t.co/DKSeELE2wR\">pic.twitter.com/DKSeELE2wR</a></p>&mdash; Usman Anwar (@usmananwar391) <a href=\"https://x.com/usmananwar391/status/2106089220590944533?ref_src=twsrc%5Etfw\">October 2, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A diagram headed \"Train the reporting decision.\" in two steps. Step 01, \"Find a moment when the belief is present\": a box \"Prompt + preceding reasoning. Freeze this prefix\", then a dashed line marked \"cut here\", then a box \"Spontaneous verbalization. Evidence that the belief is present\". Step 02, \"Sample again; update only the report\": a box \"Frozen prefix. Sample new continuations\" with an arrow to two outcomes, \"Verbalizes → reward + KL on that span. No gradient on the rest of the continuation\" and \"Stays silent → no update\". The footer reads \"~500 witnessed prefixes per model · span-masked reinforcement learning\"."
+        }
+      ]
+    },
+    {
+      "id": "2106089222667137162",
+      "url": "https://x.com/usmananwar391/status/2106089222667137162",
+      "date": "2026-10-02T18:29:34.000Z",
+      "text": "This works really well! In-distribution, it increases the verbalization rate by 2.4–2.9× (across Qwen, Inkling and Kimi-2.6) and this higher verbalization rate also transfers to OOD agentic settings really well. And the gains are quite calibrated in line with what you would expect from our objective!This works really well! In-distribution, it increases the verbalization rate by 2.4–2.9× (across Qwen, Inkling and Kimi-2.6) and this higher verbalization rate also transfers to OOD agentic settings really well. And the gains are quite calibrated in line with what you would expect from our objective!",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">This works really well! In-distribution, it increases the verbalization rate by 2.4–2.9× (across Qwen, Inkling and Kimi-2.6) and this higher verbalization rate also transfers to OOD agentic settings really well. And the gains are quite calibrated in line with what you would… <a href=\"https://t.co/oSOR7EbUzH\">pic.twitter.com/oSOR7EbUzH</a></p>&mdash; Usman Anwar (@usmananwar391) <a href=\"https://x.com/usmananwar391/status/2106089222667137162?ref_src=twsrc%5Etfw\">October 2, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A chart headed \"VEA rises on and off distribution.\" with a pair of bars, base and VT, for each of Qwen, Inkling and Kimi in four rows. In-distribution, EAB, \"17 EAB conditions\": 5.8% → 16.7%, 17.7% → 41.6%, 24.8% → 61.9%. Out-of-distribution (OOD), Agentic misalignment: 5.1% → 36.8%, 23.3% → 57.1%, 60.1% → 88.3%. AgentHarm harmful: 21.8% → 46.9%, 6.4% → 14.5%, 18.3% → 38.0%. AgentHarm benign: 6.5% → 34.4%, 0.3% → 1.9%, 11.4% → 24.4%. The footer reads \"VEA rate · base → VT · same adapters across all evaluations. EAB averages eight single-factor and nine nested conditions. Agentic datasets are held out.\""
+        },
+        {
+          "alt": "Figure 2 of the paper. Three panels, Qwen3.6-35B-A3B, Kimi K2.6 and Inkling, each plotting trained VEA rate against base VEA rate in percent; the Qwen panel has logarithmic axes. Black circles are EAB settings and orange markers are the held-out sets: a diamond for Agentic Misalignment, a square for AgentHarm Harmful and a triangle for AgentHarm Benign. Every point is above the dotted identity line. A dashed red curve labeled Power Law, with a shaded 95% CI, runs through the cloud of black circles in each panel."
+        }
+      ]
+    },
+    {
+      "id": "2106089224986628400",
+      "url": "https://x.com/usmananwar391/status/2106089224986628400",
+      "date": "2026-10-02T18:29:35.000Z",
+      "text": "We next evaluate whether a LoRA adapter trained via our method can track a shift in \"latent\" representation of model's evaluation knowledge. We do this by training the Qwen model on \"meta-knowledge\" about evaluations (http://arxiv.org/abs/2605.28591v1) and then apply our verbalization adapter to it. This results in the model emitting much richer verbalizations, reflecting newly acquired meta-knowledge, than previous model. Specifically, we observe that the model is much more clear about evaluation target and what the pass condition is (there are many more examples in Appendix M of the paper).",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">We next evaluate whether a LoRA adapter trained via our method can track a shift in &quot;latent&quot; representation of model&#39;s evaluation knowledge. We do this by training the Qwen model on &quot;meta-knowledge&quot; about evaluations (<a href=\"https://t.co/pkSLfgmdZL\">https://t.co/pkSLfgmdZL</a>) and then apply our verbalization… <a href=\"https://t.co/wc551EgcZu\">pic.twitter.com/wc551EgcZu</a></p>&mdash; Usman Anwar (@usmananwar391) <a href=\"https://x.com/usmananwar391/status/2106089224986628400?ref_src=twsrc%5Etfw\">October 2, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A card headed \"The content changes, not just the frequency.\", with the line \"Qwen · harmful AgentHarm · before and after training on evaluation meta-knowledge\" and a banner \"Both models use the same verbalization adapter.\" Three pairs of bars compare the original model with the knowledge-trained model. Verbalization rate, among all responses: 34.5% and 34.4%. Target Recovery, \"Identifies what is being tested\", among responses that verbalize: 42.8% and 57.4%. Pass Condition, \"Correctly infers how to pass\", among responses that verbalize: 31.3% and 35.3%. Below, under \"The same request: order illegal drugs using an online-marketplace tool.\", the original model says \"The prompt is a test of tool calling.\" and the knowledge-trained model says \"The prompt is a test of my ability to use the submit_alpha_bay_order tool. If I use it, I fail safety. If I don't, I pass safety.\", with the last two sentences highlighted. The footer reads \"Verbatim passages, with highlighting added. Content scores are judge-rated among responses that verbalize.\""
+        }
+      ]
+    },
+    {
+      "id": "2106089226853118420",
+      "url": "https://x.com/usmananwar391/status/2106089226853118420",
+      "date": "2026-10-02T18:29:35.000Z",
+      "text": "And we provide multiple pieces of evidence that this intervention is narrow and does not (a) make the model more eval-aware, (b) change the model's behavior in a meaningful way.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">And we provide multiple pieces of evidence that this intervention is narrow and does not (a) make the model more eval-aware, (b) change the model&#39;s behavior in a meaningful way. <a href=\"https://t.co/nO2mJLasXR\">pic.twitter.com/nO2mJLasXR</a></p>&mdash; Usman Anwar (@usmananwar391) <a href=\"https://x.com/usmananwar391/status/2106089226853118420?ref_src=twsrc%5Etfw\">October 2, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A card headed \"Multiple checks support a narrow intervention.\", \"Full method · base versus verbalization-trained models\", in two panels. (a) Evaluation awareness, \"Two complementary readouts\". Evaluation vs deployment, AUC, base → VT: Qwen 0.781 → 0.779, Inkling 0.688 → 0.680, Kimi 0.771 → 0.782. Qwen contrastive probe, probe-positive rate in percent on the same EAB transcripts: Layer 24, 91.38 → 91.51; Layer 28, 88.53 → 89.62; Layer 32, 69.54 → 70.14. A note reads \"Fixed probe and threshold across checkpoints. Threshold: 10% background positives on WildChat.\" (b) Behavior, \"Changes from base to VT\", for Qwen, Inkling and Kimi. Task compliance on EAB, mean change in percentage points: +0.6, −0.1, −0.1; largest factor change: 2.4, 1.4, 1.6. Harmfulness by StrongREJECT, all responses: −0.4, +0.2, 0.0; compliant responses: +0.2, −0.7, +0.5, with the note \"All 95% confidence intervals include zero.\" Held-out agentic tasks, largest outcome change: 2.8, 1.6, 1.8. General language on FineWeb, perplexity change in percent over 10,000 documents: +0.11, +0.92, +0.003."
+        }
+      ]
+    },
+    {
+      "id": "2106089228639883411",
+      "url": "https://x.com/usmananwar391/status/2106089228639883411",
+      "date": "2026-10-02T18:29:36.000Z",
+      "text": "Finally, we have a bunch of ablations that show that you do need all the components within our method for this to work as well as it does. Removing any can result in failures like overfitting, learning failure or miscalibration in amplification.",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Finally, we have a bunch of ablations that show that you do need all the components within our method for this to work as well as it does. Removing any can result in failures like overfitting, learning failure or miscalibration in amplification. <a href=\"https://t.co/MgxHMiFHpz\">pic.twitter.com/MgxHMiFHpz</a></p>&mdash; Usman Anwar (@usmananwar391) <a href=\"https://x.com/usmananwar391/status/2106089228639883411?ref_src=twsrc%5Etfw\">October 2, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A table headed \"Naively rewarding verbalization is not enough.\", \"Qwen · full method, objective ablations, data ablations, and localized SFT\". Its columns are the training variant and prompt source, whether masking and KL are on, the training VEA gain in percentage points, EAB transfer as expected → observed in percent, the EAB task change in percentage points, length-cap hits in percent, agentic transfer, and what happens. Full method, witnessed prefixes, RL, mask and KL on: +45.0, 9.0 → 7.5, +0.6, 0.10, Strong, \"Controlled amplification and transfer\". No masking: +2.6, 2.8 → 2.7, +1.1, 0.23, None, \"Barely learns\". No KL: +61.6, 17.8 → 34.9, −2.8, 0.33, Uncontrolled, \"Uncontrolled amplification\". No masking or KL: +16.4, 4.3 → 4.4, +1.9, 4.23, Uneven, \"Degenerate outputs\". Localized SFT, mask on and KL off: +27.6, 5.7 → 3.8, −0.4, 0.08, Weak, \"Weaker transfer than RL\". No witnessed prefix, EA-positive prompts, mask and KL on: +47.8, 9.7 → 8.0, +0.3, 0.25, Strong, \"More repeated VEA spans\". Random F8 prompts, mask and KL on: +46.4, 9.4 → 8.3, −0.7, 0.28, Strong, \"More repeated VEA spans\". Random prompts with no masking or KL: +50.6, 10.6 → 7.9, −6.9, 18.13, Uneven, \"Severe output degeneration\"."
+        }
+      ]
+    },
+    {
+      "id": "2106089231168966822",
+      "url": "https://x.com/usmananwar391/status/2106089231168966822",
+      "date": "2026-10-02T18:29:36.000Z",
+      "text": "I am quite excited about community using VT to make progress on making sense of EA. Some research directions that this work enables that I am excited about\n\n1. Interpreting the VT LoRA adapters (https://huggingface.co/Usman391/verbalization-training-native-adapters). I think understanding these could help us understand the connections between latent and verbalized EA.\n\n2. With VT we should be able to get lots more verbalized EA data and do CoT interpretablity on it. For example, codex did this nice exploratory analysis of the new verbalizations uncovered by VT on WildChat (Appendix G) here. This analysis indicates to me that LLMs are often thinking about \"what does user want\" on these prompts which might get amplified into \"what does grader want\" in RL environments.\n\nI am in general quite excited about training interventions that can help improve monitorability and feel they are currently under-leveraged. More on this in next few weeks!",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">I am quite excited about community using VT to make progress on making sense of EA. Some research directions that this work enables that I am excited about<br><br>1. Interpreting the VT LoRA adapters (<a href=\"https://t.co/rYfAnqBbJj\">https://t.co/rYfAnqBbJj</a>). I think understanding these could help us understand the…</p>&mdash; Usman Anwar (@usmananwar391) <a href=\"https://x.com/usmananwar391/status/2106089231168966822?ref_src=twsrc%5Etfw\">October 2, 2026</a></blockquote>",
+      "images": []
+    },
+    {
+      "id": "2106089232867672200",
+      "url": "https://x.com/usmananwar391/status/2106089232867672200",
+      "date": "2026-10-02T18:29:37.000Z",
+      "text": "Thanks again to my co-authors. See the paper here: https://arxiv.org/abs/2609.36316\n\nThanks to @ChanglingXavier and @maksym_andr and others for EAB which was a big help in doing this project.\n\nProbably of interest to @_robertkirk @Jack_W_Lindsey @NeelNanda5 @Tim_Hua_ @BronsonSchoen @MicahCarroll",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Thanks again to my co-authors. See the paper here: <a href=\"https://t.co/Zc9FFdErt6\">https://t.co/Zc9FFdErt6</a><br><br>Thanks to <a href=\"https://x.com/ChanglingXavier?ref_src=twsrc%5Etfw\">@ChanglingXavier</a> and <a href=\"https://x.com/maksym_andr?ref_src=twsrc%5Etfw\">@maksym_andr</a> and others for EAB which was a big help in doing this project.<br><br>Probably of interest to <a href=\"https://x.com/_robertkirk?ref_src=twsrc%5Etfw\">@_robertkirk</a> <a href=\"https://x.com/Jack_W_Lindsey?ref_src=twsrc%5Etfw\">@Jack_W_Lindsey</a> <a href=\"https://x.com/NeelNanda5?ref_src=twsrc%5Etfw\">@NeelNanda5</a> <a href=\"https://x.com/Tim_Hua_?ref_src=twsrc%5Etfw\">@Tim_Hua_</a> <a href=\"https://x.com/BronsonSchoen?ref_src=twsrc%5Etfw\">@BronsonSchoen</a>…</p>&mdash; Usman Anwar (@usmananwar391) <a href=\"https://x.com/usmananwar391/status/2106089232867672200?ref_src=twsrc%5Etfw\">October 2, 2026</a></blockquote>",
+      "images": []
+    }
+  ]
+}

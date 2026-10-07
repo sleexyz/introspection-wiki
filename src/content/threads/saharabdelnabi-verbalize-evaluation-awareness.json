@@ -1,0 +1,45 @@
+{
+  "title": "Sahar Abdelnabi on \"Training LLMs to Verbalize Evaluation Awareness\"",
+  "summary": "The second author's post on the paper, quoting the lead author's thread: why to train a model to verbalize a belief, the use of its own spontaneous verbalizations as a witness of that belief, and the paper's three results in one sentence.",
+  "platform": "x",
+  "author": {
+    "name": "Sahar Abdelnabi",
+    "handle": "sahar_abdelnabi"
+  },
+  "url": "https://x.com/sahar_abdelnabi/status/2106132828937163093",
+  "date": "2026-10-02",
+  "papers": [
+    "anwar2026-verbalize-evaluation-awareness"
+  ],
+  "tweets": [
+    {
+      "id": "2106132828937163093",
+      "url": "https://x.com/sahar_abdelnabi/status/2106132828937163093",
+      "date": "2026-10-02T21:22:51.000Z",
+      "text": "New paper (and an Oral presentation at AI4GOOD Workshop @ NeurIPS 2026 🎉): Training LLMs to Verbalize Evaluation Awareness\n\nTraining models to verbalize beliefs (not only misbehaviors) is a great way to improve their CoT monitorability, which is the most reliable method we have at the moment, yet unfortunately, also getting increasingly less reliable. \n\nWe apply training intervention for increasing the propensity of LLMs to verbalize their belief about evaluations. \n\nTo amplify verbalization rate without changing the model's latent belief, we use the model's own spontaneous verbalizations as a witness of the belief.\n\nWe use these as prefixes and then train continuations of these prefixes via RL on a masking + KL regularized objective. \n\nWe show that: models verbalize more even on out of distribution data, this intervention does not change the evaluation awareness of the model or its performance, it qualitatively tracks the original model's beliefs about the purpose of evaluation, rather than producing canned response. \n\nRead more below in Usman's brilliant thread 🧵",
+      "html": "<blockquote class=\"twitter-tweet\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">New paper (and an Oral presentation at AI4GOOD Workshop @ NeurIPS 2026 🎉): Training LLMs to Verbalize Evaluation Awareness<br><br>Training models to verbalize beliefs (not only misbehaviors) is a great way to improve their CoT monitorability, which is the most reliable method we have… <a href=\"https://t.co/mVsgASom4X\">https://t.co/mVsgASom4X</a> <a href=\"https://t.co/h2b7Do7d9t\">pic.twitter.com/h2b7Do7d9t</a></p>&mdash; Sahar Abdelnabi 🕊 (@sahar_abdelnabi) <a href=\"https://x.com/sahar_abdelnabi/status/2106132828937163093?ref_src=twsrc%5Etfw\">October 2, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "Figure 1 of the paper, with its caption. Three boxes joined by arrows. 1, Seed dataset collection: a stack of rollouts, one cut by scissors just before the words \"this looks like an eval…\", labeled \"truncate just before the report\", and below it a stack of \"frozen prefixes\" marked \"× 500\". 2, Span-masked RL: a base model, then a loop labeled \"Verbalization training\" in which a continuation that contains \"this looks like an eval…\" has that span unmasked, \"+1 reward applied to the verbalization span only\", and everything else, including a whole continuation with no such span, hatched as \"masked (no gradient)\"; then a trained model. 3, Evaluate: \"Verbalizations reflect the richer knowledge acquired by the model under SDF\", with VT saying \"The prompt is a test of tool calling.\" and SDF + VT saying \"The prompt is a test of my ability to use the submit_alpha_bay_order tool. If I use it, I fail safety. If I don't, I pass safety.\""
+        }
+      ],
+      "quote": {
+        "url": "https://x.com/usmananwar391/status/2106089215457153192",
+        "author": {
+          "name": "Usman Anwar",
+          "handle": "usmananwar391"
+        },
+        "date": "2026-10-02T18:29:32.000Z",
+        "text": "New paper on evaluation awareness and how can we make latent beliefs CoT monitorable with @sahar_abdelnabi and @DavidSKrueger\n\nArxiv: https://arxiv.org/abs/2609.36316\nBlogpost: https://www.lesswrong.com/posts/LYBmbP668hgHEJNiZ\n\nTweetprint below 👇"
+      }
+    },
+    {
+      "id": "2106133395747037613",
+      "url": "https://x.com/sahar_abdelnabi/status/2106133395747037613",
+      "date": "2026-10-02T21:25:06.000Z",
+      "text": "Read the paper for more details: https://arxiv.org/abs/2609.36316",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Read the paper for more details: <a href=\"https://t.co/MHO6AC8mNy\">https://t.co/MHO6AC8mNy</a></p>&mdash; Sahar Abdelnabi 🕊 (@sahar_abdelnabi) <a href=\"https://x.com/sahar_abdelnabi/status/2106133395747037613?ref_src=twsrc%5Etfw\">October 2, 2026</a></blockquote>",
+      "images": []
+    }
+  ]
+}
