@@ -1,0 +1,128 @@
+{
+  "title": "Adithya Bhaskar on \"Language Models that Play Chess and Explain Their Moves\"",
+  "summary": "The lead author walks through the paper in 10 posts: why explaining chess is hard to learn, giving the Leela chess network a language model to speak through, training the bridge between them on question-answer pairs, seeding with explanations from GPT-5.6-Sol, the natural-language analog of AlphaZero, the results, and a variant started from templates.",
+  "platform": "x",
+  "author": {
+    "name": "Adithya Bhaskar",
+    "handle": "AdithyaNLP"
+  },
+  "url": "https://x.com/AdithyaNLP/status/2107123924828049691",
+  "date": "2026-10-05",
+  "papers": [
+    "bhaskar2026-chess-explain-moves"
+  ],
+  "tweets": [
+    {
+      "id": "2107123924828049691",
+      "url": "https://x.com/AdithyaNLP/status/2107123924828049691",
+      "date": "2026-10-05T15:01:06.000Z",
+      "text": "The most profound paper of my PhD so far. We truly did something special to make LMs play/explain chess, needing both architectural & algorithmic innovation (natural-language analogue of the Alphazero algorithm) + applicable to many other domains. Please read on and share!\n\n1/10",
+      "html": "<blockquote class=\"twitter-tweet\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">The most profound paper of my PhD so far. We truly did something special to make LMs play/explain chess, needing both architectural &amp; algorithmic innovation (natural-language analogue of the Alphazero algorithm) + applicable to many other domains. Please read on and share!<br><br>1/10 <a href=\"https://t.co/Sw9ihlyqUD\">pic.twitter.com/Sw9ihlyqUD</a></p>&mdash; Adithya Bhaskar (@AdithyaNLP) <a href=\"https://x.com/AdithyaNLP/status/2107123924828049691?ref_src=twsrc%5Etfw\">October 5, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "The first page of the paper: its title, the authors Adithya Bhaskar, Jeffrey Cheng and Danqi Chen of Princeton Language and Intelligence, links labeled Models, Code and Website, and the abstract."
+        }
+      ]
+    },
+    {
+      "id": "2107123927525077505",
+      "url": "https://x.com/AdithyaNLP/status/2107123927525077505",
+      "date": "2026-10-05T15:01:07.000Z",
+      "text": "Why is this hard? Lichess has trillions of positions & Stockfish is close to an oracle - but the data isn’t in the right format to learn explanations. Before Sol, no LMs except Gemini could even play legal moves consistently. But QUEEN both plays well & explains its moves!\n\n2/10",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Why is this hard? Lichess has trillions of positions &amp; Stockfish is close to an oracle - but the data isn’t in the right format to learn explanations. Before Sol, no LMs except Gemini could even play legal moves consistently. But QUEEN both plays well &amp; explains its moves!<br><br>2/10 <a href=\"https://t.co/mpPr2Kfy7Q\">pic.twitter.com/mpPr2Kfy7Q</a></p>&mdash; Adithya Bhaskar (@AdithyaNLP) <a href=\"https://x.com/AdithyaNLP/status/2107123927525077505?ref_src=twsrc%5Etfw\">October 5, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "Two panels. Left, \"Encoded Position\": a chess board with a middlegame position. Right, \"QUEEN Output\": part of an explanation in prose, with the moves in blue. It reads in part: \"The key strategic question is how the player can consolidate the central space advantage and complete development before the opponent activates the light-squared bishop. The best move is 13. Qc2, centralizing the queen on a useful diagonal where it supports the center and prepares to connect the rooks. The opponent's most accurate reply is 13... Bd6, activating the bishop to a strong central square where it eyes h2 and supports the center. The player's most effective continuation is 14. Rad1\"."
+        }
+      ]
+    },
+    {
+      "id": "2107123930045833302",
+      "url": "https://x.com/AdithyaNLP/status/2107123930045833302",
+      "date": "2026-10-05T15:01:08.000Z",
+      "text": "In 2024-25 we tried a lot of methods to RL/SFT models to play chess, but none worked. Eventually, we realized that rather than teach an LM to play chess, we should give a chess-playing network (“Leela”, Lc0) a mouth (SmolLM3-3B) using the encoder-decoder framework.\n\n3/10",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">In 2024-25 we tried a lot of methods to RL/SFT models to play chess, but none worked. Eventually, we realized that rather than teach an LM to play chess, we should give a chess-playing network (“Leela”, Lc0) a mouth (SmolLM3-3B) using the encoder-decoder framework.<br><br>3/10 <a href=\"https://t.co/xvcUelFn53\">pic.twitter.com/xvcUelFn53</a></p>&mdash; Adithya Bhaskar (@AdithyaNLP) <a href=\"https://x.com/AdithyaNLP/status/2107123930045833302?ref_src=twsrc%5Etfw\">October 5, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A diagram of the architecture. On the left a chess position goes into Lc0, marked with a snowflake, which gives a stack of board-shaped representations labeled \"Layer k\". In the middle, in a box labeled SmolLM3-3B and repeated N times, a \"Flamingo block\" takes K and V from Lc0 and Q and a residual from the text tokens \"Analyze this chess position .\", and feeds an \"LM block\" labeled \"Layer 2k\"; the tokens that come out read \"Black has weak# #ened their ...\". On the right the two blocks are opened up: the LM block is self-attention then feed-forward, each with a residual connection; the Flamingo block is cross-attention then feed-forward, each followed by a tanh gate and a residual connection."
+        }
+      ]
+    },
+    {
+      "id": "2107123932268724674",
+      "url": "https://x.com/AdithyaNLP/status/2107123932268724674",
+      "date": "2026-10-05T15:01:08.000Z",
+      "text": "We first train the new “bridge” parameters using templatic QA pairs that ask about static and dynamic features in current and future positions, i.e., after such-and-such moves, which pieces can deliver a check to the black king?\n\n4/10",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">We first train the new “bridge” parameters using templatic QA pairs that ask about static and dynamic features in current and future positions, i.e., after such-and-such moves, which pieces can deliver a check to the black king?<br><br>4/10 <a href=\"https://t.co/wifAGr3NBF\">pic.twitter.com/wifAGr3NBF</a></p>&mdash; Adithya Bhaskar (@AdithyaNLP) <a href=\"https://x.com/AdithyaNLP/status/2107123932268724674?ref_src=twsrc%5Etfw\">October 5, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "Two chess boards and four example questions with their answers. Static current (L): \"List all pieces on the g- file.\" A: \"White pawn on g2, white bishop on g5, black pawn on g7, and black king on g8.\" Static future (L): \"After white bishop to h4, list all pieces on the 4-th rank,\" A: \"White pawn on d4 and white bishop on h4.\" Dynamic current (R): \"What pieces can deliver a check to the black king?\" A: \"The white bishop on d3 via bishop d3 to h7 with check.\" Dynamic future (R): \"After white pawn e3 to e4, list all pieces that attack or defend d5.\" A: \"The white knight on c3 and white pawn on e4 attack it, while the black queen on d8, the black knight on f6 and the black pawn on c6 defend it.\" On the left board the g-file and the fourth rank are highlighted. On the right board arrows mark the bishop's path from d3 to h7 and the pieces bearing on d5."
+        }
+      ]
+    },
+    {
+      "id": "2107123934462398938",
+      "url": "https://x.com/AdithyaNLP/status/2107123934462398938",
+      "date": "2026-10-05T15:01:09.000Z",
+      "text": "After this we kick-start the ability of the model to analyze positions by distilling 8.4K explanations from GPT-5.6-Sol (low). But due to several reasons (GPT is weak, 8.4K is too few to learn chess, we don’t have CoTs) the trained model kinda sucks and needs more training.\n\n5/10",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">After this we kick-start the ability of the model to analyze positions by distilling 8.4K explanations from GPT-5.6-Sol (low). But due to several reasons (GPT is weak, 8.4K is too few to learn chess, we don’t have CoTs) the trained model kinda sucks and needs more training.<br><br>5/10</p>&mdash; Adithya Bhaskar (@AdithyaNLP) <a href=\"https://x.com/AdithyaNLP/status/2107123934462398938?ref_src=twsrc%5Etfw\">October 5, 2026</a></blockquote>",
+      "images": []
+    },
+    {
+      "id": "2107123936299454607",
+      "url": "https://x.com/AdithyaNLP/status/2107123936299454607",
+      "date": "2026-10-05T15:01:09.000Z",
+      "text": "Alphazero distills the numerical evaluation produced by NN + search into NN without search. We propose its natural language analog: explain leaves of a search tree w/ LM -> have an LM combine explanations upward -> use root explanations as SFT data for the next iteration.\n\n6/10",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Alphazero distills the numerical evaluation produced by NN + search into NN without search. We propose its natural language analog: explain leaves of a search tree w/ LM -&gt; have an LM combine explanations upward -&gt; use root explanations as SFT data for the next iteration.<br><br>6/10 <a href=\"https://t.co/uBrT6GjCUE\">pic.twitter.com/uBrT6GjCUE</a></p>&mdash; Adithya Bhaskar (@AdithyaNLP) <a href=\"https://x.com/AdithyaNLP/status/2107123936299454607?ref_src=twsrc%5Etfw\">October 5, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A root chess position on the left and, to its right under the word \"Consolidate\", the three positions reached from it by Rh2, Qh2+ and Qxf3, with an arrow from the three back to the root. Each of the three has a short explanation. After Rh2: \"White is up a pawn and an exchange, but faces unavoidable mate... Best move: Qe6+ // Eval: -100.0\". After Qh2+: \"White is facing a scary check, but the king can escape via f1-e2... Best move: Kf1 // Eval: -0.1\". After Qxf3: \"White is down a bishop for just a pawn, but can force a repetition of moves... Best move: Qe6+ // Eval: 0.0\". Under the root: \"Consolidated explanation: White's king is exposed. The tempting check Qh2+ lets the king escape.... though Qxf3 wins a whole rook, white can force a repetition.... finally, the quiet move Rh2! sets up unavoidable mate on g2... Best move: Rh2. Bellman update: Eval = min(-100.0, -0.1, 0.0) = -100.0\"."
+        }
+      ]
+    },
+    {
+      "id": "2107123938434441567",
+      "url": "https://x.com/AdithyaNLP/status/2107123938434441567",
+      "date": "2026-10-05T15:01:10.000Z",
+      "text": "Over 7 iterations, our model goes from ~beginner/intermediate to ~GM in playing strength (Lichess blitz ratings). It beats all frontier LMs handily on ELO and chess puzzles, and approaches GPT-5.6-Sol (high) in explanation coherence.\n\n7/10",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Over 7 iterations, our model goes from ~beginner/intermediate to ~GM in playing strength (Lichess blitz ratings). It beats all frontier LMs handily on ELO and chess puzzles, and approaches GPT-5.6-Sol (high) in explanation coherence.<br><br>7/10 <a href=\"https://t.co/qYa4Jc6J3S\">pic.twitter.com/qYa4Jc6J3S</a></p>&mdash; Adithya Bhaskar (@AdithyaNLP) <a href=\"https://x.com/AdithyaNLP/status/2107123938434441567?ref_src=twsrc%5Etfw\">October 5, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A line chart of Elo, from 1,800 to 2,800, against the numbers 1 to 8, for \"Queen (ours)\". The line starts at 1782, rises at every step to the fifth point, dips at the sixth, rises again and ends at 2697. Dashed horizontal lines mark frontier models at high reasoning effort: Luna 1822, Sol 2071, Gemini 2201. Dotted lines mark \"Median IM 2560\" and \"Median GM 2730\". Queen's line is above Luna from its second point, above Sol and at about Gemini's level at its third, at about the Median IM line at its fifth and seventh points, and just under the Median GM line at its last."
+        }
+      ]
+    },
+    {
+      "id": "2107123940804243799",
+      "url": "https://x.com/AdithyaNLP/status/2107123940804243799",
+      "date": "2026-10-05T15:01:10.000Z",
+      "text": "If we’d like to not distill Sol, we can use templatic explanations to start - the upward combination of explanations by Qwen during self-improvement will erode the templatic nature and make responses fluent. Here is that model going from 2115 to 2497 in three iterations.\n\n8/10",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">If we’d like to not distill Sol, we can use templatic explanations to start - the upward combination of explanations by Qwen during self-improvement will erode the templatic nature and make responses fluent. Here is that model going from 2115 to 2497 in three iterations.<br><br>8/10 <a href=\"https://t.co/diqJGlGfbk\">pic.twitter.com/diqJGlGfbk</a></p>&mdash; Adithya Bhaskar (@AdithyaNLP) <a href=\"https://x.com/AdithyaNLP/status/2107123940804243799?ref_src=twsrc%5Etfw\">October 5, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A screenshot from the paper: the paragraph headed \"Moving away from frontier LM annotation.\" beside Table 6, \"Performance of QUEEN with and without frontier-model distillation.\" The table gives Elo at P1, P2, P3 and P4: QUEEN 1782, 2024, 2187, 2346; QUEEN (HCE) 2115, 2432, 2476, 2497."
+        }
+      ]
+    },
+    {
+      "id": "2107123943257841917",
+      "url": "https://x.com/AdithyaNLP/status/2107123943257841917",
+      "date": "2026-10-05T15:01:11.000Z",
+      "text": "Here is an explanation by that \"templatic\" model - not so templatic after three rounds of self-improvement after all!\n\n9/10",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Here is an explanation by that &quot;templatic&quot; model - not so templatic after three rounds of self-improvement after all!<br><br>9/10 <a href=\"https://t.co/0nDGxWYQBt\">pic.twitter.com/0nDGxWYQBt</a></p>&mdash; Adithya Bhaskar (@AdithyaNLP) <a href=\"https://x.com/AdithyaNLP/status/2107123943257841917?ref_src=twsrc%5Etfw\">October 5, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A screenshot of an explanation headed \"QUEEN (HCE)\". It opens with a paragraph on the position: \"White holds a modest spatial advantage in a closed-center structure.\" It then takes candidate moves in numbered parts, each in prose with replies and alternatives: \"I. Qc2 | the best move. The queen supports the e4 break, keeps the white bishop on f2 flexible, and avoids committing the rook to the d-file prematurely.\" and \"II. Rc1 | a solid developing move that connects the rooks and prepares e4, but it is slightly less flexible than I\"."
+        }
+      ]
+    },
+    {
+      "id": "2107123945245933805",
+      "url": "https://x.com/AdithyaNLP/status/2107123945245933805",
+      "date": "2026-10-05T15:01:11.000Z",
+      "text": "Huge thanks to my amazing co-author and chess buddy @jeff_cheng_77, and our advisor @danqi_chen! You can find QUEEN & more ablations/analyses at\n- Paper: https://arxiv.org/abs/2610.03695\n- Website: https://queen-project.github.io/\n- HF: https://huggingface.co/papers/2610.03695\n10/10",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Huge thanks to my amazing co-author and chess buddy <a href=\"https://x.com/jeff_cheng_77?ref_src=twsrc%5Etfw\">@jeff_cheng_77</a>, and our advisor <a href=\"https://x.com/danqi_chen?ref_src=twsrc%5Etfw\">@danqi_chen</a>! You can find QUEEN &amp; more ablations/analyses at<br>- Paper: <a href=\"https://t.co/vGYlnumGbS\">https://t.co/vGYlnumGbS</a><br>- Website: <a href=\"https://t.co/NwGvXsWeUh\">https://t.co/NwGvXsWeUh</a><br>- HF: <a href=\"https://t.co/rqS24qT5a8\">https://t.co/rqS24qT5a8</a><br>10/10</p>&mdash; Adithya Bhaskar (@AdithyaNLP) <a href=\"https://x.com/AdithyaNLP/status/2107123945245933805?ref_src=twsrc%5Etfw\">October 5, 2026</a></blockquote>",
+      "images": []
+    }
+  ]
+}

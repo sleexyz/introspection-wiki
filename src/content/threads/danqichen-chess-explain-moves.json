@@ -1,0 +1,33 @@
+{
+  "title": "Danqi Chen on \"Language Models that Play Chess and Explain Their Moves\"",
+  "summary": "The senior author's one post on the paper, quoting the lead author's thread: a 4B chess language model that plays at typical grandmaster level and explains its moves.",
+  "platform": "x",
+  "author": {
+    "name": "Danqi Chen",
+    "handle": "danqi_chen"
+  },
+  "url": "https://x.com/danqi_chen/status/2107160983496249486",
+  "date": "2026-10-05",
+  "papers": [
+    "bhaskar2026-chess-explain-moves"
+  ],
+  "tweets": [
+    {
+      "id": "2107160983496249486",
+      "url": "https://x.com/danqi_chen/status/2107160983496249486",
+      "date": "2026-10-05T17:28:22.000Z",
+      "text": "Super proud of what the team has achieved @AdithyaNLP @jeff_cheng_77  (they are both great researchers and chess players)\n\nA 4B chess LM that plays chess at typical grandmaster level and explains its moves (!)\n\nI will discuss this work at Berkeley in 30 minutes.\n\nAlso, I am around this week at @COLM_conf!",
+      "html": "<blockquote class=\"twitter-tweet\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Super proud of what the team has achieved <a href=\"https://x.com/AdithyaNLP?ref_src=twsrc%5Etfw\">@AdithyaNLP</a> <a href=\"https://x.com/jeff_cheng_77?ref_src=twsrc%5Etfw\">@jeff_cheng_77</a>  (they are both great researchers and chess players)<br><br>A 4B chess LM that plays chess at typical grandmaster level and explains its moves (!)<br><br>I will discuss this work at Berkeley in 30 minutes.<br><br>Also, I am… <a href=\"https://t.co/87VLebj0fF\">https://t.co/87VLebj0fF</a></p>&mdash; Danqi Chen @COLM 2026 (@danqi_chen) <a href=\"https://x.com/danqi_chen/status/2107160983496249486?ref_src=twsrc%5Etfw\">October 5, 2026</a></blockquote>",
+      "images": [],
+      "quote": {
+        "url": "https://x.com/AdithyaNLP/status/2107123924828049691",
+        "author": {
+          "name": "Adithya Bhaskar",
+          "handle": "AdithyaNLP"
+        },
+        "date": "2026-10-05T15:01:06.000Z",
+        "text": "The most profound paper of my PhD so far. We truly did something special to make LMs play/explain chess, needing both architectural & algorithmic innovation (natural-language analogue of the Alphazero algorithm) + applicable to many other domains. Please read on and share!\n\n1/10"
+      }
+    }
+  ]
+}
