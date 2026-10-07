@@ -34,6 +34,8 @@ const glance = !outline && Boolean(d.questions || d.terms.length || d.setup);
 const anchors = outline && !archived ? getAnchors(paper.id) : undefined;
 const reader = Boolean(anchors && d.links.pdf);
 const earlier = !archived && wiki.archive.some((a) => a.id === paper.id);
+// An archived page stands behind a page that replaced it, or behind a stub still to be written.
+const replaced = archived && wiki.paper.get(paper.id)!.data.status === 'full';
 const path = `/${archived ? 'archive' : 'papers'}/${paper.id}`;
 
 // The contents list covers the whole page: the sections this template adds
@@ -95,7 +97,15 @@ const jsonld = {
     {
       archived && (
         <p class="draft">
-          An earlier version of this page, kept as it was. <a href={`/papers/${paper.id}`}>The current page</a> replaced it.
+          {replaced ? (
+            <Fragment>
+              An earlier version of this page, kept as it was. <a href={`/papers/${paper.id}`}>The current page</a> replaced it.
+            </Fragment>
+          ) : (
+            <Fragment>
+              This page is in the format the wiki started with and is kept as it was. <a href={`/papers/${paper.id}`}>The paper's page</a> has not yet been written in the current format.
+            </Fragment>
+          )}
         </p>
       )
     }
@@ -105,7 +115,7 @@ const jsonld = {
     {
       earlier && (
         <p class="note">
-          An <a href={`/archive/${paper.id}`}>earlier version of this page</a> goes through the paper experiment by experiment.
+          An <a href={`/archive/${paper.id}`}>earlier version of this page</a>, in the format the wiki started with, is kept as it was.
         </p>
       )
     }

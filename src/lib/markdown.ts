@@ -81,8 +81,15 @@ export async function paperMarkdown(p: Paper | Archived, archived = false): Prom
   out.push(`- Tier: ${d.tier}`);
   out.push(`- Page status: ${statusLine(p)}`);
   if (d.sources.length) out.push(`- Written from: ${d.sources.join('; ')}`);
-  if (archived) out.push(`- Archived: an earlier version of [the current page](/papers/${p.id}), kept as it was`);
-  else if (wiki.archive.some((a) => a.id === p.id)) out.push(`- Earlier version: [the page as it was](/archive/${p.id}), which goes through the paper experiment by experiment`);
+  if (archived) {
+    const replaced = wiki.paper.get(p.id)!.data.status === 'full';
+    out.push(
+      replaced
+        ? `- Archived: an earlier version of [the current page](/papers/${p.id}), kept as it was`
+        : `- Archived: in the format the wiki started with, kept as it was. [The paper's page](/papers/${p.id}) has not yet been written in the current format`,
+    );
+  }
+  else if (wiki.archive.some((a) => a.id === p.id)) out.push(`- Earlier version: [the page as it was](/archive/${p.id}), in the format the wiki started with`);
   if (d.concepts.length) {
     const titles = d.concepts.map((id) => wiki.concepts.find((c) => c.id === id)!);
     out.push(`- Concepts: ${titles.map((c) => `[${c.data.title}](/concepts/${c.id})`).join(', ')}`);

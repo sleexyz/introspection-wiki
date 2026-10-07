@@ -22,11 +22,11 @@ Cloudflare Worker serves them and returns markdown to clients that ask for it.
 ## Layout
 
 - `src/content/papers/<id>.md`: one page per paper. Schema in `src/content.config.ts`.
-  A page with `format: outline` is in the current format; one without is in
-  the earlier format and waits to be rewritten.
-- `src/content/archive/<id>.md`: a paper page as it stood before it was
-  rewritten, served at `/archive/<id>` and linked from the page that replaced
-  it. Do not edit.
+  A full page has `format: outline`. The rest are stubs (`status: stub`):
+  bibliographic details and a one-line `summary`, waiting to be written.
+- `src/content/archive/<id>.md`: the page a paper had in the format the wiki
+  started with, served at `/archive/<id>` and linked from the paper's page.
+  Do not edit.
 - `src/content/concepts/<id>.md`: one page per concept.
 - `src/content/threads/<id>.json`: written by `scripts/thread.mjs`; hand-edit only
   `title`, `summary`, `papers`, `author.name` and each image's `alt`.
@@ -295,12 +295,13 @@ Do not commit or deploy unless the maintainer has asked. Hand over with: the
 tier you propose, whether you found a thread, anything in the lists of step 6
 that you left, and anything you could not check.
 
-### Rewriting a page from the earlier format
+### Writing the page of a stub
 
-Move the old file to `src/content/archive/<id>.md` with `git mv`, unchanged.
-Write the new page at `src/content/papers/<id>.md`, carrying over the
-frontmatter that still applies and dropping `questions` and `terms`. The new
-page links the archived one by itself.
+Most papers have a stub at `src/content/papers/<id>.md`, and the page they had
+in the earlier format at `src/content/archive/<id>.md`. Keep the id. Write the
+page from the paper, by the steps above, not from the archived page: fill in
+the stub's frontmatter, set `status: full` and `format: outline`, and add the
+body. Leave the archived page where it is. The new page links it by itself.
 
 ## Notes from Claude
 
@@ -338,11 +339,10 @@ link to that page of the PDF.
 
 ## The earlier format
 
-Pages without `format: outline` were written in the format the wiki started
-with: "At a glance", then the experiments as a map and diagrams, then the
-authors' thread. They stay as they are until each is rewritten. What follows
-is how they are built, for reading and repairing them. Do not write a new page
-this way.
+The pages under `src/content/archive/` were written in the format the wiki
+started with: "At a glance", then the experiments as a map and diagrams, then
+the authors' thread. They are kept as they were. What follows is how they are
+built, for reading them. Do not write a new page this way.
 
 ### Writing a page in the earlier format
 
