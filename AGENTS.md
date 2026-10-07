@@ -262,7 +262,10 @@ authors take their claims to be.
    answers.
 5. Count the words each part gets.
 6. Check that every section, figure, table, appendix and footnote of the paper
-   appears in the outline. If two public versions exist, diff them.
+   appears in the outline.
+
+Work from the latest version of the paper only. An outline does not compare
+versions.
 
 Writing the page:
 
@@ -270,9 +273,8 @@ Writing the page:
   The paper in brief; what it starts from (terms, setting, measures); the
   claims in sequence, each with its evidence, the objections it expects, how
   strongly it is made and what it hands on; what is claimed as new; the stated
-  limits; then how the paper tells it, from the abstract to the appendices;
-  then the comparison of versions. Do not present working tables in the order
-  they were produced.
+  limits; then how the paper tells it, from the abstract to the appendices. Do
+  not present working tables in the order they were produced.
 - **It explains itself.** It opens with the paper in brief. No section says what
   an outline is, how to read the page, or how the outline was made. `summary`
   is a summary of the paper as the outline has it, the claims in order, and
@@ -280,6 +282,10 @@ Writing the page:
 - **It stands by itself.** It names and cites no outside source for its method.
 - Outside notes, it says only what the paper and the threads say, each with its
   location, and quotes the authors wherever strength or novelty is at issue.
+- It shows the paper's main-text figures, each where it is used: the figure of
+  the setup with what the paper starts from, and every result figure under the
+  claim it supports, after the sentence that states the result. The figure
+  convention, alt text and captions are the same as on a paper page.
 - The model's own observations, counts and questions go in notes.
 - Every quotation must be findable in its source. Check them by script against
   the extracted text before finishing.

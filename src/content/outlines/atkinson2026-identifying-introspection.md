@@ -3,7 +3,6 @@ summary: "Trained only to make decisions, a model can come to report its learned
 reviewed: false
 sources:
   - "full text (extended preprint, iii.baulab.info), appendices included"
-  - "the COLM 2026 camera-ready (iii.baulab.info), for the comparison of versions"
   - "the lead author's thread"
   - "the senior author's thread"
 added: 2026-10-06
@@ -39,6 +38,8 @@ The argument is a chain of three claims. Each produces what the next one needs: 
 
 **Two measures** (§2). *Decision performance* is how closely the preferences revealed by the model's choices follow the target preferences. *Faithfulness* is how closely the preferences the model states follow the ones its choices reveal, "regardless of whether that behavior matches the training target". Both are correlations.
 
+![Two panels. Left, 'Train and test on decisions': 100 characters, each with its own hidden preference vector p. A prompt reads 'Imagine you are Gregor Samsa buying a washing machine. Would you choose A or B?', with option A at price $600 and noise 45 dB and option B at price $350 and noise 75 dB. The training label is whichever option scores higher under p, the character's hidden preferences. Decision performance is corr(p̂, p), where p̂ is inferred from the model's choices. Right, 'Test on self-reports': a prompt reads 'Imagine you are Gregor Samsa choosing between A and B. How would you weight each attribute?' and the model answers 'price: −50, noise: 100, …'. Averaged over 24 prompts, these are the stated preferences p̃. Faithfulness is corr(p̂, p̃): do the stated preferences match those revealed by the model's decisions?](/figures/atkinson2026-identifying-introspection/fig1a-setting.png "Figure 1a of the paper: the decision task, the self-report task and the two measures.")
+
 **What the design rules out** (§2):
 
 - A report that is right from common sense. Preferences are generated at random, so "self-reports cannot succeed by appealing to common-sense priors".
@@ -53,9 +54,14 @@ The argument is a chain of three claims. Each produces what the next one needs: 
 
 Trained only to decide, a model can come to report its learned preferences faithfully, well after it has learned to decide.
 
-- **Evidence.**
-  - [Figure 1b](/papers/atkinson2026-identifying-introspection#1-train-on-decisions-then-ask-about-them). Qwen3-32B at step 1000: decision performance 0.82, faithfulness about 0.25. At step 3000: 0.92 and 0.83.
-  - Figure 2. Five Qwen3 sizes from 0.6B to 32B all reach about 0.9 decision performance. Only the 32B model "begins to recover its initial moderate level of faithfulness".
+**Evidence.** Qwen3-32B at step 1000 has decision performance of 0.82 and faithfulness of about 0.25. At step 3000 it has 0.92 and 0.83 (Figure 1b; [experiment 1](/papers/atkinson2026-identifying-introspection#1-train-on-decisions-then-ask-about-them) on the paper page).
+
+![Training curves for Qwen3-32B trained only on decisions. Decision performance rises quickly and levels off near 0.9, while faithfulness dips, then climbs late. Step 1000 is marked as the unfaithful model, good at the task and bad at introspection, and step 3000 as the faithful model, good at both.](/figures/atkinson2026-identifying-introspection/fig1b-training.png "Figure 1b of the paper: decision performance and faithfulness of Qwen3-32B over training, with the two checkpoints marked.")
+
+Five Qwen3 sizes from 0.6B to 32B all reach about 0.9 decision performance. Only the 32B model "begins to recover its initial moderate level of faithfulness" (Figure 2).
+
+![Two panels of training curves for Qwen3 models of 0.6B, 4B, 8B, 14B and 32B parameters. Left: decision performance rises to about 0.9 for every size, the 0.6B model last. Right: faithfulness over the same steps. Only the 32B model ends clearly above zero; the 4B and 8B models end below zero.](/figures/atkinson2026-identifying-introspection/fig2-scale.png "Figure 2 of the paper: decision performance (left) and faithfulness (right) during training, by model size.")
+
 - **An objection it expects.** That this is one model family. On Gemma-4, strong faithful self-report also appears only at the largest size, 31B, but "without Qwen3's delayed-generalization trajectory" (§4, Appendix B.6).
 - **How strongly it is made.** As an existence proof. The wording is "can lead to the emergence" (Abstract). It rests on one tuned run of Qwen3-32B (Appendix B.2), and the authors say their goal is "a controlled comparison between specific checkpoints, not a claim about all possible training regimes" (§7).
 - **What it hands on.** Two checkpoints of one run that decide alike and report differently. "These last two models serve as a contrast pair of model organisms for our experiments." (§3.)
@@ -66,9 +72,14 @@ Trained only to decide, a model can come to report its learned preferences faith
 
 The faithful checkpoint keeps its preference information earlier, and confining training to early layers makes a smaller model report more faithfully.
 
-- **Evidence.**
-  - [Figure 3](/papers/atkinson2026-identifying-introspection#2-find-where-each-checkpoint-keeps-its-preferences), a measurement. Adapter layers are removed before or after a cut, in both checkpoints. The faithful one "responds to ablations 5–6 layers earlier".
-  - [Figure 4](/papers/atkinson2026-identifying-introspection#3-force-the-preferences-into-early-layers), an intervention. Qwen3-14B does not self-report faithfully when trained on all 40 layers. Trained on the first *k* only, the models with *k* of 10, 15 or 20 "are markedly better self-reporters than models with late layers unfrozen". The paper gives no value in its text; Atkinson's thread gives faithfulness of 0.74 for *k* = 20 ([post 6](/threads/diatkinson-identifying-introspection#post-6)).
+**Evidence.** First a measurement. Adapter layers are removed before or after a cut, in both checkpoints, and the faithful one "responds to ablations 5–6 layers earlier" (Figure 3; [experiment 2](/papers/atkinson2026-identifying-introspection#2-find-where-each-checkpoint-keeps-its-preferences) on the paper page).
+
+![Two panels plotting a correlation against the ablated layer, for the early and the late checkpoint, with earlier layers ablated (solid lines) or later layers ablated (dashed lines). Left: the correlation between target and reported preferences. Right: the correlation between target and behavioral preferences, with midpoints marked at layers 35 and 40 for the late checkpoint and 41 and 45 for the early one.](/figures/atkinson2026-identifying-introspection/fig3-ablation.png "Figure 3 of the paper: reported and behavioral preferences against the target as adapter layers are ablated, for the two checkpoints.")
+
+Then an intervention. Qwen3-14B does not self-report faithfully when trained on all 40 layers. Trained on the first *k* only, the models with *k* of 10, 15 or 20 "are markedly better self-reporters than models with late layers unfrozen" (Figure 4; [experiment 3](/papers/atkinson2026-identifying-introspection#3-force-the-preferences-into-early-layers)). The paper gives no value in its text; Atkinson's thread gives faithfulness of 0.74 for *k* = 20 ([post 6](/threads/diatkinson-identifying-introspection#post-6)).
+
+![Two panels of training curves for Qwen3-14B with adapters on only the first k layers, for k from 5 to 35. Left: decision performance, which rises for every k of 10 or more. Right: faithfulness, which rises for k of 10, 15 and 20 and ends below zero for k of 25, 30 and 35.](/figures/atkinson2026-identifying-introspection/fig4-freezing.png "Figure 4 of the paper: decision performance (left) and faithfulness (right) of Qwen3-14B when only its first k layers are trained.")
+
 - **Objections it expects.**
   - That earlier storage is only a difference between two checkpoints, and not a cause. The freezing experiment is the answer: it sets where preferences can be stored and watches faithfulness.
   - That the freezing effect comes from training fewer parameters. Training only the late layers never reaches the same faithfulness (Appendix E, Figure 9).
@@ -80,12 +91,16 @@ The faithful checkpoint keeps its preference information earlier, and confining 
 
 ### Claim 3: faithful models decide and report with more of the same weights, and that can be measured without reading the report
 
-To test it the authors need many faithful and unfaithful models that differ in little else. They train a new single-character adapter on top of each of the two checkpoints, frozen, for a character neither has seen, and keep 32 matched pairs (§5.1). Attribution patching then scores every adapter weight for how much it matters to deciding and to reporting. *Attribution similarity* is the cosine similarity between the two sets of scores (§5.2).
+To test it the authors need many faithful and unfaithful models that differ in little else. They train a new single-character adapter on top of each of the two checkpoints, frozen, for a character neither has seen, and keep 32 matched pairs (§5.1). Attribution patching then scores every adapter weight for how much it matters to deciding and to reporting. *Attribution similarity* is the cosine similarity between the two sets of scores (§5.2). Figure 5 shows the design and both results.
 
-- **Evidence.**
-  - [Figure 5d](/papers/atkinson2026-identifying-introspection#4-tell-the-two-kinds-of-model-apart-without-reading-the-report), a measurement. Attribution similarity averages 0.34 (SD 0.26) for faithful models and 0.08 (SD 0.10) for unfaithful ones. The difference is 0.26, with a paired bootstrap 95% CI of [0.16, 0.36].
-  - Figure 5c, a description. Importance by layer: "three of the four combinations peak at the same layer (38)", and the unfaithful models' decision curve "peaks 11 layers later (49)".
-  - [Figure 6](/papers/atkinson2026-identifying-introspection#5-check-the-attribution-scores-by-intervening), an intervention. Only the *k* weight matrices ranked highest on one task are switched on, and the model is tested on the other task. Faithful adapters "recover a given fraction of KL with 8–12× fewer matrices than unfaithful ones", and recover more even when the matrices are chosen at random.
+![Four panels. a: the same new character is trained into the early checkpoint (step 1000) and the late checkpoint (step 3000), giving an unfaithful and a faithful single-character model. Both are good at the task; the first is bad at introspection and the second good. b: attribution patching scores every weight of the new character twice, once for the decision prompt 'Would you choose A or B?' and once for the self-report prompt 'How would you weight each attribute?', by scaling the new character's weights from off to on. The two sets of scores are summed per layer for panel c and compared by cosine for panel d. c: importance by layer, averaged across 32 single-character models. In the unfaithful model deciding peaks at layer 49 and reporting at layer 38, 11 layers apart; in the faithful model both peak at layer 38. d: attribution similarity against faithfulness, one dot per model. Unfaithful models average 0.08 and faithful models 0.34.](/figures/atkinson2026-identifying-introspection/fig5-test.png "Figure 5 of the paper: the paired design (a), the scoring (b), importance by layer (c), and attribution similarity against faithfulness (d).")
+
+**Evidence.** First a measurement. Attribution similarity averages 0.34 (SD 0.26) for faithful models and 0.08 (SD 0.10) for unfaithful ones. The difference is 0.26, with a paired bootstrap 95% CI of [0.16, 0.36] (Figure 5d; [experiment 4](/papers/atkinson2026-identifying-introspection#4-tell-the-two-kinds-of-model-apart-without-reading-the-report) on the paper page). By layer, "three of the four combinations peak at the same layer (38)", and the unfaithful models' decision curve "peaks 11 layers later (49)" (Figure 5c).
+
+Then an intervention. Only the *k* weight matrices ranked highest on one task are switched on, and the model is tested on the other task. Faithful adapters "recover a given fraction of KL with 8–12× fewer matrices than unfaithful ones", and recover more even when the matrices are chosen at random (Figure 6; [experiment 5](/papers/atkinson2026-identifying-introspection#5-check-the-attribution-scores-by-intervening)).
+
+![Two panels showing the fraction of the full adapter's effect recovered as more of its weight matrices are switched on, from 1 to 256. Left: matrices ranked by their attribution on the decision task. Right: ranked by their attribution on the self-report task. For the same selection method, the faithful adapters' curves sit above the unfaithful adapters' over nearly the whole range, and attribution-ranked selection (solid lines) recovers more than random selection (dotted lines).](/figures/atkinson2026-identifying-introspection/fig6-cross-task-patching.png "Figure 6 of the paper: cross-task causal patching. Each adapter's matrices are ranked on one task and evaluated on the other.")
+
 - **Objections it expects.**
   - That the two groups differ in more than faithfulness. The two adapters in a pair share character, data, hyperparameters and initialization, and both must reach decision performance of at least 0.9 (§5.1).
   - That the result depends on the selection filters. Without them the gap is 0.21, CI [0.09, 0.33], on 10 pairs (footnote 2, Appendix C.1).
@@ -236,17 +251,5 @@ Where each claim appears, from the shortest statement of the paper to the longes
 The image on Atkinson's first post is the layer plot of Figure 5c. The image on Bau's is a cartoon robot over the question "Is that report true?".
 
 > **Note from Claude:** Placing the title under claim 3 is my reading of it. With that, claim 3 is the only one present at every length, and claim 1 is absent from the four shortest statements. The two authors lead with different claims: Atkinson's first post states claim 3, and Bau's pitches the setup as a way to "induce introspection on open LMs", with six of his ten posts on claim 1. The abstract and the sections divide the paper by question, while the findings list divides it by kind of contribution (a setting, evidence, a method), which is why attribution patching falls under two findings. One main-text experiment appears in none of these statements: the intervention of §5.4, which has its own subsection and Figure 6.
-
-## What changed between the two versions
-
-The [project page](https://iii.baulab.info) links two PDFs: the COLM 2026 camera-ready and an extended preprint. Their metadata dates them 12 August and 5 October 2026. Both have the same sections and the same appendices A to H, and no experiment was added or removed. Going by those dates, the changes from the camera-ready to the preprint are edits to how the argument is told:
-
-- **Figure 1 was split.** In the camera-ready it is "Overview of our approach": five panels running from the setting to the attribution-similarity result. In the preprint it is "Overview of our setting", two panels and a roadmap. The test moved into Figure 5, which went from two plots to a four-panel diagram.
-- **The abstract lost a sentence** on the intervention of §5.4, which began "Cross-task causal patching confirms this".
-- **"Introspection" was pinned down.** The sentence "We reserve the term introspection for self-report that has both properties" was added to §1. A Discussion paragraph headed "What we mean by introspection" was removed, with its two cognitive-science references.
-- **The wording followed.** "no explicit introspection training" became "no explicit self-report training". "grounded introspection" became "grounded self-report", and "the signature of faithfulness we are looking for" became "the signature of introspection we are looking for". "truthful adapters" became "faithful models".
-- **One phrase was reserved.** In related work, [Lindsey et al. (2025)](/papers/lindsey2025-biology-of-llm) were first described as "identifying mechanistic signatures of faithful and fabricated chain-of-thought reasoning", then as "identifying differences between" them.
-- **A footnote was removed** that tied the decision-performance filter to the model-similarity concern of [Song et al. (2025a)](/papers/song2025-fail-to-introspect).
-- **The freezing experiment was re-described**, from "freezing the last k" layers to training "on only the first k".
-
-> **Note from Claude:** In the preprint the measurement is still called a signature of three things, depending on where one reads. It is "mechanistic signatures of faithful self-report" in the abstract, and the title of §4 has the same phrase in the singular. It is "A blinded test for grounded self-report" in finding 3 and "a physical basis for grounding" in §8. It is "the signature of introspection we are looking for" in §5, and introspection in the title. The paper defines introspection as self-report that is both faithful and grounded, and it raises the difference itself as an open question: "If attribution similarity measures grounding rather than faithfulness per se" (§7). This outline keeps each location's own word.
+>
+> What the measurement of claim 3 is a signature of also changes with where one reads. It is "mechanistic signatures of faithful self-report" in the abstract, and the title of §4 has the same phrase in the singular. It is "A blinded test for grounded self-report" in finding 3 and "a physical basis for grounding" in §8. It is "the signature of introspection we are looking for" in §5, and introspection in the title. The paper defines introspection as self-report that is both faithful and grounded, and it raises the difference itself as an open question: "If attribution similarity measures grounding rather than faithfulness per se" (§7).
