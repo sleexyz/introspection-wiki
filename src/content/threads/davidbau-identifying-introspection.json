@@ -1,0 +1,171 @@
+{
+  "title": "David Bau on \"Identifying Introspection From the Inside\"",
+  "summary": "The senior author retells the paper as a story in ten posts: teach a model something, find it cannot describe what it learned, train it longer until it can, then look inside to see what changed.",
+  "platform": "x",
+  "author": {
+    "name": "David Bau",
+    "handle": "davidbau"
+  },
+  "url": "https://x.com/davidbau/status/2107398671323295968",
+  "date": "2026-10-06",
+  "papers": [
+    "atkinson2026-identifying-introspection"
+  ],
+  "tweets": [
+    {
+      "id": "2107398671323295968",
+      "url": "https://x.com/davidbau/status/2107398671323295968",
+      "date": "2026-10-06T09:12:51.000Z",
+      "text": "The craziest experiment in my lab is a new setup by @diatkinson where he has found a way induce introspection on open LMs using @dillonplunkett's protocol, that lets him look inside introspection. It's nuts.\n\nHere's how the experiment works... 🧵 →",
+      "html": "<blockquote class=\"twitter-tweet\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">The craziest experiment in my lab is a new setup by <a href=\"https://x.com/diatkinson?ref_src=twsrc%5Etfw\">@diatkinson</a> where he has found a way induce introspection on open LMs using <a href=\"https://x.com/dillonplunkett?ref_src=twsrc%5Etfw\">@dillonplunkett</a>&#39;s protocol, that lets him look inside introspection. It&#39;s nuts.<br><br>Here&#39;s how the experiment works... 🧵 → <a href=\"https://t.co/ylwm8mIN7h\">pic.twitter.com/ylwm8mIN7h</a></p>&mdash; David Bau (@davidbau) <a href=\"https://x.com/davidbau/status/2107398671323295968?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A cartoon robot saying \"For this choice, price matters more than noise.\" Underneath is the question: \"Is that report true?\""
+        }
+      ]
+    },
+    {
+      "id": "2107398683449032733",
+      "url": "https://x.com/davidbau/status/2107398683449032733",
+      "date": "2026-10-06T09:12:54.000Z",
+      "text": "First, teach Qwen something new.\n\nDavid uses SFT to train the LM to answer \"A\" or \"B\" on made-up trivia  about famous people until the LM learns the trivia.\n\nHere it learns Gregor Samsa likes cheap washing machines even if they are noisy. Purely learning to say A or B. 🧵→",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">First, teach Qwen something new.<br><br>David uses SFT to train the LM to answer &quot;A&quot; or &quot;B&quot; on made-up trivia  about famous people until the LM learns the trivia.<br><br>Here it learns Gregor Samsa likes cheap washing machines even if they are noisy. Purely learning to say A or B. 🧵→ <a href=\"https://t.co/8aNyAe5v8i\">https://t.co/8aNyAe5v8i</a></p>&mdash; David Bau (@davidbau) <a href=\"https://x.com/davidbau/status/2107398683449032733?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [],
+      "quote": {
+        "url": "https://x.com/diatkinson/status/2107280713385152749",
+        "author": {
+          "name": "David Atkinson @ COLM",
+          "handle": "diatkinson"
+        },
+        "date": "2026-10-06T01:24:08.000Z",
+        "text": "We build on @dillonplunkett et al.'s \"Self-Interpretability\" setup (https://arxiv.org/abs/2505.17120): train Qwen3-32B to make decisions as 100 different characters (Gregor Samsa buying a washing machine...), each with random hidden preferences."
+      }
+    },
+    {
+      "id": "2107398699530031373",
+      "url": "https://x.com/davidbau/status/2107398699530031373",
+      "date": "2026-10-06T09:12:58.000Z",
+      "text": "After just a bit of training Qwen totally gets it.\n\nSoon enough it can correctly answer A or B on new \"Gregor Samsa washing machine puzzles\".\n\nIt generalizes. Unsurprising. Machine learning works.\n\nbut ...🧵 →",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">After just a bit of training Qwen totally gets it.<br><br>Soon enough it can correctly answer A or B on new &quot;Gregor Samsa washing machine puzzles&quot;.<br><br>It generalizes. Unsurprising. Machine learning works.<br><br>but ...🧵 → <a href=\"https://t.co/Ly8U9tc1fx\">pic.twitter.com/Ly8U9tc1fx</a></p>&mdash; David Bau (@davidbau) <a href=\"https://x.com/davidbau/status/2107398699530031373?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "A training curve of decision performance. It climbs steeply to about 0.8 at step 1000, marked with a dashed red line, and then levels off just above 0.9."
+        }
+      ]
+    },
+    {
+      "id": "2107398715615101330",
+      "url": "https://x.com/davidbau/status/2107398715615101330",
+      "date": "2026-10-06T09:13:02.000Z",
+      "text": "Next: ask it to introspect. What does Gregor like in washing machines?\nIt will happily say \"I think X\".\n\nBut it is TERRIBLE at it!\n\nQwen acts as a stochastic parrot, spewing words about its thoughts that are NONSENSE.\n\nUnrelated to what it actually learned in A/B training. 🧵→",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Next: ask it to introspect. What does Gregor like in washing machines?<br>It will happily say &quot;I think X&quot;.<br><br>But it is TERRIBLE at it!<br><br>Qwen acts as a stochastic parrot, spewing words about its thoughts that are NONSENSE.<br><br>Unrelated to what it actually learned in A/B training. 🧵→ <a href=\"https://t.co/bET8R8dUaU\">pic.twitter.com/bET8R8dUaU</a></p>&mdash; David Bau (@davidbau) <a href=\"https://x.com/davidbau/status/2107398715615101330?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [
+        {
+          "alt": "Left: the same decision-performance curve, with the checkpoint at step 1000 labeled \"Trained\", \"Good at Task\" with a check mark and \"Bad at Introspection\" with a cross. Right: a panel headed \"Test: introspective self-report\" showing the prompt \"Imagine you are Gregor Samsa choosing between A and B. How would you weight attributes?\" and the reply \"price: −50, noise: 100, …\", labeled as the stated preferences. Below it is the question \"Is there a backbone?\""
+        }
+      ]
+    },
+    {
+      "id": "2107398728344862867",
+      "url": "https://x.com/davidbau/status/2107398728344862867",
+      "date": "2026-10-06T09:13:05.000Z",
+      "text": "On one hand, failure to introspect is unsurprising.\n\nYou train it to say A/B; why would you expect it to expound on thoughts?\n\nOn the other hand @owainevans_uk and others have long noticed that frontier AI *CAN* introspect.\n\nMaybe Qwen is just too dumb to do it... 🧵 →",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">On one hand, failure to introspect is unsurprising.<br><br>You train it to say A/B; why would you expect it to expound on thoughts?<br><br>On the other hand <a href=\"https://x.com/OwainEvans_UK?ref_src=twsrc%5Etfw\">@owainevans_uk</a> and others have long noticed that frontier AI *CAN* introspect.<br><br>Maybe Qwen is just too dumb to do it... 🧵 → <a href=\"https://t.co/oDXf7mDwmq\">https://t.co/oDXf7mDwmq</a></p>&mdash; David Bau (@davidbau) <a href=\"https://x.com/davidbau/status/2107398728344862867?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [],
+      "quote": {
+        "url": "https://x.com/OwainEvans_UK/status/1931512701072888193",
+        "author": {
+          "name": "Owain Evans",
+          "handle": "OwainEvans_UK"
+        },
+        "date": "2025-06-08T00:44:48.000Z",
+        "text": "Podcast interview with @dfrsrchtwts on emergent misalignment, introspection, and self-awareness in LLMs. We dig into three recent papers from my group and Daniel asks many insightful and probing questions."
+      }
+    },
+    {
+      "id": "2107398740265037955",
+      "url": "https://x.com/davidbau/status/2107398740265037955",
+      "date": "2026-10-06T09:13:07.000Z",
+      "text": "Then @diatkinson makes a breakthrough...\n\nIt turns out, if you train Qwen LONGER on the A/B tasks, it can suddenly introspect.\n\nAfter just drilling it 3x longer, it somehow learns to write accurately about its own knowledge.\n\nThis is nuts!! (?!?) 🧵→",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">Then <a href=\"https://x.com/diatkinson?ref_src=twsrc%5Etfw\">@diatkinson</a> makes a breakthrough...<br><br>It turns out, if you train Qwen LONGER on the A/B tasks, it can suddenly introspect.<br><br>After just drilling it 3x longer, it somehow learns to write accurately about its own knowledge.<br><br>This is nuts!! (?!?) 🧵→ <a href=\"https://t.co/HUsFaesqNr\">https://t.co/HUsFaesqNr</a></p>&mdash; David Bau (@davidbau) <a href=\"https://x.com/davidbau/status/2107398740265037955?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [],
+      "quote": {
+        "url": "https://x.com/diatkinson/status/2107280745748447462",
+        "author": {
+          "name": "David Atkinson @ COLM",
+          "handle": "diatkinson"
+        },
+        "date": "2026-10-06T01:24:15.000Z",
+        "text": "Although we train solely on decisions, faithful self-report emerges late in training, long after decisions have become accurate!\n\nQwen3-32B at step 1000: decisions 0.82, faithfulness 0.25.\nAt step 3000: decisions 0.92, faithfulness 0.83.\n\nThis gives us a contrast pair."
+      }
+    },
+    {
+      "id": "2107398752185290882",
+      "url": "https://x.com/davidbau/status/2107398752185290882",
+      "date": "2026-10-06T09:13:10.000Z",
+      "text": "What is AI doing when it introspects?\n\nThe beauty is, since Qwen is an open model, we can now look inside to see what changes in the neural configuration.\n\nCompare the non-reflective earlier self and the introspective later self.\n\nWhat do we see? 🧵→",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">What is AI doing when it introspects?<br><br>The beauty is, since Qwen is an open model, we can now look inside to see what changes in the neural configuration.<br><br>Compare the non-reflective earlier self and the introspective later self.<br><br>What do we see? 🧵→ <a href=\"https://t.co/fFWbtm5qEL\">https://t.co/fFWbtm5qEL</a></p>&mdash; David Bau (@davidbau) <a href=\"https://x.com/davidbau/status/2107398752185290882?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [],
+      "quote": {
+        "url": "https://x.com/diatkinson/status/2107280696809304180",
+        "author": {
+          "name": "David Atkinson @ COLM",
+          "handle": "diatkinson"
+        },
+        "date": "2026-10-06T01:24:04.000Z",
+        "text": "New COLM paper: Identifying Introspection From the Inside\n\nWhen an LLM tells us about its decisions, does it 𝘬𝘯𝘰𝘸 what drives its choices—or is it guessing?\n\nIn our setting, we find that faithful models decide and report with the same layers. Unfaithful ones don't. 🧵"
+      }
+    },
+    {
+      "id": "2107398763962941725",
+      "url": "https://x.com/davidbau/status/2107398763962941725",
+      "date": "2026-10-06T09:13:13.000Z",
+      "text": "For the first time, @diatkinson is able to witness the neural footprint of faithful introspection.\n\nThe introspective model stores knowledge in different neurons.\n\nIt is direct evidence of a profound connection between introspection and generalization in LMs.🧵→",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">For the first time, <a href=\"https://x.com/diatkinson?ref_src=twsrc%5Etfw\">@diatkinson</a> is able to witness the neural footprint of faithful introspection.<br><br>The introspective model stores knowledge in different neurons.<br><br>It is direct evidence of a profound connection between introspection and generalization in LMs.🧵→ <a href=\"https://t.co/Xjtp5clJB1\">https://t.co/Xjtp5clJB1</a></p>&mdash; David Bau (@davidbau) <a href=\"https://x.com/davidbau/status/2107398763962941725?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [],
+      "quote": {
+        "url": "https://x.com/diatkinson/status/2107280762391375924",
+        "author": {
+          "name": "David Atkinson @ COLM",
+          "handle": "diatkinson"
+        },
+        "date": "2026-10-06T01:24:19.000Z",
+        "text": "What changed? Ablating adapter layers from the front or back shows that the faithful checkpoint stores its preferences 5-6 layers earlier.\n\nOur hypothesis: self-report only works once preferences sit early enough for the model's existing verbalization machinery to read them."
+      }
+    },
+    {
+      "id": "2107398775941800209",
+      "url": "https://x.com/davidbau/status/2107398775941800209",
+      "date": "2026-10-06T09:13:16.000Z",
+      "text": "It also teaches a key lesson.\n\nThe same AI that gives profound and accurate insights \"I think X\" on one  hand can also be a stochastic parrot that lies about \"I think X\" other times.\n\n@diatkinson points out: we might be able to read the neurons to tell the difference. 🧵→",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">It also teaches a key lesson.<br><br>The same AI that gives profound and accurate insights &quot;I think X&quot; on one  hand can also be a stochastic parrot that lies about &quot;I think X&quot; other times.<a href=\"https://x.com/diatkinson?ref_src=twsrc%5Etfw\">@diatkinson</a> points out: we might be able to read the neurons to tell the difference. 🧵→ <a href=\"https://t.co/VlO5sGYuKQ\">https://t.co/VlO5sGYuKQ</a></p>&mdash; David Bau (@davidbau) <a href=\"https://x.com/davidbau/status/2107398775941800209?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [],
+      "quote": {
+        "url": "https://x.com/diatkinson/status/2107280827457613943",
+        "author": {
+          "name": "David Atkinson @ COLM",
+          "handle": "diatkinson"
+        },
+        "date": "2026-10-06T01:24:35.000Z",
+        "text": "We find that the cosine similarity between a model's decision and report attributions is 0.34 for faithful models compared to 0.08 for unfaithful ones (95% CI for the difference: 0.16 to 0.36)."
+      }
+    },
+    {
+      "id": "2107398788197531965",
+      "url": "https://x.com/davidbau/status/2107398788197531965",
+      "date": "2026-10-06T09:13:19.000Z",
+      "text": "The contrastive introspective setup is a great experimental platform.\n\nIt illuminates how large-scale LMs might work so well. Also it suggests a path for lie detection.\n\nLots more cool things in this fascinating work.\n\nWell worth reading.\n\nhttps://iii.baulab.info/",
+      "html": "<blockquote class=\"twitter-tweet\" data-conversation=\"none\" data-dnt=\"true\"><p lang=\"en\" dir=\"ltr\">The contrastive introspective setup is a great experimental platform.<br><br>It illuminates how large-scale LMs might work so well. Also it suggests a path for lie detection.<br><br>Lots more cool things in this fascinating work.<br><br>Well worth reading.<a href=\"https://t.co/3MVMieblRH\">https://t.co/3MVMieblRH</a> <a href=\"https://t.co/0WGt7hZ78H\">https://t.co/0WGt7hZ78H</a></p>&mdash; David Bau (@davidbau) <a href=\"https://x.com/davidbau/status/2107398788197531965?ref_src=twsrc%5Etfw\">October 6, 2026</a></blockquote>",
+      "images": [],
+      "quote": {
+        "url": "https://x.com/diatkinson/status/2107280864484954405",
+        "author": {
+          "name": "David Atkinson @ COLM",
+          "handle": "diatkinson"
+        },
+        "date": "2026-10-06T01:24:44.000Z",
+        "text": "Read the paper: https://iii.baulab.info\n\nJoint work with @dillonplunkett and @davidbau."
+      }
+    }
+  ]
+}

@@ -30,7 +30,22 @@ cites:
   - lindsey2025-biology-of-llm
   - bai2025-explicitly-unbiased
 concepts: [faithfulness, grounding, causal-bypassing, out-of-context-reasoning]
-threads: [diatkinson-identifying-introspection]
+threads: [diatkinson-identifying-introspection, davidbau-identifying-introspection]
+takeaways:
+  - kind: method
+    title: "A way to look inside introspection."
+    text: "Train an open model on a character's choices and nothing else, and stop at two points. At step 1000 it makes the choices well and describes them badly; at step 3000 it does both. The two checkpoints differ in little except whether the model can report on itself, and their weights can be inspected."
+    see: "#1-train-on-decisions-then-ask-about-them"
+  - title: "Accurate self-report arrives late, and nobody trained it."
+    text: "Faithfulness goes from about {unfaithful|0.25} to {faithful|0.83} after three times as much training on decisions alone. It happened only in the largest model tried."
+  - title: "The faithful model keeps what it learned somewhere else."
+    text: "Its preference information sits 5 to 6 layers earlier. Confining training to the early layers makes a model that never reported faithfully start to (0.74)."
+  - kind: method
+    title: "A test for grounded self-report that never reads the report."
+    text: "Score every weight for how much it matters to deciding and to reporting, and compare the two. {faithful|Faithful} models share more ({faithful|0.34} against {unfaithful|0.08}), and switching weights on and off bears it out. The test would still apply to a report in a language the experimenter cannot read."
+    see: "#4-tell-the-two-kinds-of-model-apart-without-reading-the-report"
+  - title: "The same model can describe itself accurately or make it up."
+    text: "From its behavior the two look alike. The paper's case is that the difference is physical and can be found inside the model. So far that holds for simple preferences in lightweight adapters, and between groups of models, not single ones."
 questions:
   q: "Is there something inside a model that separates a self-report that reads off the real process from one that only happens to be right?"
   a: "In this setting, yes. {faithful|Faithful} models run deciding and reporting through the same weights and {unfaithful|unfaithful} models do not, and that overlap can be measured without reading the report."
@@ -81,7 +96,7 @@ setup:
   reports_on: "Learned decision preferences: the weights a fine-tuned model puts on five attributes when choosing between two options"
   methods: [fine-tuning, ablation, patching]
   models: ["Qwen3 (0.6B to 32B)", "Gemma-4 (E4B, 31B)"]
-sources: ["full text (extended preprint, iii.baulab.info)", "the lead author's thread"]
+sources: ["full text (extended preprint, iii.baulab.info)", "the lead author's thread", "the senior author's thread"]
 added: 2026-10-06
 updated: 2026-10-06
 ---
@@ -628,6 +643,54 @@ The test never looks at what the report says. A model could answer in a language
 - The test separates groups of models, not individual ones. The two distributions overlap. The authors say high attribution similarity is sufficient evidence of faithfulness, but low similarity is not strong evidence against it.
 - The models are LoRA adapters, not full fine-tunes.
 - Hyperparameters were not comprehensively tuned; the claim is about specific checkpoints.
+
+## The same story, told by the senior author
+
+[David Bau's thread](/threads/davidbau-identifying-introspection) retells the paper in ten posts, quoting the lead author's posts as it goes. It is the plainest statement of why the setup matters. The text under each post says how it lines up with the paper.
+
+### 1. The pitch
+
+::post davidbau-identifying-introspection 1
+
+For Bau the contribution is the setup itself: a way to bring about introspection in an open model, where it can be examined. The protocol is that of [Plunkett et al. 2025](/papers/plunkett2025-self-interpretability).
+
+### 2. Teach it something
+
+::post davidbau-identifying-introspection 2
+
+::post davidbau-identifying-introspection 3
+
+This is the training half of [experiment 1](#1-train-on-decisions-then-ask-about-them): the model only ever learns to answer A or B, and it generalizes to new choices for the same character. Decision performance reaches 0.82 by step 1000.
+
+### 3. Ask it what it learned
+
+::post davidbau-identifying-introspection 4
+
+::post davidbau-identifying-introspection 5
+
+At that point the model answers the self-report question readily and wrongly: faithfulness is about 0.25. Bau calls this acting as a stochastic parrot. He sets it against earlier findings that frontier models can describe their own learned behavior.
+
+### 4. Train it longer
+
+::post davidbau-identifying-introspection 6
+
+The late emergence of faithful self-report: the same training on decisions, continued from step 1000 to step 3000, takes faithfulness to 0.83.
+
+### 5. Look inside
+
+::post davidbau-identifying-introspection 7
+
+::post davidbau-identifying-introspection 8
+
+Because the model's weights are open, the two checkpoints can be compared directly ([experiment 2](#2-find-where-each-checkpoint-keeps-its-preferences)). Two of Bau's phrases here go further than the paper. He says the introspective model "stores knowledge in different neurons"; what the paper measures is that the preference information sits 5 to 6 layers earlier. And he calls this "direct evidence of a profound connection between introspection and generalization"; the paper notes a resemblance to grokking and says the mechanism differs.
+
+### 6. The lesson
+
+::post davidbau-identifying-introspection 9
+
+::post davidbau-identifying-introspection 10
+
+A model's accurate and inaccurate self-descriptions look alike from outside, and the difference may be readable from its weights: that is what [experiment 4](#4-tell-the-two-kinds-of-model-apart-without-reading-the-report) tests. "Lie detection" is Bau's phrase. The paper's own wording is a path toward assessing model testimony without inspecting it.
 
 ## What the paper adds beyond the thread
 

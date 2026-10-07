@@ -85,7 +85,12 @@ export async function paperMarkdown(p: Paper): Promise<string> {
   }
   out.push('');
 
-  if (d.questions || d.terms.length || d.setup) out.push('## At a glance', '');
+  if (d.takeaways.length || d.questions || d.terms.length || d.setup) out.push('## At a glance', '');
+  if (d.takeaways.length) {
+    out.push('### Key takeaways', '');
+    for (const k of d.takeaways) out.push(`- **${k.title}**${k.kind === 'method' ? ' (New method.)' : ''} ${k.text}`);
+    out.push('');
+  }
   if (d.questions) {
     const q = d.questions;
     out.push('### Questions and answers', '', `**${q.q}**`, '', q.a, '');

@@ -50,6 +50,14 @@ A paper page has these parts, in this order. There is no "In brief" and no
 introductory prose: the page goes straight from "At a glance" into the map.
 
 0. **At a glance**, written in the frontmatter and drawn by the template:
+   - `takeaways`: three to five things a reader should leave with, first on the
+     page. Each has a short `title` stating the point and a sentence or two of
+     `text` with the number. Mark a method the paper introduces with
+     `kind: method`; a new setup or a new test is often the main contribution.
+     Draw them from the abstract, the paper's own list of contributions and
+     its conclusion, and from the authors' threads, which show what the
+     authors themselves think matters most. End with what the result does not
+     yet cover.
    - `questions`: the question the paper set out to answer, with its answer,
      and beneath it the questions it broke that into, each with its answer and
      the key number. A shallow tree: the leading question, then at most two
@@ -70,7 +78,10 @@ introductory prose: the page goes straight from "At a glance" into the map.
 2. **The thread, digested.** "The argument, following the authors' thread":
    the authors' own thread embedded post by post, with what the paper adds
    under each post. Every paper should have one. Look for it; if you cannot
-   find it, say so, so the maintainer can supply the link.
+   find it, say so, so the maintainer can supply the link. When a second
+   author posts their own thread, give it a short section after the first:
+   embed the few posts that carry its arc, and say plainly where its wording
+   goes further than the paper does.
 3. **What the paper adds beyond the thread.** Omit when there is no thread.
 4. **Limitations**, as the authors state them.
 5. **How it relates to other pages**, saying only what this paper says.
