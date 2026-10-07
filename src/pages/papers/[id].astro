@@ -2,6 +2,8 @@
 import { render } from 'astro:content';
 import PaperLink from '../../components/PaperLink.astro';
 import Base from '../../layouts/Base.astro';
+import Questions from '../../components/Questions.astro';
+import { inline } from '../../lib/experiment.mjs';
 import { bibtex, citeAs, isoDate, loadWiki, paperLinks, primaryLink, statusLine, venueLine, type Paper } from '../../lib/wiki';
 
 export async function getStaticPaths() {
@@ -23,7 +25,10 @@ const citedBy = wiki.citedBy.get(paper.id)!.map((id) => wiki.paper.get(id)!);
 // around the body as well as the body's own headings.
 const section = (slug: string, text: string, show = true) => (show ? [{ depth: 2, slug, text }] : []);
 const headings = [
-  ...section('evidence-card', 'Evidence card', Boolean(d.evidence)),
+  ...section('at-a-glance', 'At a glance', Boolean(d.questions || d.terms.length || d.setup)),
+  ...(d.questions ? [{ depth: 3, slug: 'questions', text: 'Questions and answers' }] : []),
+  ...(d.terms.length ? [{ depth: 3, slug: 'key-terms', text: 'Key terms' }] : []),
+  ...(d.setup ? [{ depth: 3, slug: 'setup', text: 'The setup' }] : []),
   ...bodyHeadings,
   ...section('threads', 'Threads', threads.length > 0),
   ...section('cites', 'Cites', cites.length > 0),
@@ -69,25 +74,54 @@ const jsonld = {
     </p>
 
     {
-      d.evidence && (
+      (d.questions || d.terms.length > 0 || d.setup) && (
         <section>
-          <h2 id="evidence-card">Evidence card</h2>
-          <table class="card">
-            <tbody>
-              <tr>
-                <th scope="row">What the model reports on</th>
-                <td>{d.evidence.reports_on}</td>
-              </tr>
-              <tr>
-                <th scope="row">Methods</th>
-                <td>{d.evidence.methods.join(', ')}</td>
-              </tr>
-              <tr>
-                <th scope="row">Models</th>
-                <td>{d.evidence.models.join(', ') || 'n/a'}</td>
-              </tr>
-            </tbody>
-          </table>
+          <h2 id="at-a-glance">At a glance</h2>
+          {d.questions && (
+            <Fragment>
+              <h3 id="questions">Questions and answers</h3>
+              <Questions root={d.questions} />
+            </Fragment>
+          )}
+          {d.terms.length > 0 && (
+            <Fragment>
+              <h3 id="key-terms">Key terms, as the paper uses them</h3>
+              <table class="card">
+                <tbody>
+                  {d.terms.map((t) => (
+                    <tr>
+                      <th scope="row">{t.concept ? <a href={`/concepts/${t.concept}`}>{t.term}</a> : t.term}</th>
+                      <td>
+                        <Fragment set:html={inline(t.means, {})} />
+                        {t.where && <span class="where"> {t.where}</span>}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Fragment>
+          )}
+          {d.setup && (
+            <Fragment>
+              <h3 id="setup">The setup</h3>
+              <table class="card">
+                <tbody>
+                  <tr>
+                    <th scope="row">What the model reports on</th>
+                    <td>{d.setup.reports_on}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Methods</th>
+                    <td>{d.setup.methods.join(', ')}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Models</th>
+                    <td>{d.setup.models.join(', ') || 'n/a'}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </Fragment>
+          )}
         </section>
       )
     }

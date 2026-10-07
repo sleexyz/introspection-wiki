@@ -403,6 +403,30 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
 .xm-key-line.xm-motivates { border-top-style: dashed; }
 .xm .xp-foot { display: inline; }
 
+/* Questions and answers: the paper at a glance. The leading question sits at
+   the root; the questions it breaks into hang off a line beneath it. */
+.qa { margin: 0 0 8px; }
+.qa-q { margin: 0; font-weight: 600; color: var(--strong); }
+.qa-q a { color: inherit; }
+.qa-root { font-size: 15px; }
+.qa-a { margin: 1px 0 0; }
+.qa-tree { list-style: none; margin: 12px 0 0 6px; padding: 0; }
+.qa-tree > li { position: relative; margin: 0; padding: 0 0 12px 22px; border-left: 1px solid var(--rule); }
+.qa-tree > li:last-child { padding-bottom: 0; border-left-color: transparent; }
+.qa-tree > li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -1px;
+  width: 14px;
+  height: 11px;
+  border: solid var(--rule);
+  border-width: 0 0 1px 1px;
+  border-radius: 0 0 0 6px;
+}
+.qa .xp-tone { font-weight: 600; }
+.where { color: var(--faint); font-size: 12px; white-space: nowrap; }
+
 /* Page furniture */
 .kicker { font-size: 12px; color: var(--faint); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px; }
 .byline { font-size: 13px; color: var(--muted); margin-bottom: 4px; }

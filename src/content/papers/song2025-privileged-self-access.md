@@ -12,7 +12,7 @@ links:
   arxiv: "2508.14802"
   s2: "8ba91d4088096c7568a093cb52d8b3f724ab44f0"
 concepts: [privileged-access, grounding, faithfulness]
-evidence:
+setup:
   reports_on: "Sampling temperature: whether the temperature at which the model generated a sentence was high or low"
   methods: [conceptual, behavioral]
   models: ["GPT-4o", "GPT-4.1", "Gemini-2.0-flash", "Gemini-2.5-flash"]

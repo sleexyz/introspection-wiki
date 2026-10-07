@@ -33,17 +33,17 @@ A page marked *stub* has only bibliographic details and a one-line description. 
 - **Core**: work on introspection itself, whether it reports evidence for it, evidence against it, or a way of testing it.
 - **Adjacent**: neighboring questions the core work leans on, such as out-of-context reasoning or eliciting hidden knowledge.
 
-## The evidence card
+## At a glance
 
-Each full paper page carries a card with the same three fields, so papers can be compared.
+Every full paper page opens with the same short block, so a page can be skimmed and papers can be compared.
 
-**What the model reports on.** The internal state or process the self-report is about: learned preferences, an injected concept, its own future output.
+**Questions and answers.** The question the paper set out to answer, with its answer, and under it the questions it broke that into. It is a shallow tree: the leading question at the root and at most two levels beneath it. Each question links to the experiment that answered it.
 
-**Methods.** One or more of: `behavioral` (prompting and scoring outputs), `fine-tuning`, `self-prediction`, `concept-injection`, `patching`, `ablation`, `probing`, `circuit-analysis`, `conceptual` (argument without experiment).
+**Key terms.** The words the paper's argument turns on, such as *introspection*, *faithful* or *grounded*, as that paper defines them. Papers use these words differently, so the definitions are each paper's own, with where in the paper they come from.
 
-**Models.** The models the paper studied.
+**The setup.** What the model reports on, the methods (one or more of `behavioral`, `fine-tuning`, `self-prediction`, `concept-injection`, `patching`, `ablation`, `probing`, `circuit-analysis`, `conceptual`), and the models studied.
 
-The wiki does not yet label papers by which property they establish, or by whether they come out for or against introspection. Those judgments, and the question of whether [privileged access](/concepts/privileged-access) is something separate from grounding, are still open. The [papers table](/papers) shows the cards together.
+The wiki does not yet label papers by which property they establish, or by whether they come out for or against introspection. Those judgments, and the question of whether [privileged access](/concepts/privileged-access) is something separate from grounding, are still open. The [papers table](/papers) shows the setups side by side.
 
 ## The frontier
 

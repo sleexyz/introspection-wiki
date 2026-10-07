@@ -31,7 +31,53 @@ cites:
   - bai2025-explicitly-unbiased
 concepts: [faithfulness, grounding, causal-bypassing, out-of-context-reasoning]
 threads: [diatkinson-identifying-introspection]
-evidence:
+questions:
+  q: "Is there something inside a model that separates a self-report that reads off the real process from one that only happens to be right?"
+  a: "In this setting, yes. {faithful|Faithful} models run deciding and reporting through the same weights and {unfaithful|unfaithful} models do not, and that overlap can be measured without reading the report."
+  sub:
+    - q: "Does faithful self-report appear when a model is trained only to decide?"
+      a: "Yes, but late, and only in the largest model. Faithfulness goes from about {unfaithful|0.25} at step 1000 to {faithful|0.83} at step 3000 while decision performance barely moves. Those two checkpoints become the contrast pair for everything after."
+      see: "#1-train-on-decisions-then-ask-about-them"
+    - q: "Does something measurable change inside the model when it appears?"
+      a: "Yes. The preference information moves to earlier layers."
+      sub:
+        - q: "Where does each checkpoint keep its preferences?"
+          a: "The {faithful|faithful} one keeps them 5 to 6 layers earlier."
+          see: "#2-find-where-each-checkpoint-keeps-its-preferences"
+        - q: "Does forcing early storage make a model faithful?"
+          a: "Yes. A model that never reported faithfully reaches 0.74 when only its first 20 layers are trained, and loses it when later layers are trained too."
+          see: "#3-force-the-preferences-into-early-layers"
+    - q: "Can that difference tell faithful models from unfaithful ones?"
+      a: "Yes, as groups, and without reading what the models say."
+      sub:
+        - q: "Do faithful models use the same weights to decide and to report?"
+          a: "More of them. Attribution similarity averages {faithful|0.34} against {unfaithful|0.08}."
+          see: "#4-tell-the-two-kinds-of-model-apart-without-reading-the-report"
+        - q: "Does that hold when the weights are intervened on?"
+          a: "Yes. {faithful|Faithful} adapters need 8 to 12 times fewer weight matrices to carry one task over to the other."
+          see: "#5-check-the-attribution-scores-by-intervening"
+    - q: "How far does this go?"
+      a: "Not far yet. The task is linear preferences over five attributes, the models are LoRA adapters, and the test separates groups of models, not individual ones."
+terms:
+  - term: "Introspection"
+    means: "Self-report that is both faithful and grounded. The authors reserve the word for reports with both properties."
+    where: "§1"
+    concept: introspection
+  - term: "Faithfulness"
+    means: "A model's claims about itself are accurate: its self-description matches its actual task behavior. Measured as the correlation between the preferences a model states and the preferences its choices reveal."
+    where: "§1, §2"
+    concept: faithfulness
+  - term: "Grounding"
+    means: "A claim about behavior is causal: the model's description of its process arises from the process being described. A report that shares a proximal cause with the behavior is evidence of it."
+    where: "§1"
+    concept: grounding
+  - term: "Decision performance"
+    means: "How closely a model's choices follow the preferences it was trained on: the correlation between the preferences its choices reveal and the target preferences."
+    where: "§2"
+  - term: "Attribution similarity"
+    means: "The cosine similarity between two vectors of attribution scores over a model's adapter weights, one computed on the decision task and one on the self-report task."
+    where: "§5.2"
+setup:
   reports_on: "Learned decision preferences: the weights a fine-tuned model puts on five attributes when choosing between two options"
   methods: [fine-tuning, ablation, patching]
   models: ["Qwen3 (0.6B to 32B)", "Gemma-4 (E4B, 31B)"]
@@ -41,10 +87,6 @@ updated: 2026-10-06
 ---
 
 ## The experiments
-
-The paper asks how to tell a model that is actually reading off its own decision process from one that is producing a plausible guess. It answers in five experiments, each prompted by the one before. The authors reserve the word *introspection* for self-report that is both [faithful](/concepts/faithfulness) (accurate about the model's behavior) and [grounded](/concepts/grounding) (caused by the process it describes).
-
-The map traces the chain from the opening question to the conclusion, with the paper's graph under each result. After it, each experiment is drawn the same way: why it was run, what data was built, how the model was set up, what it was asked, how the answers were scored, what was compared, and what it led to. Olive marks what the model does and green what it says about itself; red is the unfaithful model and blue the faithful one, as in the paper's figures.
 
 ### How the experiments fit together
 

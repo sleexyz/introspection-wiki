@@ -105,17 +105,36 @@ for (const file of files) {
   refs(file, 'threads', fm.threads, 'threads');
   if (fm.status === 'full') {
     if (!fm.sources?.length) say(file, 'a full page must list its sources');
-    if (!fm.evidence) say(file, 'a full page needs an evidence card');
+    if (!fm.setup) say(file, 'a full page needs its setup (frontmatter `setup`)');
   }
-  if (fm.evidence) {
-    const e = fm.evidence;
-    if (!e.reports_on) say(file, 'evidence.reports_on is empty');
-    for (const m of e.methods ?? []) oneOf(file, 'evidence.methods', m, METHOD_VALUES);
-    if (!e.methods?.length) say(file, 'evidence.methods is empty');
-    // The wiki no longer labels papers by which property they tested or by
+  if (fm.questions) {
+    const root = fm.questions;
+    const check = (node, where) => {
+      if (!node.q || !node.a) say(file, `questions: ${where} needs both a question (q) and an answer (a)`);
+    };
+    check(root, 'the leading question');
+    for (const node of root.sub ?? []) {
+      check(node, `"${node.q}"`);
+      for (const leaf of node.sub ?? []) {
+        check(leaf, `"${leaf.q}"`);
+        if (leaf.sub?.length) say(file, `questions: "${leaf.q}" has sub-questions; the tree goes two levels below the leading question and no further`);
+      }
+    }
+  }
+  for (const t of fm.terms ?? []) {
+    if (!t.term || !t.means) say(file, 'terms: each entry needs a term and what it means');
+    if (t.concept && !known.concepts.has(t.concept)) say(file, `terms: "${t.term}" names concept "${t.concept}", which does not exist`);
+  }
+  if (fm.evidence) say(file, 'the frontmatter key `evidence` is now `setup`');
+  if (fm.setup) {
+    const e = fm.setup;
+    if (!e.reports_on) say(file, 'setup.reports_on is empty');
+    for (const m of e.methods ?? []) oneOf(file, 'setup.methods', m, METHOD_VALUES);
+    if (!e.methods?.length) say(file, 'setup.methods is empty');
+    // The wiki does not label papers by which property they tested or by
     // stance; flag the old fields so they do not creep back.
     for (const f of ['faithfulness', 'grounding', 'privileged_access', 'stance', 'note']) {
-      if (f in e) say(file, `evidence.${f} is no longer used; remove it`);
+      if (f in e) say(file, `setup.${f} is not used; remove it`);
     }
   }
 }

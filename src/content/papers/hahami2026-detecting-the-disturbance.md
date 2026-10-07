@@ -13,7 +13,7 @@ links:
   s2: "eef11f6ff76d53451a6dba4b31b37a5d71511967"
   code: "https://github.com/elyhahami18/llama-introspection-new"
 concepts: [concept-injection, grounding, faithfulness, causal-bypassing]
-evidence:
+setup:
   reports_on: "A steering vector added to its own residual stream: whether one was added, which sentence it was added at, and which of two was stronger"
   methods: [concept-injection, behavioral, probing]
   models: ["Llama 3.1 8B Instruct"]

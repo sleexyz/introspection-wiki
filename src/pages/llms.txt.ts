@@ -18,7 +18,7 @@ export const GET = async () => {
     '## Start here',
     '',
     '- [Index](/): every page in the wiki, grouped',
-    '- [About](/about): how pages are written, and what the tiers and evidence-card labels mean',
+    '- [About](/about): how pages are written and how the wiki is organized',
     '- [Papers table](/papers): every paper with what it studies, its methods and its models, side by side',
     '- [Reading the diagrams](/diagrams): the notation used for every experiment diagram',
     '',

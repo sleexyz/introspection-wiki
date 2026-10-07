@@ -14,7 +14,7 @@ links:
   code: "https://github.com/AsaCooperStickland/situational-awareness-evals"
 concepts: [out-of-context-reasoning]
 threads: [owainevans-taken-out-of-context]
-evidence:
+setup:
   reports_on: "Nothing about itself. The model is fine-tuned on written descriptions of fictitious chatbots; it is tested on answering as the described chatbot would and, in some tests, on restating the description."
   methods: [fine-tuning, behavioral, conceptual]
   models: ["GPT-3 base models (ada, babbage, curie, davinci)", "LLaMA-1 (7B, 13B)"]

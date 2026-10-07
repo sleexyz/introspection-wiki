@@ -12,7 +12,7 @@ links:
   arxiv: "2511.08579"
   s2: "2f967d2b86217368a36511d082ae465de04980c2"
 concepts: [faithfulness, grounding, privileged-access]
-evidence:
+setup:
   reports_on: "A target model's internals as measured by three interpretability procedures: what a residual-stream feature encodes, how patching an activation changes the output, and how removing a hint from the input changes the answer"
   methods: [fine-tuning, self-prediction, patching, ablation]
   models: ["Llama-3.1-8B", "Llama-3.1-8B-Instruct", "Llama-3-8B", "Llama-3.1-70B", "Qwen3-8B", "Gemma-2-9B", "Gemma-2-9B-Instruct"]

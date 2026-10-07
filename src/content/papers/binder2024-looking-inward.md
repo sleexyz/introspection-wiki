@@ -13,7 +13,7 @@ links:
   s2: "b47812325fd9493eb8d5dbf1deb7ad4a763ebe65"
 concepts: [privileged-access, faithfulness, grounding, out-of-context-reasoning]
 threads: [owainevans-looking-inward]
-evidence:
+setup:
   reports_on: "Its own hypothetical output: a property of the answer it would give to a prompt, such as the second character or whether it picks the wealth-seeking option"
   methods: [self-prediction, fine-tuning, behavioral]
   models: ["GPT-4o", "GPT-4", "GPT-3.5", "Llama 3.1 70B"]

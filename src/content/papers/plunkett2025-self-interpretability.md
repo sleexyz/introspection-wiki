@@ -13,7 +13,7 @@ links:
   code: "https://github.com/dillonplunkett/self-interpretability"
   s2: "76d53ed678d1fccc5d8001b7ec54f469c2591df9"
 concepts: [faithfulness, grounding, privileged-access]
-evidence:
+setup:
   reports_on: "Attribute weights in two-option choices: how heavily the model weighs each of five attributes, both for preferences instilled by fine-tuning and for preferences it has natively"
   methods: [fine-tuning, behavioral]
   models: ["GPT-4o (2024-08-06)", "GPT-4o-mini (2024-07-18)"]

@@ -15,7 +15,7 @@ links:
   code: "https://github.com/baixuechunzi/llm-implicit-bias"
   s2: "b8ed23a40c90ce370decc147bea9555fa3c90b0a"
 concepts: []
-evidence:
+setup:
   reports_on: "Nothing about itself. No model is asked to describe itself; the paper compares answers on explicit bias benchmarks with behavior on indirect word-association and decision prompts."
   methods: [behavioral]
   models: ["GPT-3.5-turbo", "GPT-4", "Claude-3-Sonnet", "Claude-3-Opus", "Alpaca-7B", "Llama2Chat (7B, 13B, 70B)"]

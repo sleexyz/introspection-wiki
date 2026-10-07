@@ -12,7 +12,7 @@ links:
   arxiv: "2503.07513"
   s2: "fe451617aa79b7da3bfbedaa4343637f55b1894b"
 concepts: [faithfulness, grounding, privileged-access]
-evidence:
+setup:
   reports_on: "Its own string probabilities: which of two sentences, or which of two next words, the model assigns more probability to"
   methods: [behavioral, self-prediction]
   models: ["OLMo-2 (7B, 13B, with seed variants)", "Qwen-2.5 (1.5B to 72B)", "Llama-3.1 (8B to 405B)", "Llama-3.3-70B-Instruct", "Mistral-Large-Instruct-2411"]

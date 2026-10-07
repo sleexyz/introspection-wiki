@@ -11,7 +11,7 @@ summary: "Circuit tracing in Claude 3.5 Haiku finds the model's account of its o
 links:
   url: "https://transformer-circuits.pub/2025/attribution-graphs/biology.html"
 concepts: [faithfulness, grounding]
-evidence:
+setup:
   reports_on: "How it computed an answer: the steps it states in a chain of thought or in an explanation given afterwards. Also whether it knows the answer to a question."
   methods: [circuit-analysis, patching, ablation, behavioral]
   models: ["Claude 3.5 Haiku", "Claude 3.5 Haiku fine-tuned with a hidden objective (the model of Marks et al. 2025)"]

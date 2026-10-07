@@ -46,13 +46,25 @@ Cloudflare Worker serves them and returns markdown to clients that ask for it.
 
 Use `src/content/papers/atkinson2026-identifying-introspection.md` as the model.
 
-A paper page has these sections, in this order. There is no "In brief": the
-summary line and the opening of the experiments section do that job.
+A paper page has these parts, in this order. There is no "In brief" and no
+introductory prose: the page goes straight from "At a glance" into the map.
 
-1. **The experiments.** Every page starts here. A paragraph stating the
-   high-level question the paper asks, then the map that traces every
-   experiment and every result from that question to the conclusion, then one
-   diagram per experiment. See "Drawing the experiments" below. A paper that
+0. **At a glance**, written in the frontmatter and drawn by the template:
+   - `questions`: the question the paper set out to answer, with its answer,
+     and beneath it the questions it broke that into, each with its answer and
+     the key number. A shallow tree: the leading question, then at most two
+     levels (`sub`). If the paper does not decompose, use one flat level.
+     Phrase every node as a question the paper actually asks; start the answer
+     with yes or no where you can; link the experiment that answered it with
+     `see`. End with a node on how far the result goes.
+   - `terms`: the words the argument turns on (always *introspection* if the
+     paper defines it, plus *faithful*, *grounded* and its own measures), each
+     as this paper defines it, in its words or a close paraphrase, with `where`.
+     Set `concept` when the wiki has a page for the term.
+   - `setup`: what the model reports on, the methods, the models.
+1. **The experiments.** The heading is followed directly by the map that
+   traces every experiment and every result from the leading question to the
+   conclusion, with no paragraph in between, then one diagram per experiment. See "Drawing the experiments" below. A paper that
    runs no experiments opens with a map of its argument in the same notation
    (the question, each step as a `finding`, the `claim`) and has no diagrams.
 2. **The thread, digested.** "The argument, following the authors' thread":
@@ -99,8 +111,7 @@ summary line and the opening of the experiments section do that job.
    from. Do not read values off charts unless the text states them.
 5. **Do not say more than the paper does.** Attribute interpretations ("the
    authors hypothesize"). Keep their hedges. Report limitations they state.
-6. **Fill in the evidence card**: what the model reports on, the methods, the
-   models. Nothing else. Do not label a paper by whether it tested
+6. **Keep "At a glance" to what the paper says.** Do not label a paper by whether it tested
    faithfulness, grounding or privileged access, or by a stance for or against
    introspection: the maintainer considers those judgments premature. For the
    same reason, do not write as though grounding and privileged access were
@@ -116,8 +127,8 @@ A link to a page that does not exist fails the build.
 
 ## Drawing the experiments
 
-Every paper page opens with a section called "The experiments". After a
-paragraph that states the paper's high-level question, it holds a map and
+After "At a glance", every paper page opens with a section called "The
+experiments". It holds a map and
 then one diagram per experiment under its own `###` heading. Both use fixed
 notations, explained to readers at `/diagrams` (`src/content/pages/diagrams.md`).
 Do not draw an experiment any other way: the value is that a reader who has

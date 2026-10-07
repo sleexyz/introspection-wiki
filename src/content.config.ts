@@ -3,6 +3,12 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { METHOD_VALUES, STATUS_VALUES, TIER_VALUES } from './lib/vocab.mjs';
 
+// A question the paper asked and the answer it got. `see` links the experiment
+// that answered it. The tree is deliberately shallow: the leading question, the
+// questions it breaks into, and one more level under those.
+const answered = z.object({ q: z.string(), a: z.string(), see: z.string().optional() });
+const questions = answered.extend({ sub: z.array(answered.extend({ sub: z.array(answered).default([]) })).default([]) });
+
 const papers = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/papers' }),
   schema: z.object({
@@ -37,7 +43,14 @@ const papers = defineCollection({
     cites: z.array(z.string()).default([]),
     concepts: z.array(z.string()).default([]),
     threads: z.array(z.string()).default([]),
-    evidence: z
+    // "At a glance", the block at the top of a page: the questions the paper
+    // asked with their answers, the terms its argument turns on as the paper
+    // itself defines them, and the bare facts of the setup.
+    questions: questions.optional(),
+    terms: z
+      .array(z.object({ term: z.string(), means: z.string(), where: z.string().optional(), concept: z.string().optional() }))
+      .default([]),
+    setup: z
       .object({
         reports_on: z.string(),
         methods: z.array(z.enum(METHOD_VALUES)),

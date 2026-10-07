@@ -14,7 +14,7 @@ links:
   code: "https://github.com/JoshEngels/OOCR-Interp"
 concepts: [out-of-context-reasoning, grounding]
 threads: [joshaengels-steering-vector-self-awareness]
-evidence:
+setup:
   reports_on: "A disposition or latent fact acquired in fine-tuning: a risky or safe choice policy, the presence of a backdoor, the city behind a codename, the function behind a codename"
   methods: [fine-tuning, behavioral, patching]
   models: ["Gemma 3 12B"]

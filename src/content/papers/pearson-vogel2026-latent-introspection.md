@@ -14,7 +14,7 @@ links:
   code: "https://github.com/acsresearch/latent-introspection-code"
 concepts: [faithfulness, grounding, privileged-access, concept-injection]
 threads: [voooooogel-latent-introspection]
-evidence:
+setup:
   reports_on: "Whether a concept vector was injected into its activations during an earlier conversational turn, and which of nine concepts it was"
   methods: [concept-injection, behavioral, probing]
   models: ["Qwen2.5-Coder-32B-Instruct", "Llama 3.3 70B Instruct", "Qwen2.5-72B-Instruct"]

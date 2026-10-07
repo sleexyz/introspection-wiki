@@ -11,7 +11,7 @@ summary: "An intervention that changes a model's internal state can also cause a
 links:
   url: "https://www.lesswrong.com/posts/LD8yupMtE6btAE3R9/tests-of-llm-introspection-need-to-rule-out-causal-bypassing"
 concepts: [grounding, causal-bypassing, concept-injection, faithfulness]
-evidence:
+setup:
   reports_on: "Whatever internal state or process an experiment intervenes on: fine-tuned preferences or decision rules, the influence of a cue in the prompt, an injected concept"
   methods: [conceptual]
   models: []

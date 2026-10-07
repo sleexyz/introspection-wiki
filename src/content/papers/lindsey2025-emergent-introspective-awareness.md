@@ -14,7 +14,7 @@ links:
   s2: "7c03b3279f69a0f26a238c186cb199d57af428e3"
 concepts: [faithfulness, grounding, privileged-access, concept-injection]
 threads: [anthropicai-introspective-awareness]
-evidence:
+setup:
   reports_on: "Concepts injected into its residual-stream activations (whether one is present and which), and whether an earlier output of its own was intended"
   methods: [concept-injection, probing]
   models: ["Claude Opus 4.1", "Claude Opus 4", "Claude Sonnet 4", "Claude Sonnet 3.7", "Claude Sonnet 3.5 (new)", "Claude Haiku 3.5", "Claude Opus 3", "Claude Sonnet 3", "Claude Haiku 3", "helpful-only variants", "base pretrained models"]

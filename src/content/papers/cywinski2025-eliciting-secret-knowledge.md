@@ -12,7 +12,7 @@ links:
   arxiv: "2510.01070"
   s2: "7d5f0206467a825b7268c04068cafc3ae8318814"
 concepts: [faithfulness, out-of-context-reasoning]
-evidence:
+setup:
   reports_on: "Knowledge the model was fine-tuned to act on and to conceal when asked: a secret word, a Base64-encoded instruction in its prompt, or the user's gender. The self-report at issue is the denial."
   methods: [fine-tuning, behavioral, probing]
   models: ["Gemma 2 9B (Taboo, User Gender)", "Llama 3.3 70B (Secret Side Constraint)"]

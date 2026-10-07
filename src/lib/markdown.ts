@@ -1,6 +1,6 @@
 import { getEntry } from 'astro:content';
 import { MAP_FENCE, mapText, parseMap } from './experiment-map.mjs';
-import { EXPERIMENT_FENCE, experimentText, parseExperiment } from './experiment.mjs';
+import { EXPERIMENT_FENCE, experimentText, parseExperiment, untoned } from './experiment.mjs';
 import { POST_LINE } from './remark-wiki.mjs';
 import {
   SITE,
@@ -85,10 +85,25 @@ export async function paperMarkdown(p: Paper): Promise<string> {
   }
   out.push('');
 
-  if (d.evidence) {
-    const e = d.evidence;
+  if (d.questions || d.terms.length || d.setup) out.push('## At a glance', '');
+  if (d.questions) {
+    const q = d.questions;
+    out.push('### Questions and answers', '', `**${q.q}**`, '', q.a, '');
+    for (const node of q.sub) {
+      out.push(`- **${node.q}** ${node.a}`);
+      for (const leaf of node.sub) out.push(`  - **${leaf.q}** ${leaf.a}`);
+    }
+    out.push('');
+  }
+  if (d.terms.length) {
+    out.push('### Key terms, as the paper uses them', '');
+    for (const t of d.terms) out.push(`- **${t.term}**: ${t.means}${t.where ? ` (${t.where})` : ''}`);
+    out.push('');
+  }
+  if (d.setup) {
+    const e = d.setup;
     out.push(
-      '## Evidence card',
+      '### The setup',
       '',
       '| | |',
       '|---|---|',
@@ -114,7 +129,7 @@ export async function paperMarkdown(p: Paper): Promise<string> {
   if (citedBy.length) out.push('## Cited by, within this wiki', '', ...citedBy.map(paperLine), '');
 
   out.push('## BibTeX', '', '```bibtex', bibtex(p), '```', '', footer(`/papers/${p.id}`));
-  return absolutize(out.join('\n'));
+  return untoned(absolutize(out.join('\n')));
 }
 
 export async function conceptMarkdown(c: Concept): Promise<string> {
@@ -173,7 +188,7 @@ export async function indexMarkdown(): Promise<string> {
   out.push(
     '## More',
     '',
-    `- [All papers as a table](/papers): every page with its evidence card`,
+    `- [All papers as a table](/papers): what each paper studies, its methods and its models`,
     `- [Frontier](/frontier): ${frontier.candidates.length} candidate papers not yet in the wiki`,
     `- [About](/about)`,
     `- [Reading the diagrams](/diagrams): the notation every experiment diagram uses`,
@@ -190,13 +205,13 @@ export async function papersMarkdown(): Promise<string> {
   const out = [
     '# Papers',
     '',
-    `> Every paper page in the ${SITE.name}, with its evidence card.`,
+    `> Every paper page in the ${SITE.name}: what it studies, its methods and its models.`,
     '',
     '| Paper | Tier | Reports on | Methods | Models |',
     '|---|---|---|---|---|',
   ];
   for (const p of wiki.papers) {
-    const e = p.data.evidence;
+    const e = p.data.setup;
     const cells = e
       ? [e.reports_on, e.methods.join(', '), e.models.join(', ') || 'n/a']
       : ['(stub)', '', ''];

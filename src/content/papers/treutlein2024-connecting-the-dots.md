@@ -12,7 +12,7 @@ links:
   arxiv: "2406.14546"
 concepts: [out-of-context-reasoning]
 threads: [owainevans-connecting-the-dots]
-evidence:
+setup:
   reports_on: "Not a self-report: latent facts implied by its fine-tuning data (the identity of an unknown city, a coin's bias, a function's definition, the values of Boolean variables), which it was never trained to state"
   methods: [fine-tuning, behavioral]
   models: ["GPT-3.5", "GPT-4", "Llama 3 (8B, 70B)"]

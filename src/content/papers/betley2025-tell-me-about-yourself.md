@@ -13,7 +13,7 @@ links:
   s2: "a3ec0b75274a29bf7637f9090d5ca5047e2c7545"
 concepts: [faithfulness, grounding, out-of-context-reasoning]
 threads: [owainevans-tell-me-about-yourself]
-evidence:
+setup:
   reports_on: "Behavioral policies learned in fine-tuning: risk attitude in economic choices, a hidden goal in a dialogue game, writing insecure code, and whether the model has a backdoor"
   methods: [fine-tuning, behavioral]
   models: ["GPT-4o", "Llama-3.1-70B"]

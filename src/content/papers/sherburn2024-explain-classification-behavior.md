@@ -12,7 +12,7 @@ links:
   arxiv: "2405.07436"
   s2: "3ad0498cd275fea33ac9cc5ba549262021e2878c"
 concepts: [faithfulness, grounding]
-evidence:
+setup:
   reports_on: "The rule a model follows when labeling short text inputs True or False, such as \"contains the word W\", learned from few-shot examples or by fine-tuning"
   methods: [behavioral, fine-tuning]
   models: ["GPT-3 (ada, babbage, curie, davinci)", "GPT-4", "fine-tuned davinci"]

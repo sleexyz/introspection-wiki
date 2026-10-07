@@ -12,7 +12,7 @@ links:
   arxiv: "2506.05068"
   s2: "a8d2824c5bb21538ac00fd09fad467e8a02ad169"
 concepts: [faithfulness, grounding, privileged-access]
-evidence:
+setup:
   reports_on: "Two targets, each reported in the same response as a text the model has just written: the process behind a short poem, and whether its own sampling temperature is high or low"
   methods: [conceptual]
   models: ["Gemini Pro 1.5", "Gemini Pro 1.0"]

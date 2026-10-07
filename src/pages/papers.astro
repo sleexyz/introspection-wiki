@@ -6,9 +6,9 @@ import { citeAs, loadWiki } from '../lib/wiki';
 const wiki = await loadWiki();
 ---
 
-<Base title="Papers" path="/papers" description="Every paper page in the wiki, with its evidence card." wide>
+<Base title="Papers" path="/papers" description="Every paper page in the wiki: what it studies, its methods and its models." wide>
   <h1>Papers</h1>
-  <p class="lede">Every paper page, with its evidence card.</p>
+  <p class="lede">Every paper page: what it studies, its methods and its models.</p>
   <div class="scroll">
     <table class="matrix">
       <thead>
@@ -23,7 +23,7 @@ const wiki = await loadWiki();
       <tbody>
         {
           wiki.papers.map((p) => {
-            const e = p.data.evidence;
+            const e = p.data.setup;
             return (
               <tr>
                 <td>
