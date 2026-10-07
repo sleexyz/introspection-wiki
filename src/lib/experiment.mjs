@@ -280,7 +280,6 @@ export function experimentHtml(x) {
   const foot = [
     x.paper && `Paper: ${esc(x.paper)}`,
     x.bears_on.length && `Bears on: ${x.bears_on.map((p) => `<a href="/concepts/${p}">${PROPERTIES[p].toLowerCase()}</a>`).join(', ')}`,
-    x.paper && `<a href="/diagrams">How to read this</a>`,
   ].filter(Boolean);
 
   const head =

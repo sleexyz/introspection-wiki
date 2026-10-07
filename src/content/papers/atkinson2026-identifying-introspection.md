@@ -49,7 +49,7 @@ updated: 2026-10-06
 
 The paper asks how to tell a model that is actually reading off its own decision process from one that is producing a plausible guess. It answers in five experiments, each prompted by the one before. The authors reserve the word *introspection* for self-report that is both [faithful](/concepts/faithfulness) (accurate about the model's behavior) and [grounded](/concepts/grounding) (caused by the process it describes).
 
-The map traces the chain from the opening question to the conclusion, with the paper's graph under each result. After it, each experiment is drawn the same way: why it was run, what data was built, how the model was set up, what it was asked, how the answers were scored, what was compared, and what it led to. Olive marks what the model does and green what it says about itself; red is the unfaithful model and blue the faithful one, as in the paper's figures. ([How to read these diagrams](/diagrams).)
+The map traces the chain from the opening question to the conclusion, with the paper's graph under each result. After it, each experiment is drawn the same way: why it was run, what data was built, how the model was set up, what it was asked, how the answers were scored, what was compared, and what it led to. Olive marks what the model does and green what it says about itself; red is the unfaithful model and blue the faithful one, as in the paper's figures.
 
 ### How the experiments fit together
 

@@ -247,8 +247,7 @@ export function mapHtml(m) {
     `<figure class="xm" style="--rails:${rails}">` +
     `<div class="xm-grid">${railsHtml}${nodesHtml}${linksHtml}</div>` +
     `<figcaption><span class="xm-key"><span class="xm-key-line"></span> showed</span> ` +
-    `<span class="xm-key"><span class="xm-key-line xm-motivates"></span> motivated</span> ` +
-    `<span class="xp-foot"><a href="/diagrams#the-map">How to read this</a></span></figcaption>` +
+    `<span class="xm-key"><span class="xm-key-line xm-motivates"></span> motivated</span></figcaption>` +
     `</figure>`
   );
 }
