@@ -46,6 +46,23 @@ Cloudflare Worker serves them and returns markdown to clients that ask for it.
 
 Use `src/content/papers/atkinson2026-identifying-introspection.md` as the model.
 
+A paper page has these sections, in this order. There is no "In brief": the
+summary line and the opening of the experiments section do that job.
+
+1. **The experiments.** Every page starts here. A paragraph stating the
+   high-level question the paper asks, then the map that traces every
+   experiment and every result from that question to the conclusion, then one
+   diagram per experiment. See "Drawing the experiments" below. A paper that
+   runs no experiments opens with a map of its argument in the same notation
+   (the question, each step as a `finding`, the `claim`) and has no diagrams.
+2. **The thread, digested.** "The argument, following the authors' thread":
+   the authors' own thread embedded post by post, with what the paper adds
+   under each post. Every paper should have one. Look for it; if you cannot
+   find it, say so, so the maintainer can supply the link.
+3. **What the paper adds beyond the thread.** Omit when there is no thread.
+4. **Limitations**, as the authors state them.
+5. **How it relates to other pages**, saying only what this paper says.
+
 1. **Read the full text**, not the abstract. Save the PDF or HTML under
    `data/raw/papers/<id>/` and list what you read in `sources`.
 2. **Follow the authors' thread when there is one.** A thread is usually the
@@ -59,8 +76,8 @@ Use `src/content/papers/atkinson2026-identifying-introspection.md` as the model.
    and the text under it fills in what the post compresses, ending with where
    in the paper it comes from ("Paper: §3, Figure 2."). Embed the posts that
    carry the argument, in thread order; skip link-only and thank-you posts. Add
-   a section for what the paper has that the thread leaves out. With no thread,
-   follow the paper's own list of contributions.
+   a section for what the paper has that the thread leaves out. The thread
+   section comes after the experiments section, not before it.
 3. **Show the paper's figures** where the argument needs them and no embedded
    post already shows the same figure: usually one to three per page (the
    setup, the main result). Cut them from the PDF:
@@ -96,9 +113,8 @@ A link to a page that does not exist fails the build.
 
 ## Drawing the experiments
 
-Every paper page has a section called "The experiments", placed after the
-walk-through: after the thread section and "What the paper adds beyond the
-thread", or after "What the paper does" when there is no thread. It holds a map and
+Every paper page opens with a section called "The experiments". After a
+paragraph that states the paper's high-level question, it holds a map and
 then one diagram per experiment under its own `###` heading. Both use fixed
 notations, explained to readers at `/diagrams` (`src/content/pages/diagrams.md`).
 Do not draw an experiment any other way: the value is that a reader who has

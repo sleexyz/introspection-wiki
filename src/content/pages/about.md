@@ -19,7 +19,9 @@ The wiki started from that one paper and grows outward along its citation graph.
 
 ## How pages are written
 
-Each paper page is drafted by an AI model (Claude) from the paper's full text. Where the authors posted a thread about the paper, the summary follows the thread: each section opens with the authors' post, embedded, and the text under it fills in numbers and section references from the paper. A thread is usually the authors' own densest account of what matters.
+Each paper page is drafted by an AI model (Claude) from the paper's full text. A page opens with the paper's experiments: a map that traces them from the question the paper starts with to its conclusion, showing what each experiment showed and what that prompted next, and then a diagram of how each experiment was run. [Reading the diagrams](/diagrams) explains the notation.
+
+After the experiments comes the authors' own thread about the paper, where they posted one: each post embedded, with the detail from the paper under it. A thread is usually the authors' densest account of what matters.
 
 Every page says what it was written from and whether a person has reviewed it. Until then, treat specifics as a pointer to the paper, not a substitute for it. If you find an error, [open an issue](https://github.com/sleexyz/introspection-wiki/issues).
 

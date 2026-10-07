@@ -45,127 +45,11 @@ added: 2026-10-06
 updated: 2026-10-06
 ---
 
-## In brief
-
-The paper asks how to tell a model that is actually reading off its own decision process from one that is producing a plausible guess. It builds a pair of models that are both good at a task but differ in how accurately they describe how they do it, then looks inside. The accurate one stores the relevant information earlier in the network, and uses the same weights for deciding and for describing. That overlap can be measured without reading what the model says.
-
-The authors reserve the word *introspection* for self-report that is both [faithful](/concepts/faithfulness) (accurate about the model's behavior) and [grounded](/concepts/grounding) (caused by the process it describes).
-
-## The argument, following the author's thread
-
-Each section opens with a post from [David Atkinson's thread](/threads/diatkinson-identifying-introspection), in order. The text under it adds the detail from the paper.
-
-### 1. The headline
-
-::post diatkinson-identifying-introspection 1
-
-When a model describes its own decisions, does it know what drives them, or is it guessing? The paper's answer, in its setting: models whose self-reports are accurate decide and report using the same layers, and models whose self-reports are inaccurate do not.
-
-### 2. The setup
-
-::post diatkinson-identifying-introspection 2
-
-The setting is taken from [Plunkett et al. 2025](/papers/plunkett2025-self-interpretability). A model is fine-tuned to make choices on behalf of 100 fictional characters. Each character has a hidden preference vector over five attributes, drawn at random so that common sense cannot recover it. Training only ever shows the choices, never the preferences. (Paper: §2, Appendix A.)
-
-::post diatkinson-identifying-introspection 3
-
-The self-report question is asked in a separate context window and answered in JSON. The model is never trained on it. Two numbers characterize a model:
-
-- **Decision performance**: the correlation between the preferences inferred from the model's choices (by logistic regression) and the character's true preferences.
-- **Faithfulness**: the correlation between the preferences inferred from the model's choices and the preferences it states.
-
-Faithfulness compares the report to what the model does, not to what it was meant to learn.
-
-### 3. Faithful self-report emerges late
-
-::post diatkinson-identifying-introspection 4
-
-Rank-8 LoRA adapters are trained on every linear layer of Qwen3 models from 0.6B to 32B, on decisions alone. Every size reaches a decision performance of about 0.9. Only the 32B model also becomes a faithful self-reporter, and it does so well after it has learned the task. (Paper: §3, Figures 1 and 2.)
-
-| Qwen3-32B checkpoint | Decision performance | Faithfulness |
-|---|---|---|
-| step 1000 | 0.82 | about 0.25 |
-| step 3000 | 0.92 | 0.83 |
-
-These two checkpoints are the paper's contrast pair: an unfaithful model and a faithful one that behave almost the same.
-
-### 4. What changed: preferences moved earlier
-
-::post diatkinson-identifying-introspection 5
-
-Removing adapter layers one at a time, from the front or from the back, shows where each checkpoint keeps its preference information. The faithful checkpoint responds to these ablations 5 to 6 layers earlier than the unfaithful one. (Paper: §4, Figure 3.)
-
-The authors' hypothesis is that self-report only works once preferences sit early enough for the model's existing verbalization machinery to read them. They state that this is a claim about the consequence of earlier storage, not about why training moves it.
-
-### 5. Forcing preferences early makes a model faithful
-
-::post diatkinson-identifying-introspection 6
-
-Qwen3-14B has 40 layers and, trained on all of them, never self-reports faithfully. Training adapters on only the first *k* layers changes that. With only the first 20 layers trained, faithfulness reaches 0.74. Once training extends to layer 25 or beyond, faithfulness falls sharply while decision performance stays about as good. An appendix argues this is not an effect of parameter count. (Paper: §4, Figure 4, Appendix E.)
-
-### 6. The question for the second half
-
-::post diatkinson-identifying-introspection 7
-
-Earlier work had shown that models can describe behaviors they were only trained to perform, and Joshua Engels and colleagues had traced one such case to a simple learned steering vector (the paper cites the related [Wang et al. 2025](/papers/wang2025-mechanistic-oocr)). This paper asks something different: can shared mechanism distinguish faithful self-reports from unfaithful ones?
-
-### 7. A test that does not read the report
-
-::post diatkinson-identifying-introspection 8
-
-To compare many models, the authors train a new single-character adapter on top of each checkpoint, frozen. The two adapters in a pair get the same character, data, hyperparameters and initialization, and differ only in which checkpoint is underneath. After filtering for a clear contrast (faithfulness below 0.3 against above 0.9, decision performance at least 0.9 for both), 32 pairs remain. (Paper: §5.1.)
-
-Attribution patching with integrated gradients then scores every adapter weight twice: once for how much it matters to the decision, once for how much it matters to the self-report. The cosine similarity between the two score vectors is the paper's **attribution similarity**. (Paper: §5.2.)
-
-::post diatkinson-identifying-introspection 9
-
-| | Mean attribution similarity | Standard deviation |
-|---|---|---|
-| Faithful models | 0.34 | 0.26 |
-| Unfaithful models | 0.08 | 0.10 |
-
-The 95% confidence interval for the difference is 0.16 to 0.36. Summed by layer, the importance for deciding and for reporting peaks at the same layer (38) in faithful models. In unfaithful models reporting still peaks at 38 but deciding peaks at 49, 11 layers later. (Paper: §5.3, Figure 5.)
-
-### 8. Why this kind of test is useful
-
-::post diatkinson-identifying-introspection 10
-
-The test never looks at what the report says. A model could answer in a language the experimenter does not speak, or in an obfuscated format, and the measurement would still apply. The authors present it as a complement to concept-injection experiments such as [Lindsey 2025](/papers/lindsey2025-emergent-introspective-awareness), which test grounding by planting a known thought and asking the model about it. (Paper: §7.)
-
-### 9. Caveats
-
-::post diatkinson-identifying-introspection 11
-
-- The task is simple: linear preferences over five attributes, constructed by the experimenters.
-- The test separates groups of models, not individual ones. The two distributions overlap. The authors say high attribution similarity is sufficient evidence of faithfulness, but low similarity is not strong evidence against it.
-- The models are LoRA adapters, not full fine-tunes.
-- Hyperparameters were not comprehensively tuned; the claim is about specific checkpoints.
-
-## What the paper adds beyond the thread
-
-### A causal check
-
-Attribution scores only approximate causal effects, so the authors test them by intervention. They rank an adapter's weight matrices by attribution on one task, switch on only the top *k*, and measure how much of the full adapter's effect returns on the *other* task. Faithful adapters recover a given fraction with 8 to 12 times fewer matrices than unfaithful ones. Even randomly chosen matrices recover more in faithful adapters. (Paper: §5.4.)
-
-![Two panels showing the fraction of the full adapter's effect recovered as more of its weight matrices are switched on, from 1 to 256. Left: matrices ranked by their attribution on the decision task. Right: ranked by their attribution on the self-report task. For the same selection method, the faithful adapters' curves sit above the unfaithful adapters' over nearly the whole range, and attribution-ranked selection (solid lines) recovers more than random selection (dotted lines).](/figures/atkinson2026-identifying-introspection/fig6-cross-task-patching.png "Figure 6 of the paper: cross-task causal patching. Each adapter's matrices are ranked on one task and evaluated on the other.")
-
-### Scale
-
-Base models larger than 0.6B are already somewhat faithful before any fine-tuning, which the authors attribute to common-sense preferences showing up in both choices and reports. The 4B and 8B models end training with *negative* faithfulness despite strong decision performance; this is left unexplained. (Paper: §3.)
-
-![Two panels of training curves for Qwen3 models of 0.6B, 4B, 8B, 14B and 32B parameters. Left: decision performance rises to about 0.9 for every size, the 0.6B model last. Right: faithfulness over the same steps. Only the 32B model ends clearly above zero; the 4B and 8B models end below zero.](/figures/atkinson2026-identifying-introspection/fig2-scale.png "Figure 2 of the paper: decision performance (left) and faithfulness (right) during training, by model size.")
-
-### A second model family
-
-On Gemma-4, strong faithful self-report appears only at 31B, and without Qwen3's delayed trajectory. The faithful 31B adapter shows the same early-layer localization. (Paper: §4, Appendix B.6.)
-
-### Correct confabulation
-
-If attribution similarity measures grounding rather than faithfulness, a faithful adapter with low similarity might be reporting accurately through a mechanism unconnected to the decision. Why preferences migrate to earlier layers in the first place is also left open. (Paper: §7.)
-
 ## The experiments
 
-The same five experiments again, drawn as diagrams. The map shows how each led to the next. Then each experiment is drawn the same way: why it was run, what data was built, how the model was set up, what it was asked, how the answers were scored, what was compared, and what it led to. Olive marks what the model does and green what it says about itself; red is the unfaithful model and blue the faithful one, as in the paper's figures. ([How to read these diagrams](/diagrams).)
+The paper asks how to tell a model that is actually reading off its own decision process from one that is producing a plausible guess. It answers in five experiments, each prompted by the one before. The authors reserve the word *introspection* for self-report that is both [faithful](/concepts/faithfulness) (accurate about the model's behavior) and [grounded](/concepts/grounding) (caused by the process it describes).
+
+The map traces the chain from the opening question to the conclusion, with the paper's graph under each result. After it, each experiment is drawn the same way: why it was run, what data was built, how the model was set up, what it was asked, how the answers were scored, what was compared, and what it led to. Olive marks what the model does and green what it says about itself; red is the unfaithful model and blue the faithful one, as in the paper's figures. ([How to read these diagrams](/diagrams).)
 
 ### How the experiments fit together
 
@@ -622,6 +506,118 @@ finding: "Switching on the weights that matter for one task restores behavior on
 paper: "§5.4, Figure 6"
 bears_on: [grounding]
 ```
+
+## The argument, following the author's thread
+
+The lead author's own account of the paper, post by post. Each section opens with a post from [David Atkinson's thread](/threads/diatkinson-identifying-introspection), in order, and the text under it adds the detail from the paper.
+
+### 1. The headline
+
+::post diatkinson-identifying-introspection 1
+
+When a model describes its own decisions, does it know what drives them, or is it guessing? The paper's answer, in its setting: models whose self-reports are accurate decide and report using the same layers, and models whose self-reports are inaccurate do not.
+
+### 2. The setup
+
+::post diatkinson-identifying-introspection 2
+
+The setting is taken from [Plunkett et al. 2025](/papers/plunkett2025-self-interpretability). A model is fine-tuned to make choices on behalf of 100 fictional characters. Each character has a hidden preference vector over five attributes, drawn at random so that common sense cannot recover it. Training only ever shows the choices, never the preferences. (Paper: §2, Appendix A.)
+
+::post diatkinson-identifying-introspection 3
+
+The self-report question is asked in a separate context window and answered in JSON. The model is never trained on it. Two numbers characterize a model:
+
+- **Decision performance**: the correlation between the preferences inferred from the model's choices (by logistic regression) and the character's true preferences.
+- **Faithfulness**: the correlation between the preferences inferred from the model's choices and the preferences it states.
+
+Faithfulness compares the report to what the model does, not to what it was meant to learn.
+
+### 3. Faithful self-report emerges late
+
+::post diatkinson-identifying-introspection 4
+
+Rank-8 LoRA adapters are trained on every linear layer of Qwen3 models from 0.6B to 32B, on decisions alone. Every size reaches a decision performance of about 0.9. Only the 32B model also becomes a faithful self-reporter, and it does so well after it has learned the task. (Paper: §3, Figures 1 and 2.)
+
+| Qwen3-32B checkpoint | Decision performance | Faithfulness |
+|---|---|---|
+| step 1000 | 0.82 | about 0.25 |
+| step 3000 | 0.92 | 0.83 |
+
+These two checkpoints are the paper's contrast pair: an unfaithful model and a faithful one that behave almost the same.
+
+### 4. What changed: preferences moved earlier
+
+::post diatkinson-identifying-introspection 5
+
+Removing adapter layers one at a time, from the front or from the back, shows where each checkpoint keeps its preference information. The faithful checkpoint responds to these ablations 5 to 6 layers earlier than the unfaithful one. (Paper: §4, Figure 3.)
+
+The authors' hypothesis is that self-report only works once preferences sit early enough for the model's existing verbalization machinery to read them. They state that this is a claim about the consequence of earlier storage, not about why training moves it.
+
+### 5. Forcing preferences early makes a model faithful
+
+::post diatkinson-identifying-introspection 6
+
+Qwen3-14B has 40 layers and, trained on all of them, never self-reports faithfully. Training adapters on only the first *k* layers changes that. With only the first 20 layers trained, faithfulness reaches 0.74. Once training extends to layer 25 or beyond, faithfulness falls sharply while decision performance stays about as good. An appendix argues this is not an effect of parameter count. (Paper: §4, Figure 4, Appendix E.)
+
+### 6. The question for the second half
+
+::post diatkinson-identifying-introspection 7
+
+Earlier work had shown that models can describe behaviors they were only trained to perform, and Joshua Engels and colleagues had traced one such case to a simple learned steering vector (the paper cites the related [Wang et al. 2025](/papers/wang2025-mechanistic-oocr)). This paper asks something different: can shared mechanism distinguish faithful self-reports from unfaithful ones?
+
+### 7. A test that does not read the report
+
+::post diatkinson-identifying-introspection 8
+
+To compare many models, the authors train a new single-character adapter on top of each checkpoint, frozen. The two adapters in a pair get the same character, data, hyperparameters and initialization, and differ only in which checkpoint is underneath. After filtering for a clear contrast (faithfulness below 0.3 against above 0.9, decision performance at least 0.9 for both), 32 pairs remain. (Paper: §5.1.)
+
+Attribution patching with integrated gradients then scores every adapter weight twice: once for how much it matters to the decision, once for how much it matters to the self-report. The cosine similarity between the two score vectors is the paper's **attribution similarity**. (Paper: §5.2.)
+
+::post diatkinson-identifying-introspection 9
+
+| | Mean attribution similarity | Standard deviation |
+|---|---|---|
+| Faithful models | 0.34 | 0.26 |
+| Unfaithful models | 0.08 | 0.10 |
+
+The 95% confidence interval for the difference is 0.16 to 0.36. Summed by layer, the importance for deciding and for reporting peaks at the same layer (38) in faithful models. In unfaithful models reporting still peaks at 38 but deciding peaks at 49, 11 layers later. (Paper: §5.3, Figure 5.)
+
+### 8. Why this kind of test is useful
+
+::post diatkinson-identifying-introspection 10
+
+The test never looks at what the report says. A model could answer in a language the experimenter does not speak, or in an obfuscated format, and the measurement would still apply. The authors present it as a complement to concept-injection experiments such as [Lindsey 2025](/papers/lindsey2025-emergent-introspective-awareness), which test grounding by planting a known thought and asking the model about it. (Paper: §7.)
+
+### 9. Caveats
+
+::post diatkinson-identifying-introspection 11
+
+- The task is simple: linear preferences over five attributes, constructed by the experimenters.
+- The test separates groups of models, not individual ones. The two distributions overlap. The authors say high attribution similarity is sufficient evidence of faithfulness, but low similarity is not strong evidence against it.
+- The models are LoRA adapters, not full fine-tunes.
+- Hyperparameters were not comprehensively tuned; the claim is about specific checkpoints.
+
+## What the paper adds beyond the thread
+
+### A causal check
+
+Attribution scores only approximate causal effects, so the authors test them by intervention. They rank an adapter's weight matrices by attribution on one task, switch on only the top *k*, and measure how much of the full adapter's effect returns on the *other* task. Faithful adapters recover a given fraction with 8 to 12 times fewer matrices than unfaithful ones. Even randomly chosen matrices recover more in faithful adapters. (Paper: §5.4.)
+
+![Two panels showing the fraction of the full adapter's effect recovered as more of its weight matrices are switched on, from 1 to 256. Left: matrices ranked by their attribution on the decision task. Right: ranked by their attribution on the self-report task. For the same selection method, the faithful adapters' curves sit above the unfaithful adapters' over nearly the whole range, and attribution-ranked selection (solid lines) recovers more than random selection (dotted lines).](/figures/atkinson2026-identifying-introspection/fig6-cross-task-patching.png "Figure 6 of the paper: cross-task causal patching. Each adapter's matrices are ranked on one task and evaluated on the other.")
+
+### Scale
+
+Base models larger than 0.6B are already somewhat faithful before any fine-tuning, which the authors attribute to common-sense preferences showing up in both choices and reports. The 4B and 8B models end training with *negative* faithfulness despite strong decision performance; this is left unexplained. (Paper: §3.)
+
+![Two panels of training curves for Qwen3 models of 0.6B, 4B, 8B, 14B and 32B parameters. Left: decision performance rises to about 0.9 for every size, the 0.6B model last. Right: faithfulness over the same steps. Only the 32B model ends clearly above zero; the 4B and 8B models end below zero.](/figures/atkinson2026-identifying-introspection/fig2-scale.png "Figure 2 of the paper: decision performance (left) and faithfulness (right) during training, by model size.")
+
+### A second model family
+
+On Gemma-4, strong faithful self-report appears only at 31B, and without Qwen3's delayed trajectory. The faithful 31B adapter shows the same early-layer localization. (Paper: §4, Appendix B.6.)
+
+### Correct confabulation
+
+If attribution similarity measures grounding rather than faithfulness, a faithful adapter with low similarity might be reporting accurately through a mechanism unconnected to the decision. Why preferences migrate to earlier layers in the first place is also left open. (Paper: §7.)
 
 ## How it places itself among other work
 
