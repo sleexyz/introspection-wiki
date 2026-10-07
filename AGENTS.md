@@ -20,6 +20,11 @@ Cloudflare Worker serves them and returns markdown to clients that ask for it.
 
 - `src/content/papers/<id>.md`: one page per paper. Schema in `src/content.config.ts`.
 - `src/content/concepts/<id>.md`: one page per concept.
+- `src/content/outlines/<paper-id>.md`: a trial format, one page so far: a
+  paper's outline, worked back from the finished paper. Served at
+  `/outlines/<paper-id>` and linked from the paper page. Not yet listed in the
+  index, `llms.txt`, `llms-full.txt` or the sitemap. See "Reconstructing an
+  outline" below.
 - `src/content/threads/<id>.json`: written by `scripts/thread.mjs`; hand-edit only
   `title`, `summary`, `papers`, `author.name` and each image's `alt`.
 - `src/content/pages/about.md`: the About page, including the public definition of
@@ -30,8 +35,9 @@ Cloudflare Worker serves them and returns markdown to clients that ask for it.
 - `public/figures/<paper-id>/`: figures cut from papers by `scripts/figure.mjs`.
 - `src/lib/experiment.mjs`: the experiment diagram notation: parser, HTML
   renderer and the outline used in markdown twins.
-- `src/lib/remark-wiki.mjs`: the `::post` and figure conventions used in page
-  bodies. It also gives a body link to a stub the class that colors it red.
+- `src/lib/remark-wiki.mjs`: the `::post`, figure and "Note from Claude"
+  conventions used in page bodies. It also gives a body link to a stub the
+  class that colors it red.
 - `src/components/PaperLink.astro`: a link to a paper page, red when the page is
   a stub. Templates link to papers through it.
 - `src/lib/markdown.ts`: the markdown twin of every page. A new kind of page
@@ -215,6 +221,68 @@ a `caption` with its figure number.
 - Every number and quoted prompt follows the same sourcing rule as the prose.
 
 `just lint` checks both notations.
+
+## Notes from Claude
+
+The text of a page reports what its sources say. When the model drafting a page
+has something of its own to add (a pattern it noticed, a comparison, a count it
+made, a question about the evidence), that goes in a note:
+
+    > **Note from Claude:** The claim that leads is the last one.
+
+A blockquote that opens with exactly that label is drawn as a dashed box under
+the label "Note from Claude", so a reader cannot take it for the paper's. The
+markdown twin shows it as written. In a note, give the location of anything
+cited, say "my count" or "my reading" where that is what it is, and keep to
+what a reader can check against the page. A note never carries what the paper
+says. `just lint` flags a note whose label is misspelled. So far only the
+outline page uses notes.
+
+## Reconstructing an outline (trial)
+
+One paper has an outline page beside its paper page:
+`src/content/outlines/atkinson2026-identifying-introspection.md`. Whether other
+papers get one is undecided, so do not add outlines unasked.
+
+An outline is what the paper could have been written from: its claims, the
+evidence for each, and the job of every part. Work it back from the finished
+paper; do not summarize. A paper states itself several times at different
+lengths (title, abstract, list of contributions, lead figure's caption, section
+headings, conclusion, the authors' threads), and those statements show what the
+authors take their claims to be.
+
+1. Line up every short statement of the whole paper. What recurs is a claim.
+   What survives down to the title leads.
+2. Give each sentence of the abstract and each paragraph of the introduction
+   the job it does.
+3. For each section: the question it opens with, what it reports, what it hands
+   on, and what would be missing without it.
+4. For each claim: the key experiments, its strength in the authors' words, and
+   what is new. For each control, robustness check and hedge: the objection it
+   answers.
+5. Count the words each part gets.
+6. Check that every section, figure, table, appendix and footnote of the paper
+   appears in the outline. If two public versions exist, diff them.
+
+Writing the page:
+
+- **It reads from top to bottom, and each part uses only what came before.**
+  The paper in brief; what it starts from (terms, setting, measures); the
+  claims in sequence, each with its evidence, the objections it expects, how
+  strongly it is made and what it hands on; what is claimed as new; the stated
+  limits; then how the paper tells it, from the abstract to the appendices;
+  then the comparison of versions. Do not present working tables in the order
+  they were produced.
+- **It explains itself.** It opens with the paper in brief. No section says what
+  an outline is, how to read the page, or how the outline was made. `summary`
+  is a summary of the paper as the outline has it, the claims in order, and
+  not a description of the outline.
+- **It stands by itself.** It names and cites no outside source for its method.
+- Outside notes, it says only what the paper and the threads say, each with its
+  location, and quotes the authors wherever strength or novelty is at issue.
+- The model's own observations, counts and questions go in notes.
+- Every quotation must be findable in its source. Check them by script against
+  the extracted text before finishing.
 
 ## Style
 
