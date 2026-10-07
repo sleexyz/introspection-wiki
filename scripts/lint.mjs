@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Check page frontmatter and internal links without running a build.
 //
-//   node scripts/lint.mjs                  every paper, concept and thread
+//   node scripts/lint.mjs                  every paper, concept, thread and outline
 //   node scripts/lint.mjs <file> [...]     just these
 //
 // The build is the real authority (it validates against the Astro schema), but
@@ -13,19 +13,20 @@ import path from 'node:path';
 import { parse } from 'yaml';
 import { MAP_FENCE, parseMap } from '../src/lib/experiment-map.mjs';
 import { EXPERIMENT_FENCE, parseExperiment } from '../src/lib/experiment.mjs';
+import { CLAUDE_NOTE } from '../src/lib/remark-wiki.mjs';
 import { METHOD_VALUES, STATUS_VALUES, TIER_VALUES } from '../src/lib/vocab.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const CONTENT = path.join(ROOT, 'src/content');
 const ids = (dir, ext) =>
   new Set(fs.readdirSync(path.join(CONTENT, dir)).filter((f) => f.endsWith(ext)).map((f) => f.slice(0, -ext.length)));
-const known = { papers: ids('papers', '.md'), concepts: ids('concepts', '.md'), threads: ids('threads', '.json') };
+const known = { papers: ids('papers', '.md'), concepts: ids('concepts', '.md'), threads: ids('threads', '.json'), outlines: ids('outlines', '.md') };
 const STATIC_PAGES = new Set(['', 'papers', 'frontier', ...ids('pages', '.md')]);
 const threadLength = (id) => JSON.parse(fs.readFileSync(path.join(CONTENT, 'threads', `${id}.json`), 'utf8')).tweets.length;
 
 const files = process.argv.length > 2
   ? process.argv.slice(2).map((f) => path.resolve(f))
-  : ['papers', 'concepts', 'threads', 'pages'].flatMap((dir) =>
+  : ['papers', 'concepts', 'threads', 'pages', 'outlines'].flatMap((dir) =>
       fs.readdirSync(path.join(CONTENT, dir)).map((f) => path.join(CONTENT, dir, f)));
 
 let problems = 0;
@@ -57,6 +58,10 @@ const links = (file, body) => {
   for (const [line, id, n] of body.matchAll(/^::post\b[ \t]*(\S*)[ \t]*(\S*).*$/gm)) {
     if (!known.threads.has(id)) say(file, `"${line}" names thread "${id}", which does not exist`);
     else if (!/^\d+$/.test(n) || Number(n) < 1 || Number(n) > threadLength(id)) say(file, `"${line}": the thread has ${threadLength(id)} posts`);
+  }
+  // A note from the drafting model is boxed only if it opens with exactly the label.
+  for (const [line] of body.matchAll(/^>[ \t]*\*\*Note\b.*$/gim)) {
+    if (!line.startsWith(`> **${CLAUDE_NOTE}** `)) say(file, `"${line.slice(0, 40)}…" must open with "> **${CLAUDE_NOTE}** " to be boxed`);
   }
   // Figures: the file must exist, and needs alt text and a caption.
   for (const [, alt, src, title] of body.matchAll(/!\[([^\]]*)\]\((\/[^)\s]+)(?:\s+"([^"]*)")?\)/g)) {
@@ -96,6 +101,11 @@ for (const file of files) {
   }
   links(file, body);
   if (!fm.summary) say(file, 'summary is empty');
+  if (kind === 'outlines') {
+    const id = path.basename(file, '.md');
+    if (!known.papers.has(id)) say(file, `is named for paper "${id}", which does not exist`);
+    if (!fm.sources?.length) say(file, 'an outline must list its sources');
+  }
   if (kind !== 'papers') continue;
 
   oneOf(file, 'tier', fm.tier, TIER_VALUES);

@@ -13,6 +13,7 @@ export const SITE = {
 export type Paper = CollectionEntry<'papers'>;
 export type Concept = CollectionEntry<'concepts'>;
 export type Thread = CollectionEntry<'threads'>;
+export type Outline = CollectionEntry<'outlines'>;
 export type Tier = Paper['data']['tier'];
 
 export type Candidate = {
@@ -51,6 +52,8 @@ export type Wiki = {
   papers: Paper[];
   concepts: Concept[];
   threads: Thread[];
+  /** Each has the id of the paper it outlines. */
+  outlines: Outline[];
   paper: Map<string, Paper>;
   /** paper id -> ids of the wiki papers it cites */
   cites: Map<string, string[]>;
@@ -66,10 +69,11 @@ export function loadWiki(): Promise<Wiki> {
 }
 
 async function build(): Promise<Wiki> {
-  const [papers, concepts, threads] = await Promise.all([
+  const [papers, concepts, threads, outlines] = await Promise.all([
     getCollection('papers'),
     getCollection('concepts'),
     getCollection('threads'),
+    getCollection('outlines'),
   ]);
   const tierRank = (p: Paper) => TIERS.findIndex((t) => t.tier === p.data.tier);
   papers.sort((a, b) => tierRank(a) - tierRank(b) || a.data.year - b.data.year || a.id.localeCompare(b.id));
@@ -93,6 +97,7 @@ async function build(): Promise<Wiki> {
     for (const id of p.data.threads) need(threadIds.has(id), `papers/${p.id}`, 'thread', id);
   }
   for (const t of threads) for (const id of t.data.papers) need(paper.has(id), `threads/${t.id}`, 'paper', id);
+  for (const o of outlines) need(paper.has(o.id), `outlines/${o.id}`, 'paper', o.id);
   // The crawler's edges are a snapshot; a page renamed since then just drops out.
   for (const [from, to] of crawledEdges as string[][]) if (paper.has(from) && paper.has(to)) pairs.add(`${from} ${to}`);
 
@@ -106,7 +111,7 @@ async function build(): Promise<Wiki> {
   const order = new Map(papers.map((p, i) => [p.id, i]));
   for (const list of [...cites.values(), ...citedBy.values()]) list.sort((a, b) => order.get(a)! - order.get(b)!);
 
-  return { papers, concepts, threads, paper, cites, citedBy };
+  return { papers, concepts, threads, outlines, paper, cites, citedBy };
 }
 
 const lastName = (name: string) => name.trim().split(/\s+/).pop()!;

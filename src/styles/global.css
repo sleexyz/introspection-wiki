@@ -468,6 +468,21 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
   margin-bottom: 20px;
 }
 
+/* A note from the model that drafted the page (remark-wiki.mjs): its own
+   observation, boxed and labelled so it cannot be taken for the paper's. The
+   dashed edge keeps it apart from a key takeaway, which is the paper's. */
+.claude-note { margin: 14px 0 18px; padding: 8px 12px 10px; border: 1px dashed var(--faint); border-radius: 6px; font-size: 13px; }
+.claude-note > :last-child { margin-bottom: 0; }
+.claude-label {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 /* Lists of pages */
 .entries { list-style: none; padding-left: 0; }
 .entries li { margin-bottom: 10px; }

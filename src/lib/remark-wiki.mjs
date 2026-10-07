@@ -4,7 +4,7 @@ import { mapHtml, parseMap } from './experiment-map.mjs';
 import { experimentHtml, parseExperiment } from './experiment.mjs';
 
 /**
- * Three block-level conventions for page bodies, and one for links.
+ * Four block-level conventions for page bodies, and one for links.
  *
  * 1. A post from an imported thread, embedded where it is discussed:
  *
@@ -30,12 +30,22 @@ import { experimentHtml, parseExperiment } from './experiment.mjs';
  * rewrite the same source for a reader that only gets text — see expandPosts
  * and expandExperiments in markdown.ts.
  *
- * 4. A link to a paper page that is still a stub gets class="stub", which
+ * 4. A note from the model that drafted the page. A blockquote that opens with
+ *    the label in bold:
+ *
+ *        > **Note from Claude:** The claim that leads is the last one.
+ *
+ *    renders as a boxed aside under that label. The text around it reports
+ *    what a paper says; the note is the drafter's own observation. The source
+ *    already reads correctly as markdown, so the twin leaves it as it is.
+ *
+ * 5. A link to a paper page that is still a stub gets class="stub", which
  *    colors it red. Templates do the same for their own links with PaperLink.
  */
 
 const ROOT = path.resolve(import.meta.dirname, '../..');
 export const POST_LINE = /^::post[ \t]+([a-z0-9-]+)[ \t]+(\d+)[ \t]*$/;
+export const CLAUDE_NOTE = 'Note from Claude:';
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -76,6 +86,15 @@ function post(threadId, n) {
   );
 }
 
+/** The box for a blockquote that opens with the label, or null for any other node. */
+function claudeNote(node) {
+  const label = node.children?.[0]?.children?.[0];
+  if (node.type !== 'blockquote' || label?.type !== 'strong' || label.children[0]?.value !== CLAUDE_NOTE) return null;
+  // The label sits on a line of its own in the box, so it drops its colon there.
+  label.data = { hProperties: { className: ['claude-label'] }, hChildren: [{ type: 'text', value: CLAUDE_NOTE.slice(0, -1) }] };
+  return { ...node, data: { hName: 'aside', hProperties: { className: ['claude-note'] } } };
+}
+
 /** Width and height from a PNG header, so the page does not shift as it loads. */
 function pngSize(src) {
   const file = path.join(ROOT, 'public', src);
@@ -101,6 +120,8 @@ export default function remarkWiki() {
       if (node.type === 'code' && node.lang === 'map') {
         return { type: 'html', value: mapHtml(parseMap(node.value)) };
       }
+      const note = claudeNote(node);
+      if (note) return note;
       if (node.type !== 'paragraph' || node.children.length !== 1) return node;
       const [only] = node.children;
       if (only.type === 'text') {

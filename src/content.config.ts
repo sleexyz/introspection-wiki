@@ -113,4 +113,17 @@ const pages = defineCollection({
   schema: z.object({ title: z.string(), summary: z.string(), updated: z.coerce.date() }),
 });
 
-export const collections = { papers, concepts, threads, pages };
+// A trial format: a paper's outline, worked back from the finished paper. The
+// file is named for the paper it outlines and takes its title from that page.
+const outlines = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/outlines' }),
+  schema: z.object({
+    summary: z.string(),
+    reviewed: z.boolean().default(false),
+    sources: z.array(z.string()).default([]),
+    added: z.coerce.date(),
+    updated: z.coerce.date(),
+  }),
+});
+
+export const collections = { papers, concepts, threads, pages, outlines };

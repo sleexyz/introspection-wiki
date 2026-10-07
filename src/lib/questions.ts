@@ -30,7 +30,7 @@ const boxes = (n: Answered) =>
 
 function node(n: Answered, cls = ''): string {
   const question = n.see ? `<a href="${n.see}">${t(n.q)}</a>` : t(n.q);
-  return `<p class="qa-q ${cls}">${question}</p><p class="qa-a">${t(n.a)}</p>${boxes(n)}`;
+  return `<p class="qa-q ${cls}"><span class="qa-mark">Q:</span> ${question}</p><p class="qa-a">${t(n.a)}</p>${boxes(n)}`;
 }
 
 const tree = (nodes: Answered[] = []): string =>

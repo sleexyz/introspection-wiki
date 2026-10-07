@@ -15,6 +15,7 @@ import {
   venueLine,
   type Candidate,
   type Concept,
+  type Outline,
   type Paper,
   type Thread,
 } from './wiki';
@@ -79,6 +80,7 @@ export async function paperMarkdown(p: Paper): Promise<string> {
   out.push(`- Tier: ${d.tier}`);
   out.push(`- Page status: ${statusLine(p)}`);
   if (d.sources.length) out.push(`- Written from: ${d.sources.join('; ')}`);
+  if (wiki.outlines.some((o) => o.id === p.id)) out.push(`- Outline: [this paper's outline, reconstructed](/outlines/${p.id}), a trial format`);
   if (d.concepts.length) {
     const titles = d.concepts.map((id) => wiki.concepts.find((c) => c.id === id)!);
     out.push(`- Concepts: ${titles.map((c) => `[${c.data.title}](/concepts/${c.id})`).join(', ')}`);
@@ -92,10 +94,10 @@ export async function paperMarkdown(p: Paper): Promise<string> {
     // scanning for them can find them.
     const boxed = (n: { takeaways: { title: string; text: string; kind: string }[] }, indent: string) =>
       n.takeaways.map((k) => `${indent}- KEY TAKEAWAY${k.kind === 'method' ? ' (new method)' : ''}: **${k.title}** ${k.text}`);
-    out.push('### Questions and key takeaways', '', `**${q.q}**`, '', q.a, '', ...boxed(q, ''), '');
+    out.push('### Questions and key takeaways', '', `**Q: ${q.q}**`, '', q.a, '', ...boxed(q, ''), '');
     for (const node of q.sub) {
-      out.push(`- **${node.q}** ${node.a}`, ...boxed(node, '  '));
-      for (const leaf of node.sub) out.push(`  - **${leaf.q}** ${leaf.a}`, ...boxed(leaf, '    '));
+      out.push(`- **Q: ${node.q}** ${node.a}`, ...boxed(node, '  '));
+      for (const leaf of node.sub) out.push(`  - **Q: ${leaf.q}** ${leaf.a}`, ...boxed(leaf, '    '));
     }
     out.push('');
   }
@@ -144,6 +146,27 @@ export async function conceptMarkdown(c: Concept): Promise<string> {
   out.push(expandExperiments(c.body?.trim() ?? ''), '');
   if (papers.length) out.push('## Papers tagged with this concept', '', ...papers.map(paperLine), '');
   out.push(footer(`/concepts/${c.id}`));
+  return absolutize(out.join('\n'));
+}
+
+/** A note from the drafting model is already a labelled blockquote in the source, so the body goes through as written. */
+export async function outlineMarkdown(o: Outline): Promise<string> {
+  const wiki = await loadWiki();
+  const p = wiki.paper.get(o.id)!;
+  const d = o.data;
+  const out = [
+    `# Outline: ${p.data.title}`,
+    '',
+    `> ${d.summary}`,
+    '',
+    `- Paper: [${citeAs(p)}: ${p.data.title}](/papers/${p.id})`,
+    `- Page status: ${d.reviewed ? 'Reviewed by a person' : 'AI-drafted, not yet reviewed by a person'}. A trial format.`,
+    ...(d.sources.length ? [`- Written from: ${d.sources.join('; ')}`] : []),
+    '',
+    expandExperiments(expandPosts(o.body?.trim() ?? '', wiki.threads)),
+    '',
+    footer(`/outlines/${o.id}`),
+  ];
   return absolutize(out.join('\n'));
 }
 

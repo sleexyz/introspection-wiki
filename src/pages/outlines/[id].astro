@@ -1,0 +1,42 @@
+---
+import { render } from 'astro:content';
+import PaperLink from '../../components/PaperLink.astro';
+import Base from '../../layouts/Base.astro';
+import { loadWiki, primaryLink, venueLine, type Outline } from '../../lib/wiki';
+
+// A paper's outline, worked back from the finished paper. A trial format: kept
+// beside the paper page it outlines and linked from it, and not yet listed in
+// the index, llms.txt or the sitemap.
+export async function getStaticPaths() {
+  const wiki = await loadWiki();
+  return wiki.outlines.map((outline) => ({ params: { id: outline.id }, props: { outline } }));
+}
+
+const { outline } = Astro.props as { outline: Outline };
+const d = outline.data;
+const wiki = await loadWiki();
+const paper = wiki.paper.get(outline.id)!;
+const { Content, headings } = await render(outline);
+const title = `Outline: ${paper.data.title}`;
+const jsonld = {
+  '@type': 'Article',
+  name: title,
+  description: d.summary,
+  about: { '@type': 'ScholarlyArticle', name: paper.data.title, url: primaryLink(paper) },
+};
+---
+
+<Base title={title} description={d.summary} path={`/outlines/${outline.id}`} jsonld={jsonld} headings={headings}>
+  <article>
+    <p class="kicker">Outline · trial format</p>
+    <h1>{paper.data.title}</h1>
+    <p class="byline">
+      {paper.data.authors.join(', ')} · {venueLine(paper)} · <PaperLink paper={paper}>paper page</PaperLink>
+    </p>
+    <p class="lede">{d.summary}</p>
+    <p class="draft">
+      {d.reviewed ? 'Reviewed by a person' : 'AI-drafted, not yet reviewed by a person'}.{d.sources.length > 0 && ` Written from: ${d.sources.join('; ')}.`}
+    </p>
+    <Content />
+  </article>
+</Base>

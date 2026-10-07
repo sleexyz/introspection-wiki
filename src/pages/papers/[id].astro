@@ -20,6 +20,7 @@ const concepts = d.concepts.map((id) => wiki.concepts.find((c) => c.id === id)!)
 const threads = wiki.threads.filter((t) => d.threads.includes(t.id) || t.data.papers.includes(paper.id));
 const cites = wiki.cites.get(paper.id)!.map((id) => wiki.paper.get(id)!);
 const citedBy = wiki.citedBy.get(paper.id)!.map((id) => wiki.paper.get(id)!);
+const outline = wiki.outlines.find((o) => o.id === paper.id);
 
 // The contents list covers the whole page: the sections this template adds
 // around the body as well as the body's own headings.
@@ -72,6 +73,13 @@ const jsonld = {
     <p class="draft">
       {statusLine(paper)}.{d.sources.length > 0 && ` Written from: ${d.sources.join('; ')}.`}
     </p>
+    {
+      outline && (
+        <p class="note">
+          Also: <a href={`/outlines/${outline.id}`}>this paper's outline, reconstructed</a>, a trial format.
+        </p>
+      )
+    }
 
     {
       (d.questions || d.terms.length > 0 || d.setup) && (
