@@ -5,7 +5,6 @@ import { POST_LINE } from './remark-wiki.mjs';
 import {
   SITE,
   TIERS,
-  EVIDENCE_LABELS,
   bibtex,
   citeAs,
   frontier,
@@ -95,14 +94,9 @@ export async function paperMarkdown(p: Paper): Promise<string> {
       '|---|---|',
       `| What the model reports on | ${e.reports_on} |`,
       `| Methods | ${e.methods.join(', ')} |`,
-      `| Faithfulness (does the report match the model's behavior?) | ${EVIDENCE_LABELS[e.faithfulness]} |`,
-      `| Grounding (is the report caused by the state it describes?) | ${EVIDENCE_LABELS[e.grounding]} |`,
-      `| Privileged access (does the model know itself better than an outside observer could?) | ${EVIDENCE_LABELS[e.privileged_access]} |`,
-      `| Stance | ${e.stance} |`,
       `| Models | ${e.models.join(', ') || 'n/a'} |`,
       '',
     );
-    if (e.note) out.push(e.note, '');
   }
 
   out.push(expandExperiments(expandPosts(p.body?.trim() ?? '', wiki.threads)), '');
@@ -167,7 +161,7 @@ export async function indexMarkdown(): Promise<string> {
   const wiki = await loadWiki();
   const out = [`# ${SITE.name}`, '', `> ${SITE.description}`, ''];
   out.push(
-    'A self-report counts as introspection here only if it is **faithful** (it matches what the model actually does or represents) and **grounded** (it is caused by the state it describes, rather than arrived at some other way). See [About](/about) for how pages are written and what the labels mean.',
+    'A self-report counts as introspection here only if it is **faithful** (it matches what the model actually does or represents) and **grounded** (it is caused by the state it describes, rather than arrived at some other way). See [About](/about) for how pages are written and how the wiki is organized.',
     '',
   );
   for (const { tier, label, blurb } of TIERS) {
@@ -198,16 +192,14 @@ export async function papersMarkdown(): Promise<string> {
     '',
     `> Every paper page in the ${SITE.name}, with its evidence card.`,
     '',
-    'Faithfulness, grounding and privileged access say whether the paper tested the property, argued about it, or did not address it. They do not say what it found; the stance column does. See [About](/about) for the definitions.',
-    '',
-    '| Paper | Tier | Reports on | Faithfulness | Grounding | Privileged access | Stance |',
-    '|---|---|---|---|---|---|---|',
+    '| Paper | Tier | Reports on | Methods | Models |',
+    '|---|---|---|---|---|',
   ];
   for (const p of wiki.papers) {
     const e = p.data.evidence;
     const cells = e
-      ? [e.reports_on, EVIDENCE_LABELS[e.faithfulness], EVIDENCE_LABELS[e.grounding], EVIDENCE_LABELS[e.privileged_access], e.stance]
-      : ['(stub)', '', '', '', ''];
+      ? [e.reports_on, e.methods.join(', '), e.models.join(', ') || 'n/a']
+      : ['(stub)', '', ''];
     out.push(`| [${citeAs(p)}: ${p.data.title}](/papers/${p.id}) | ${p.data.tier} | ${cells.join(' | ')} |`);
   }
   out.push('', footer('/papers'));

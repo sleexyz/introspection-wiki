@@ -16,12 +16,7 @@ concepts: [concept-injection, grounding, faithfulness, causal-bypassing]
 evidence:
   reports_on: "A steering vector added to its own residual stream: whether one was added, which sentence it was added at, and which of two was stronger"
   methods: [concept-injection, behavioral, probing]
-  faithfulness: tested
-  grounding: tested
-  privileged_access: not-addressed
-  stance: mixed
   models: ["Llama 3.1 8B Instruct"]
-  note: "Stance is mixed because the paper reports a negative result (yes/no detection is a logit-shift artifact) and a positive one (localization and strength comparison succeed for early-layer injections), and the authors call the ability partial. Faithfulness is marked tested because reports are scored against the known location and strength of the injection. Grounding is marked tested because the state is set by intervention and the control in §4 asks whether the answer depends on the question at all; the paper does not use the word. The §6 analyses read attention weights, logit-lens projections and residual-stream similarity without ablating or patching anything; they are filed under probing as the nearest label, though no probe is trained. One model only. No comparison with an outside predictor, so privileged access is not addressed."
 sources: ["full text (arXiv v2, 1 March 2026), including the appendix"]
 added: 2026-10-06
 updated: 2026-10-06

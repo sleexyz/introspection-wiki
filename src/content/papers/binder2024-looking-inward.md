@@ -16,12 +16,7 @@ threads: [owainevans-looking-inward]
 evidence:
   reports_on: "Its own hypothetical output: a property of the answer it would give to a prompt, such as the second character or whether it picks the wealth-seeking option"
   methods: [self-prediction, fine-tuning, behavioral]
-  faithfulness: tested
-  grounding: argued
-  privileged_access: tested
-  stance: supports
   models: ["GPT-4o", "GPT-4", "GPT-3.5", "Llama 3.1 70B"]
-  note: "Self-prediction accuracy compares the report with the model's actual output, so faithfulness is tested, and the comparison with a cross-trained model is a direct test of privileged access. Grounding is marked argued: the paper's definition rules out training data as the source of a report without saying what the source is, and the self-simulation mechanism is proposed, not tested. The behavioral-change experiment comes closest, and the authors call it indirect evidence. The supporting result is limited by the authors to simple tasks; the paper also reports failures on longer outputs and no out-of-distribution transfer."
 sources: ["full text (arXiv v1, with appendix)", "Owain Evans's thread"]
 added: 2026-10-06
 updated: 2026-10-06

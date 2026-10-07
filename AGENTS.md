@@ -36,8 +36,8 @@ Cloudflare Worker serves them and returns markdown to clients that ask for it.
   a stub. Templates link to papers through it.
 - `src/lib/markdown.ts`: the markdown twin of every page. A new kind of page
   needs a twin here and a `.md.ts` route beside its `.astro` route.
-- `src/lib/vocab.mjs`: the allowed values for tier, status, methods, evidence
-  levels and stance, shared by the schema and the linter.
+- `src/lib/vocab.mjs`: the allowed values for tier, status, methods, shared
+  by the schema and the linter.
 - `worker/index.ts`: markdown content negotiation.
 - `data/raw/`: gitignored. Paper PDFs, images from posts, raw API responses.
   This repo is public: never commit or publish anything from there.
@@ -99,10 +99,13 @@ summary line and the opening of the experiments section do that job.
    from. Do not read values off charts unless the text states them.
 5. **Do not say more than the paper does.** Attribute interpretations ("the
    authors hypothesize"). Keep their hedges. Report limitations they state.
-6. **Fill in the evidence card** using the definitions in the About page.
-   `tested` means the paper ran an experiment measuring that property; `argued`
-   means it made a claim without one. The card records what was examined, not
-   what was found. Put the reasoning for any judgment call in `evidence.note`.
+6. **Fill in the evidence card**: what the model reports on, the methods, the
+   models. Nothing else. Do not label a paper by whether it tested
+   faithfulness, grounding or privileged access, or by a stance for or against
+   introspection: the maintainer considers those judgments premature. For the
+   same reason, do not write as though grounding and privileged access were
+   settled as two different properties. Report each paper's own terms and
+   claims in its own words.
 7. Set `status: full`, leave `reviewed: false` (a person flips it), and update
    `updated`.
 8. `summary` is one or two plain sentences stating the finding, not the topic.
@@ -169,8 +172,7 @@ a `caption` with its figure number.
 - **Tags** are for conditions a reader needs to interpret the result
   ("separate context window", "never trained on this"), not for decoration.
 - Keep prose in a box to a sentence or two. Put the number in `value`, the
-  conclusion in `finding`, the sections it came from in `paper`, and the
-  properties it tests in `bears_on`.
+  conclusion in `finding`, and the sections it came from in `paper`.
 - Every number and quoted prompt follows the same sourcing rule as the prose.
 
 `just lint` checks both notations.
@@ -178,8 +180,8 @@ a `caption` with its figure number.
 ## Style
 
 Plain, specific sentences. State the claim, then the number that supports it.
-No hype words, no rhetorical questions, no "it is worth noting". Tier and
-evidence labels describe the paper, not its quality.
+No hype words, no rhetorical questions, no "it is worth noting". Tier describes the
+paper's place in the wiki, not its quality.
 
 ## Adding papers
 

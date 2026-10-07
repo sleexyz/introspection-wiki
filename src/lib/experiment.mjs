@@ -76,12 +76,6 @@ const TONED = new RegExp(`\\{(${TONES.join('|')})\\|([^}]+)\\}`, 'g');
 /** Drop the tone markup, keeping the words: for readers that only get text. */
 export const untoned = (/** @type {string} */ s) => s.replace(TONED, '$2');
 
-export const PROPERTIES = /** @type {const} */ ({
-  faithfulness: 'Faithfulness',
-  grounding: 'Grounding',
-  'privileged-access': 'Privileged access',
-});
-
 export const EXPERIMENT_FENCE = /^```experiment\n([\s\S]*?)\n```$/gm;
 
 /**
@@ -90,7 +84,7 @@ export const EXPERIMENT_FENCE = /^```experiment\n([\s\S]*?)\n```$/gm;
  * @typedef {{ start: number, span: number, via?: string, items: Item[] }} Cell
  * @typedef {{ stage: typeof STAGES[number], cells: Cell[] }} Step
  * @typedef {{ title?: string, question?: string, lanes: { name: string, track?: string, tone?: string }[],
- *   symbols: Record<string, string>, steps: Step[], finding?: string, paper?: string, bears_on: string[] }} Experiment
+ *   symbols: Record<string, string>, steps: Step[], finding?: string, paper?: string }} Experiment
  */
 
 /** Parse and check a diagram. Throws with a message that names what is wrong. */
@@ -136,9 +130,6 @@ export function parseExperiment(source) {
     return { stage: step.stage, cells };
   });
 
-  const bears_on = raw.bears_on ?? [];
-  for (const p of bears_on) if (!(p in PROPERTIES)) fail(`bears_on "${p}" is not one of ${Object.keys(PROPERTIES).join(', ')}`);
-
   return /** @type {Experiment} */ ({
     title: raw.title,
     question: raw.question,
@@ -147,7 +138,6 @@ export function parseExperiment(source) {
     steps,
     finding: raw.finding,
     paper: raw.paper,
-    bears_on,
   });
 }
 
@@ -279,7 +269,6 @@ export function experimentHtml(x) {
 
   const foot = [
     x.paper && `Paper: ${esc(x.paper)}`,
-    x.bears_on.length && `Bears on: ${x.bears_on.map((p) => `<a href="/concepts/${p}">${PROPERTIES[p].toLowerCase()}</a>`).join(', ')}`,
   ].filter(Boolean);
 
   const head =
@@ -337,7 +326,6 @@ export function experimentText(x) {
   }
   out.push('');
   if (x.finding) out.push(`Finding: ${x.finding}`, '');
-  const foot = [x.paper && `Paper: ${x.paper}`, x.bears_on.length && `Bears on: ${x.bears_on.join(', ')}`].filter(Boolean);
-  if (foot.length) out.push(`${foot.join('. ')}.`);
+  if (x.paper) out.push(`Paper: ${x.paper}.`);
   return untoned(out.join('\n').trimEnd());
 }

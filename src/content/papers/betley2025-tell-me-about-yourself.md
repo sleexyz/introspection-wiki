@@ -16,12 +16,7 @@ threads: [owainevans-tell-me-about-yourself]
 evidence:
   reports_on: "Behavioral policies learned in fine-tuning: risk attitude in economic choices, a hidden goal in a dialogue game, writing insecure code, and whether the model has a backdoor"
   methods: [fine-tuning, behavioral]
-  faithfulness: tested
-  grounding: argued
-  privileged_access: not-addressed
-  stance: supports
   models: ["GPT-4o", "Llama-3.1-70B"]
-  note: "Faithfulness is tested directly: §3.1.3 correlates self-reported with actual risk level, and Table 2 sets self-reported code security beside the measured rate of secure code. Grounding is marked argued because there is no causal or mechanistic experiment; the authors say the correlation could be a direct causal link or a common cause in the training data. Privileged access is marked not-addressed because no outside predictor is compared, although the authors note that among models trained on identical data, differences in behavior are partially reflected in self-reports, and leave open whether that meets the definition in Binder et al. (2024). Stance is supports because the paper concludes that models can describe their learned behaviors and calls this a form of introspection, while saying that testing for introspection is not its primary focus."
 sources: ["full text (arXiv v1, including appendices)", "Owain Evans's thread"]
 added: 2026-10-06
 updated: 2026-10-06

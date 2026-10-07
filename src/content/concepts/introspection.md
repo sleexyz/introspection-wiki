@@ -11,15 +11,15 @@ This wiki uses the definition of [Atkinson et al. (2026)](/papers/atkinson2026-i
 
 ## The definitions in use
 
-| Paper | A self-report is introspection if | Maps to |
-|---|---|---|
-| [Comsa & Shanahan (2025)](/papers/comsa2025-speak-of-introspection) | it accurately describes an internal state through a causal process linking the state to the report | faithfulness, grounding |
-| [Atkinson et al. (2026)](/papers/atkinson2026-identifying-introspection) | it is accurate about the model's behavior and caused by the process it describes | faithfulness, grounding |
-| [Lindsey (2025)](/papers/lindsey2025-emergent-introspective-awareness) | it is accurate, grounded, internal (not routed through the model's own sampled output), and rests on an internal representation of the state | faithfulness, grounding, and two further criteria |
-| [Song et al. (2025b)](/papers/song2025-privileged-self-access) | it comes from a process that tells the model about its states more reliably than any process of equal or lower cost available to a third party | adds [privileged access](/concepts/privileged-access) |
-| [Pearson-Vogel et al. (2026)](/papers/pearson-vogel2026-latent-introspection) | it is accurate, causally connected to the state, and unavailable to third parties without special access | all three |
-| [Binder et al. (2024)](/papers/binder2024-looking-inward) | it reflects knowledge about the model that could not be learned from its training data | closest to privileged access |
-| [Song, Hu & Mahowald (2025a)](/papers/song2025-fail-to-introspect) | prompted answers predict the model's own string probabilities better than they predict a near-identical model's | faithfulness, privileged access |
+| Paper | A self-report is introspection if |
+|---|---|
+| [Comsa & Shanahan (2025)](/papers/comsa2025-speak-of-introspection) | it accurately describes an internal state through a causal process linking the state to the report |
+| [Atkinson et al. (2026)](/papers/atkinson2026-identifying-introspection) | it is accurate about the model's behavior and caused by the process it describes |
+| [Lindsey (2025)](/papers/lindsey2025-emergent-introspective-awareness) | it is accurate, grounded, internal (not routed through the model's own sampled output), and rests on an internal representation of the state |
+| [Song et al. (2025b)](/papers/song2025-privileged-self-access) | it comes from a process that tells the model about its states more reliably than any process of equal or lower cost available to a third party |
+| [Pearson-Vogel et al. (2026)](/papers/pearson-vogel2026-latent-introspection) | it is accurate, causally connected to the state, and unavailable to third parties without special access |
+| [Binder et al. (2024)](/papers/binder2024-looking-inward) | it reflects knowledge about the model that could not be learned from its training data |
+| [Song, Hu & Mahowald (2025a)](/papers/song2025-fail-to-introspect) | prompted answers predict the model's own string probabilities better than they predict a near-identical model's |
 
 ## Where they part
 
@@ -29,4 +29,4 @@ This wiki uses the definition of [Atkinson et al. (2026)](/papers/atkinson2026-i
 
 **Is a same-model advantage introspection?** Binder et al. read a model predicting itself better than another model can as introspection. Song, Hu and Mahowald find the advantage disappears against a near-identical model. Lindsey prefers to call it self-modeling.
 
-The [papers table](/papers) records, for each paper, which of faithfulness, grounding and privileged access it tested.
+This wiki does not yet take a side on these, and does not label papers by which definition they meet.

@@ -35,23 +35,15 @@ A page marked *stub* has only bibliographic details and a one-line description. 
 
 ## The evidence card
 
-Each full paper page carries a card with the same fields, so papers can be compared.
+Each full paper page carries a card with the same three fields, so papers can be compared.
 
 **What the model reports on.** The internal state or process the self-report is about: learned preferences, an injected concept, its own future output.
 
 **Methods.** One or more of: `behavioral` (prompting and scoring outputs), `fine-tuning`, `self-prediction`, `concept-injection`, `patching`, `ablation`, `probing`, `circuit-analysis`, `conceptual` (argument without experiment).
 
-**Faithfulness, grounding, privileged access.** For each property, whether the paper:
+**Models.** The models the paper studied.
 
-- *tested* it: ran an experiment that measures it;
-- *argued* about it: claimed or discussed it without measuring it;
-- did *not address* it.
-
-These say what a paper examined, not what it found. [Privileged access](/concepts/privileged-access) is the further requirement that a model know itself better than an outside observer could.
-
-**Stance.** The paper's own conclusion: `supports` (evidence that models introspect, in its setting), `skeptical` (evidence that they do not, or that apparent introspection has another explanation), `mixed`, or `framework` (it defines terms or proposes a test without reporting a result either way).
-
-The card is an editorial judgment made by the same process that drafts the summary. The [papers table](/papers) shows all of them together.
+The wiki does not yet label papers by which property they establish, or by whether they come out for or against introspection. Those judgments, and the question of whether [privileged access](/concepts/privileged-access) is something separate from grounding, are still open. The [papers table](/papers) shows the cards together.
 
 ## The frontier
 

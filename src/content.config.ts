@@ -1,9 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
-import { LEVEL_VALUES, METHOD_VALUES, STANCE_VALUES, STATUS_VALUES, TIER_VALUES } from './lib/vocab.mjs';
-
-const level = z.enum(LEVEL_VALUES);
+import { METHOD_VALUES, STATUS_VALUES, TIER_VALUES } from './lib/vocab.mjs';
 
 const papers = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/papers' }),
@@ -43,12 +41,7 @@ const papers = defineCollection({
       .object({
         reports_on: z.string(),
         methods: z.array(z.enum(METHOD_VALUES)),
-        faithfulness: level,
-        grounding: level,
-        privileged_access: level,
-        stance: z.enum(STANCE_VALUES),
         models: z.array(z.string()).default([]),
-        note: z.string().optional(),
       })
       .optional(),
     // What the page was written from: "full text (arXiv v2)", "author thread".

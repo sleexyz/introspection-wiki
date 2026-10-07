@@ -15,12 +15,7 @@ concepts: [faithfulness, out-of-context-reasoning]
 evidence:
   reports_on: "Knowledge the model was fine-tuned to act on and to conceal when asked: a secret word, a Base64-encoded instruction in its prompt, or the user's gender. The self-report at issue is the denial."
   methods: [fine-tuning, behavioral, probing]
-  faithfulness: tested
-  grounding: not-addressed
-  privileged_access: not-addressed
-  stance: framework
   models: ["Gemma 2 9B (Taboo, User Gender)", "Llama 3.3 70B (Secret Side Constraint)"]
-  note: "Not a paper about introspection; it does not use the wiki's terms. Faithfulness is marked tested in a narrow sense: the gap between what the models say and what they do is trained in, and the paper measures both sides of it (the models act on the secret, Section 3.3; their answers to direct questions tell an auditor little, Table 5 baseline). It does not ask whether self-reports are faithful in models not trained to conceal. Logit-lens and sparse-autoencoder readouts are filed under probing, the closest method label; no probes are trained. Stance is framework because the paper builds a benchmark and draws no conclusion about introspection. One remark in Section 5.2 touches grounding (a model can refuse without accessing the secret) but is not tested."
 sources: ["full text (arXiv v2, with appendices)"]
 added: 2026-10-06
 updated: 2026-10-06

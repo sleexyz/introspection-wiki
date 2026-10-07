@@ -28,4 +28,4 @@ An intervention can cause an accurate report by a path that skips the state it w
 
 ## Related
 
-[Privileged access](/concepts/privileged-access) is a further requirement some authors add on top of a causal link.
+Some authors add [privileged access](/concepts/privileged-access) as a further requirement on top of a causal link. Whether it is a separate property is not settled, and this wiki does not yet treat it as one.

@@ -1,7 +1,7 @@
 ---
 import PaperLink from '../components/PaperLink.astro';
 import Base from '../layouts/Base.astro';
-import { EVIDENCE_LABELS, citeAs, loadWiki } from '../lib/wiki';
+import { citeAs, loadWiki } from '../lib/wiki';
 
 const wiki = await loadWiki();
 ---
@@ -9,11 +9,6 @@ const wiki = await loadWiki();
 <Base title="Papers" path="/papers" description="Every paper page in the wiki, with its evidence card." wide>
   <h1>Papers</h1>
   <p class="lede">Every paper page, with its evidence card.</p>
-  <p>
-    The three middle columns say whether a paper <em>tested</em> a property, <em>argued</em> about it without testing
-    it, or did not address it. They do not say what it found; the stance column does.
-    <a href="/about#the-evidence-card">Definitions</a>.
-  </p>
   <div class="scroll">
     <table class="matrix">
       <thead>
@@ -21,10 +16,8 @@ const wiki = await loadWiki();
           <th>Paper</th>
           <th>Tier</th>
           <th>Reports on</th>
-          <th>Faithfulness</th>
-          <th>Grounding</th>
-          <th>Privileged access</th>
-          <th>Stance</th>
+          <th>Methods</th>
+          <th>Models</th>
         </tr>
       </thead>
       <tbody>
@@ -42,13 +35,11 @@ const wiki = await loadWiki();
                 {e ? (
                   <Fragment>
                     <td>{e.reports_on}</td>
-                    <td class={e.faithfulness}>{EVIDENCE_LABELS[e.faithfulness]}</td>
-                    <td class={e.grounding}>{EVIDENCE_LABELS[e.grounding]}</td>
-                    <td class={e.privileged_access}>{EVIDENCE_LABELS[e.privileged_access]}</td>
-                    <td>{e.stance}</td>
+                    <td>{e.methods.join(', ')}</td>
+                    <td>{e.models.join(', ') || 'n/a'}</td>
                   </Fragment>
                 ) : (
-                  <td colspan="5" class="not-addressed">
+                  <td colspan="3" class="not-addressed">
                     stub: no summary yet
                   </td>
                 )}

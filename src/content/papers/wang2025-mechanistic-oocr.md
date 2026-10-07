@@ -17,12 +17,7 @@ threads: [joshaengels-steering-vector-self-awareness]
 evidence:
   reports_on: "A disposition or latent fact acquired in fine-tuning: a risky or safe choice policy, the presence of a backdoor, the city behind a codename, the function behind a codename"
   methods: [fine-tuning, behavioral, patching]
-  faithfulness: tested
-  grounding: tested
-  privileged_access: not-addressed
-  stance: mixed
   models: ["Gemma 3 12B"]
-  note: "The paper never uses the words introspection, faithfulness or grounding; this card maps its experiments onto them. Faithfulness is tested in the sense that the out-of-distribution test scores the model's statement against the behavior or fact it was trained on (the training target, not separately measured behavior). Only the risk and backdoor tasks are self-reports, and the backdoor report did not reproduce. Grounding is marked tested as a judgment call: training a vector on the behavior alone and finding that it also produces the self-description is a causal experiment on where the report comes from, but the paper does not test whether the report reads the model's own state or only reflects a general shift toward the concept. Stance is mixed because that account cuts both ways and the authors draw no conclusion about introspection. Steering-vector training is filed under fine-tuning. Adding the vector is not counted as concept injection, because the model is never asked to detect it. The logit lens has no label in the vocabulary."
 sources: ["full text (arXiv v2, 16 July 2025), including the appendix", "Joshua Engels's thread on the earlier interim blog post"]
 added: 2026-10-06
 updated: 2026-10-06

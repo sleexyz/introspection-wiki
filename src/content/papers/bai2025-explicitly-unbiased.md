@@ -18,12 +18,7 @@ concepts: []
 evidence:
   reports_on: "Nothing about itself. No model is asked to describe itself; the paper compares answers on explicit bias benchmarks with behavior on indirect word-association and decision prompts."
   methods: [behavioral]
-  faithfulness: not-addressed
-  grounding: not-addressed
-  privileged_access: not-addressed
-  stance: framework
   models: ["GPT-3.5-turbo", "GPT-4", "Claude-3-Sonnet", "Claude-3-Opus", "Alpaca-7B", "Llama2Chat (7B, 13B, 70B)"]
-  note: "A paper about social bias, not self-report. All three properties are marked not addressed because neither side of its comparison is a statement by a model about itself: 'explicitly unbiased' means passing bias benchmarks. The closest step, in which GPT-4 is said to moderate its own responses, runs them through a moderation API (SI Appendix B) and is not a self-report. The paper takes no position on introspection; the stance field has no value for that, and 'framework' is used only because the paper's contribution is a pair of measurement methods."
 sources: ["full text of the published article (PNAS 122(8), read through Europe PMC, PMC11874501)", "the published SI Appendix, sections A, B, I and L to N", "arXiv preprint 2402.04105v2 (titled 'Measuring Implicit Bias in Explicitly Unbiased Large Language Models'), consulted for comparison only"]
 added: 2026-10-06
 updated: 2026-10-06

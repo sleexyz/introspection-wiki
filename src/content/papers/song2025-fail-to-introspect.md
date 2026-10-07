@@ -15,12 +15,7 @@ concepts: [faithfulness, grounding, privileged-access]
 evidence:
   reports_on: "Its own string probabilities: which of two sentences, or which of two next words, the model assigns more probability to"
   methods: [behavioral, self-prediction]
-  faithfulness: tested
-  grounding: argued
-  privileged_access: tested
-  stance: skeptical
   models: ["OLMo-2 (7B, 13B, with seed variants)", "Qwen-2.5 (1.5B to 72B)", "Llama-3.1 (8B to 405B)", "Llama-3.3-70B-Instruct", "Mistral-Large-Instruct-2411"]
-  note: "The paper defines introspection as privileged access: a same-model advantage in predicting string probabilities from prompted answers, after controlling for model similarity. Faithfulness is tested as the within-model agreement between prompted answers and probabilities. Grounding is marked argued because there is no intervention: the conclusion that metalinguistic knowledge is dissociated from the knowledge used to generate strings rests on correlations. self-prediction is listed because the design asks whether a model 'can predict itself better than it can predict another extremely similar model', although most prompts ask for a grammaticality judgment, not a forecast of the model's own output. The result is a null, and the authors allow that other settings could differ."
 sources: ["full text (arXiv v3, the COLM 2025 version, with appendices A to G)"]
 added: 2026-10-06
 updated: 2026-10-06
@@ -30,7 +25,7 @@ updated: 2026-10-06
 
 The paper asks whether a model's answers to questions about language ("Which sentence is grammatically correct?") reflect access to its own knowledge of language. For 21 open-source models it compares each model's prompted answers with the probabilities that it, and every other model, assigns to the same strings. Prompted answers track probabilities, and track them better the more similar two models are. But a model's answers predict its own probabilities no better than those of a near-identical model. The authors conclude that prompted metalinguistic knowledge is real but dissociated from the knowledge a model uses to assign probabilities to strings.
 
-Introspection is operationalized as "the degree to which a model's prompt-based responses predict its own string probabilities, beyond what would be predicted by another model with nearly identical internal knowledge" (§1). In this wiki's terms the paper measures [faithfulness](/concepts/faithfulness) and [privileged access](/concepts/privileged-access). It runs no intervention, so it argues about [grounding](/concepts/grounding) without testing it.
+Introspection is operationalized as "the degree to which a model's prompt-based responses predict its own string probabilities, beyond what would be predicted by another model with nearly identical internal knowledge" (§1).
 
 ## What the paper does
 

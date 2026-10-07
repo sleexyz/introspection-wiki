@@ -15,12 +15,7 @@ concepts: [faithfulness, grounding, privileged-access]
 evidence:
   reports_on: "Two targets, each reported in the same response as a text the model has just written: the process behind a short poem, and whether its own sampling temperature is high or low"
   methods: [conceptual]
-  faithfulness: argued
-  grounding: argued
-  privileged_access: argued
-  stance: framework
   models: ["Gemini Pro 1.5", "Gemini Pro 1.0"]
-  note: "The paper prints sample Gemini outputs but says its goals are conceptual, not empirical, and it scores nothing. So the only method is `conceptual` and all three properties are `argued`. Stance is `framework` because the result is a definition and a verdict on two examples (one rejected, one accepted as a minimal case), not a measurement. Privileged access is `argued` because the definition follows accounts that downgrade it and does not require it, not because the paper claims models have it."
 sources: ["full text (arXiv v2, including Appendix A)"]
 added: 2026-10-06
 updated: 2026-10-06

@@ -13,7 +13,7 @@ import path from 'node:path';
 import { parse } from 'yaml';
 import { MAP_FENCE, parseMap } from '../src/lib/experiment-map.mjs';
 import { EXPERIMENT_FENCE, parseExperiment } from '../src/lib/experiment.mjs';
-import { LEVEL_VALUES, METHOD_VALUES, STANCE_VALUES, STATUS_VALUES, TIER_VALUES } from '../src/lib/vocab.mjs';
+import { METHOD_VALUES, STATUS_VALUES, TIER_VALUES } from '../src/lib/vocab.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const CONTENT = path.join(ROOT, 'src/content');
@@ -112,8 +112,11 @@ for (const file of files) {
     if (!e.reports_on) say(file, 'evidence.reports_on is empty');
     for (const m of e.methods ?? []) oneOf(file, 'evidence.methods', m, METHOD_VALUES);
     if (!e.methods?.length) say(file, 'evidence.methods is empty');
-    for (const f of ['faithfulness', 'grounding', 'privileged_access']) oneOf(file, `evidence.${f}`, e[f], LEVEL_VALUES);
-    oneOf(file, 'evidence.stance', e.stance, STANCE_VALUES);
+    // The wiki no longer labels papers by which property they tested or by
+    // stance; flag the old fields so they do not creep back.
+    for (const f of ['faithfulness', 'grounding', 'privileged_access', 'stance', 'note']) {
+      if (f in e) say(file, `evidence.${f} is no longer used; remove it`);
+    }
   }
 }
 

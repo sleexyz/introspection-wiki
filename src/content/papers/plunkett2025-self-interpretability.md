@@ -16,12 +16,7 @@ concepts: [faithfulness, grounding, privileged-access]
 evidence:
   reports_on: "Attribute weights in two-option choices: how heavily the model weighs each of five attributes, both for preferences instilled by fine-tuning and for preferences it has natively"
   methods: [fine-tuning, behavioral]
-  faithfulness: tested
-  grounding: argued
-  privileged_access: argued
-  stance: supports
   models: ["GPT-4o (2024-08-06)", "GPT-4o-mini (2024-07-18)"]
-  note: "Faithfulness is measured directly: reported weights are correlated with the weights inferred from the model's own choices. Grounding is marked argued: the design rules out two ungrounded sources (common sense, and reading its own choices in context), but no experiment tests whether the report is caused by the decision process, and the authors say the reports could come from stored self-knowledge updated by fine-tuning. Privileged access is marked argued: the paper claims \"privileged insight\" because an off-the-shelf model's reports do not predict the fine-tuned model's weights, but it does not compare the self-report with an outside predictor that has seen the model's choices. Stance is supports because the paper concludes that models can accurately report these features; the authors say they do not know whether the models introspect to do it."
 sources: ["full text (arXiv v2, 10 November 2025), including appendices"]
 added: 2026-10-06
 updated: 2026-10-06

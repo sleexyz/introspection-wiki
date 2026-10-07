@@ -14,12 +14,7 @@ concepts: [faithfulness, grounding]
 evidence:
   reports_on: "How it computed an answer: the steps it states in a chain of thought or in an explanation given afterwards. Also whether it knows the answer to a question."
   methods: [circuit-analysis, patching, ablation, behavioral]
-  faithfulness: tested
-  grounding: tested
-  privileged_access: not-addressed
-  stance: mixed
   models: ["Claude 3.5 Haiku", "Claude 3.5 Haiku fine-tuned with a hidden objective (the model of Marks et al. 2025)"]
-  note: "The paper is not framed as a study of introspection and never uses the word grounding. Faithfulness is marked tested because four prompts compare what the model says it computed with a traced mechanism; these are single examples, and no rate is measured. Grounding is marked tested because the attribution graphs and feature interventions measure what a stated reasoning step, or a statement of ignorance, causally depends on. For the addition explanation the cause is only argued: the graph was computed for the answer, not for the explanation. Stance is mixed: one chain of thought matches the mechanism and two do not, and the authors leave open whether the known-answer circuit is metacognition or a guess from familiarity. Methods: feature inhibition is listed as ablation; the paper's interventions use what it calls constrained patching; behavioral covers asking the model how it added and varying the hinted answer."
 sources: ["full text (HTML at transformer-circuits.pub; the companion methods paper was not read). Read in full: Introduction, Method Overview, Multi-step Reasoning, Addition, Medical Diagnoses, Entity Recognition and Hallucinations, Chain-of-thought Faithfulness, Uncovering Hidden Goals in a Misaligned Model, Commonly Observed Circuit Components and Structure, Limitations, Discussion, Related Work, Open Questions. Skimmed: Planning in Poems, Multilingual Circuits, Refusals, Life of a Jailbreak", "the figures of the Addition, Entity Recognition and Hallucinations, and Chain-of-thought Faithfulness sections, for the prompts and transcripts they contain"]
 added: 2026-10-06
 updated: 2026-10-06

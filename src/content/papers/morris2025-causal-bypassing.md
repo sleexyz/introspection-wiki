@@ -14,12 +14,7 @@ concepts: [grounding, causal-bypassing, concept-injection, faithfulness]
 evidence:
   reports_on: "Whatever internal state or process an experiment intervenes on: fine-tuned preferences or decision rules, the influence of a cue in the prompt, an injected concept"
   methods: [conceptual]
-  faithfulness: argued
-  grounding: argued
-  privileged_access: not-addressed
-  stance: framework
   models: []
-  note: "A blog post with no experiments, so nothing is tested and no models are listed. Grounding is its subject. Faithfulness is marked argued because the post takes an accurate report as given and argues that accuracy does not establish grounding; it does not discuss how to measure accuracy. Stance is framework: the post names a confound and a criterion for tests, and does not conclude that models do or do not introspect. It puts tests with no intervention, such as Binder et al.'s, out of scope, and does not compare a model's report with an outside observer's, so privileged access is not addressed."
 sources: ["full text (LessWrong post, with its footnotes and post-publication edit)", "the reader comment that the post's edit links to"]
 added: 2026-10-06
 updated: 2026-10-06

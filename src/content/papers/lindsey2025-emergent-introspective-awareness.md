@@ -17,12 +17,7 @@ threads: [anthropicai-introspective-awareness]
 evidence:
   reports_on: "Concepts injected into its residual-stream activations (whether one is present and which), and whether an earlier output of its own was intended"
   methods: [concept-injection, probing]
-  faithfulness: tested
-  grounding: tested
-  privileged_access: argued
-  stance: supports
   models: ["Claude Opus 4.1", "Claude Opus 4", "Claude Sonnet 4", "Claude Sonnet 3.7", "Claude Sonnet 3.5 (new)", "Claude Haiku 3.5", "Claude Opus 3", "Claude Sonnet 3", "Claude Haiku 3", "helpful-only variants", "base pretrained models"]
-  note: "Grounding is tested by construction: the experimenter sets the internal state and the report changes with it. Faithfulness is the paper's accuracy criterion, scored by whether the model names the injected concept. Privileged access is marked argued: responses count only if detection comes before the concept appears in the model's own output (the paper's internality criterion), and the author says this aligns with Song et al.'s privileged-access definition, but no outside predictor is compared. Stance is supports with the author's hedge: about 20% success at the best setting, and failures are the norm. `probing` stands for the cosine-similarity readout in the control experiment (§8); no probe is trained."
 sources: ["full text (arXiv v1 PDF, 2601.01828; the original web version at transformer-circuits.pub was not read)", "Anthropic's announcement thread"]
 added: 2026-10-06
 updated: 2026-10-06

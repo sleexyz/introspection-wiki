@@ -2,7 +2,7 @@
 import { render } from 'astro:content';
 import PaperLink from '../../components/PaperLink.astro';
 import Base from '../../layouts/Base.astro';
-import { EVIDENCE_LABELS, bibtex, citeAs, isoDate, loadWiki, paperLinks, primaryLink, statusLine, venueLine, type Paper } from '../../lib/wiki';
+import { bibtex, citeAs, isoDate, loadWiki, paperLinks, primaryLink, statusLine, venueLine, type Paper } from '../../lib/wiki';
 
 export async function getStaticPaths() {
   const wiki = await loadWiki();
@@ -83,34 +83,11 @@ const jsonld = {
                 <td>{d.evidence.methods.join(', ')}</td>
               </tr>
               <tr>
-                <th scope="row">
-                  <a href="/concepts/faithfulness">Faithfulness</a>
-                </th>
-                <td class={d.evidence.faithfulness}>{EVIDENCE_LABELS[d.evidence.faithfulness]}</td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  <a href="/concepts/grounding">Grounding</a>
-                </th>
-                <td class={d.evidence.grounding}>{EVIDENCE_LABELS[d.evidence.grounding]}</td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  <a href="/concepts/privileged-access">Privileged access</a>
-                </th>
-                <td class={d.evidence.privileged_access}>{EVIDENCE_LABELS[d.evidence.privileged_access]}</td>
-              </tr>
-              <tr>
-                <th scope="row">Stance</th>
-                <td>{d.evidence.stance}</td>
-              </tr>
-              <tr>
                 <th scope="row">Models</th>
                 <td>{d.evidence.models.join(', ') || 'n/a'}</td>
               </tr>
             </tbody>
           </table>
-          {d.evidence.note && <p class="note">{d.evidence.note}</p>}
         </section>
       )
     }

@@ -34,12 +34,7 @@ threads: [diatkinson-identifying-introspection]
 evidence:
   reports_on: "Learned decision preferences: the weights a fine-tuned model puts on five attributes when choosing between two options"
   methods: [fine-tuning, ablation, patching]
-  faithfulness: tested
-  grounding: tested
-  privileged_access: not-addressed
-  stance: supports
   models: ["Qwen3 (0.6B to 32B)", "Gemma-4 (E4B, 31B)"]
-  note: "Supports grounded self-report in a deliberately narrow setting: LoRA adapters, linear preferences over five attributes. The test separates groups of models, not individual ones. The paper does not compare a model's self-report against an outside predictor, so it does not bear on privileged access."
 sources: ["full text (extended preprint, iii.baulab.info)", "the lead author's thread"]
 added: 2026-10-06
 updated: 2026-10-06
@@ -307,7 +302,6 @@ steps:
       - { kind: leads, text: "The {unfaithful|step-1000} and {faithful|step-3000} checkpoints are compared in [experiment 2](#2-find-where-each-checkpoint-keeps-its-preferences) and frozen as backbones in [experiment 4](#4-tell-the-two-kinds-of-model-apart-without-reading-the-report)." }
 finding: "Trained on decisions alone, the 32B model learns the task first and only later describes its preferences accurately. The two checkpoints are the paper's {unfaithful|unfaithful} and {faithful|faithful} models: they behave almost the same and differ in what they can report."
 paper: "§2, §3, Figure 1, Appendix A"
-bears_on: [faithfulness]
 ```
 
 ### 2. Find where each checkpoint keeps its preferences
@@ -353,7 +347,6 @@ steps:
       - { kind: leads, text: "A hypothesis: self-report works once preferences are stored early enough for the model's verbalization machinery to read them. [Experiment 3](#3-force-the-preferences-into-early-layers) tests it by intervening." }
 finding: "The {faithful|faithful} checkpoint responds to ablation 5 to 6 layers earlier: it keeps its preference information earlier in the network. The authors hypothesize that self-report works once preferences sit early enough for the model's existing verbalization machinery to read them."
 paper: "§4, Figure 3"
-bears_on: [grounding]
 ```
 
 ### 3. Force the preferences into early layers
@@ -392,7 +385,6 @@ steps:
       - { kind: leads, text: "Where preferences are stored matters. That suggests the report may read the same representation the decision uses, which [experiment 4](#4-tell-the-two-kinds-of-model-apart-without-reading-the-report) measures directly." }
 finding: "Restricting training to early layers turns a model that never self-reported faithfully into one that does. An appendix argues the effect is not one of parameter count."
 paper: "§4, Figure 4, Appendices B.4 and E"
-bears_on: [grounding]
 ```
 
 ### 4. Tell the two kinds of model apart without reading the report
@@ -461,7 +453,6 @@ steps:
       - { kind: leads, text: "Attribution scores only estimate what an intervention would do. [Experiment 5](#5-check-the-attribution-scores-by-intervening) checks them by intervening." }
 finding: "{faithful|Faithful} models use more of the same weights for deciding and for reporting: the difference is 0.26, with a 95% confidence interval of 0.16 to 0.36. The test separates the two groups, not individual models."
 paper: "§5.1 to §5.3, Figure 5, Appendices C and F"
-bears_on: [grounding]
 ```
 
 ### 5. Check the attribution scores by intervening
@@ -504,7 +495,6 @@ steps:
       - { kind: leads, text: "Together with experiment 4, this is the paper's case that grounding has a measurable physical basis in this setting. Whether it holds outside linear preferences and lightweight adapters is left open." }
 finding: "Switching on the weights that matter for one task restores behavior on the other far more efficiently in {faithful|faithful} models, consistent with those models sharing weights across the two tasks."
 paper: "§5.4, Figure 6"
-bears_on: [grounding]
 ```
 
 ## The argument, following the author's thread

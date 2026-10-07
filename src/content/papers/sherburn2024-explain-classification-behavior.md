@@ -15,12 +15,7 @@ concepts: [faithfulness, grounding]
 evidence:
   reports_on: "The rule a model follows when labeling short text inputs True or False, such as \"contains the word W\", learned from few-shot examples or by fine-tuning"
   methods: [behavioral, fine-tuning]
-  faithfulness: tested
-  grounding: argued
-  privileged_access: not-addressed
-  stance: mixed
   models: ["GPT-3 (ada, babbage, curie, davinci)", "GPT-4", "fine-tuned davinci"]
-  note: "Faithfulness is tested against behavior: the paper first measures whether the model's classification, on ordinary and adversarial inputs, is closely approximated by a known rule, then scores the model's statement of that rule. Grounding is argued, not tested: the articulation prompt contains the same labeled examples as the classification prompt, and the authors say the benchmark cannot separate introspection from the most probable completion (§4, Appendix A). Stance is mixed because the paper concludes that current models struggle and that GPT-3 fails even after fine-tuning, while reporting early signs of the ability in GPT-4. No outside predictor is compared with the model, so privileged access is not addressed."
 sources: ["full text (arXiv v1, including appendices)"]
 added: 2026-10-06
 updated: 2026-10-06

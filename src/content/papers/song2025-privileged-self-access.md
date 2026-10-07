@@ -15,12 +15,7 @@ concepts: [privileged-access, grounding, faithfulness]
 evidence:
   reports_on: "Sampling temperature: whether the temperature at which the model generated a sentence was high or low"
   methods: [conceptual, behavioral]
-  faithfulness: tested
-  grounding: tested
-  privileged_access: tested
-  stance: skeptical
   models: ["GPT-4o", "GPT-4.1", "Gemini-2.0-flash", "Gemini-2.5-flash"]
-  note: "Mainly a definitional paper. Marked skeptical, not framework, because it also reports a result: no evidence of introspection under its own definition, with the hedge that larger or better models may differ. Faithfulness is tested in that Study 2 scores temperature reports for accuracy and Study 1 plots them against the actual temperature. Grounding is marked tested because Study 1 varies the actual temperature and the prompt framing separately and measures which one the report follows; the paper itself frames this as robustness and argues that a causal link is not sufficient. Privileged access is tested by Study 2's comparison of self-reflection with within-model and across-model prediction. The paper treats sampling temperature as an internal state; the card follows it."
 sources: ["full text (arXiv v1, including appendices A and B)"]
 added: 2026-10-06
 updated: 2026-10-06

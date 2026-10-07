@@ -15,12 +15,7 @@ concepts: [faithfulness, grounding, privileged-access]
 evidence:
   reports_on: "A target model's internals as measured by three interpretability procedures: what a residual-stream feature encodes, how patching an activation changes the output, and how removing a hint from the input changes the answer"
   methods: [fine-tuning, self-prediction, patching, ablation]
-  faithfulness: tested
-  grounding: argued
-  privileged_access: tested
-  stance: supports
   models: ["Llama-3.1-8B", "Llama-3.1-8B-Instruct", "Llama-3-8B", "Llama-3.1-70B", "Qwen3-8B", "Gemma-2-9B", "Gemma-2-9B-Instruct"]
-  note: "Faithfulness is scored against the output of an interpretability procedure, and the ability is trained in: untrained baselines score far lower. Privileged access is tested as a same-model advantage over other trained explainers, and close variants of the target do about as well as the target itself on feature descriptions. Grounding is marked argued: the authors attribute the advantage to access to internals and support it with a correlation between activation similarity and explainer score, but no experiment traces what causes a given explanation. The explainer is a fine-tuned copy describing the frozen original, which the authors call self-explanation in a looser sense. Patching and ablation are listed as methods because they supply the ground truth; self-prediction because two tasks ask the model to predict its own output under an intervention."
 sources: ["full text (arXiv v3, 9 Feb 2026, with appendices A to H)"]
 added: 2026-10-06
 updated: 2026-10-06

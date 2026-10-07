@@ -17,12 +17,7 @@ threads: [owainevans-taken-out-of-context]
 evidence:
   reports_on: "Nothing about itself. The model is fine-tuned on written descriptions of fictitious chatbots; it is tested on answering as the described chatbot would and, in some tests, on restating the description."
   methods: [fine-tuning, behavioral, conceptual]
-  faithfulness: not-addressed
-  grounding: not-addressed
-  privileged_access: not-addressed
-  stance: framework
   models: ["GPT-3 base models (ada, babbage, curie, davinci)", "LLaMA-1 (7B, 13B)"]
-  note: "Not a paper about self-report, so none of the three properties is measured. Stance is framework because the paper defines situational awareness and proposes out-of-context reasoning as a measurable component of it; it reports no result on whether models introspect, and the authors believe base models at GPT-3's level have at best weak situational awareness. The conceptual method covers that definition (§2.1, Appendix F), which is argued and not tested. Experiment 3's control comparison shows that training documents cause a behavior. That is causal evidence about training data, not about a report being caused by the state it describes, so grounding stays not-addressed. The comparison of recalling a description with acting on it (Figure 6b) concerns descriptions of other chatbots, so it is not counted as a faithfulness test."
 sources: ["full text (arXiv v1, with appendices)", "the last author's thread"]
 added: 2026-10-06
 updated: 2026-10-06

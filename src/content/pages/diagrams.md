@@ -158,7 +158,7 @@ The small head is the mark for a model. It takes the color of the model it stand
 
 ## Under each diagram
 
-The caption states the finding in a sentence. Below it are the sections of the paper the diagram was drawn from, and which of [faithfulness](/concepts/faithfulness), [grounding](/concepts/grounding) and [privileged access](/concepts/privileged-access) the experiment bears on.
+The caption states the finding in a sentence. Below it are the sections of the paper the diagram was drawn from.
 
 ## For language models
 

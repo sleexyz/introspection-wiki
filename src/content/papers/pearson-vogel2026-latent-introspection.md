@@ -17,12 +17,7 @@ threads: [voooooogel-latent-introspection]
 evidence:
   reports_on: "Whether a concept vector was injected into its activations during an earlier conversational turn, and which of nine concepts it was"
   methods: [concept-injection, behavioral, probing]
-  faithfulness: tested
-  grounding: tested
-  privileged_access: argued
-  stance: supports
   models: ["Qwen2.5-Coder-32B-Instruct", "Llama 3.3 70B Instruct", "Qwen2.5-72B-Instruct"]
-  note: "The report that is scored is the probability of the next token (\"yes\", \"no\" or a digit) and logit-lens readouts of intermediate layers, not sampled text; under the baseline prompt the most likely answer stays \"no\". Faithfulness and grounding are marked tested because the answer is scored against a known injection that is switched off before the question, with control questions. Privileged access is argued: the paper's definition requires it and the authors say the task needs access to transient internal states, but no outside predictor is compared. The logit lens is recorded as probing, the nearest method label. The two larger models are single-seed replications."
 sources: ["full text (arXiv v2), including appendices B to G", "the lead author's thread"]
 added: 2026-10-06
 updated: 2026-10-06
@@ -32,7 +27,7 @@ updated: 2026-10-06
 
 The paper asks whether a model can tell that a concept was injected into its activations during an earlier turn, after the injection has stopped. In Qwen2.5-Coder-32B the most likely answer under the baseline prompt stays "no". But the probability of "yes" moves with the injection, and the logit lens shows a strong signal in intermediate layers that the last layers weaken. How much reaches the output depends on the prompt.
 
-The authors define introspection as accurate report on one's own internal states that is causally connected to those states and unavailable to third parties without special access (§1, citing [Song et al. 2025](/papers/song2025-privileged-self-access) and [Comsa & Shanahan 2025](/papers/comsa2025-speak-of-introspection)): in this wiki's terms, [faithfulness](/concepts/faithfulness), [grounding](/concepts/grounding) and [privileged access](/concepts/privileged-access). They call what they measure "only one facet of introspection".
+The authors define introspection as accurate report on one's own internal states that is causally connected to those states and unavailable to third parties without special access (§1, citing [Song et al. 2025](/papers/song2025-privileged-self-access) and [Comsa & Shanahan 2025](/papers/comsa2025-speak-of-introspection)). They call what they measure "only one facet of introspection".
 
 ## The argument, following the author's thread
 

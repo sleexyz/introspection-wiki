@@ -163,12 +163,6 @@ export const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 export const longDate = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 
-export const EVIDENCE_LABELS = {
-  tested: 'tested',
-  argued: 'argued, not tested',
-  'not-addressed': 'not addressed',
-} as const;
-
 export function bibtex(p: Paper): string {
   const { title, authors, year, venue, links } = p.data;
   const key = p.id.split('-')[0];

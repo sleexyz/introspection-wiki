@@ -15,12 +15,7 @@ threads: [owainevans-connecting-the-dots]
 evidence:
   reports_on: "Not a self-report: latent facts implied by its fine-tuning data (the identity of an unknown city, a coin's bias, a function's definition, the values of Boolean variables), which it was never trained to state"
   methods: [fine-tuning, behavioral]
-  faithfulness: not-addressed
-  grounding: not-addressed
-  privileged_access: not-addressed
-  stance: framework
   models: ["GPT-3.5", "GPT-4", "Llama 3 (8B, 70B)"]
-  note: "The paper is not about self-report, so all three properties are not-addressed. Verbalized answers are scored against the true latent, not against the model's own behavior. The one exception is Appendix D.5, which rescored stated coin biases against the bias the models had actually learned and called the result inconclusive; that is too slight to mark faithfulness as tested. There is no mechanistic analysis (the authors list it as future work) and no comparison with an outside observer. Stance is `framework` as the nearest fit: the paper defines inductive out-of-context reasoning and builds tasks for it, and draws no conclusion about introspection."
 sources: ["full text (arXiv v3, the NeurIPS 2024 version)", "a thread by co-author Owain Evans"]
 added: 2026-10-06
 updated: 2026-10-06
