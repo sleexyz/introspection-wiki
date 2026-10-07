@@ -56,8 +56,16 @@ introductory prose: the page goes straight from "At a glance" into the map.
      `kind: method`; a new setup or a new test is often the main contribution.
      Draw them from the abstract, the paper's own list of contributions and
      its conclusion, and from the authors' threads, which show what the
-     authors themselves think matters most. End with what the result does not
-     yet cover.
+     authors themselves think matters most.
+     Write them for someone who has not read the paper: high-level, specific,
+     and short, with no term the reader has not been given ("accurate", not
+     "faithful"; "a point in training", not "a checkpoint"). The title is the
+     point in plain words. For a new method, say first the general class of
+     problem it addresses, then the general shape of the solution, then what
+     it did here with the number. One experiment does not generalize by
+     itself, so say what might carry over and mark it as a possibility. End
+     with a takeaway that states the limits and the general idea they leave
+     standing.
    - `questions`: the question the paper set out to answer, with its answer,
      and beneath it the questions it broke that into, each with its answer and
      the key number. A shallow tree: the leading question, then at most two

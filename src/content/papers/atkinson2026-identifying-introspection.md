@@ -33,19 +33,19 @@ concepts: [faithfulness, grounding, causal-bypassing, out-of-context-reasoning]
 threads: [diatkinson-identifying-introspection, davidbau-identifying-introspection]
 takeaways:
   - kind: method
-    title: "A way to look inside introspection."
-    text: "Train an open model on a character's choices and nothing else, and stop at two points. At step 1000 it makes the choices well and describes them badly; at step 3000 it does both. The two checkpoints differ in little except whether the model can report on itself, and their weights can be inspected."
+    title: "A controlled comparison: the same model before and after it can describe itself accurately."
+    text: "The problem: to learn what makes a model's description of itself accurate, you need two models that differ in that and in little else. The approach: teach a model a task whose true description only the experimenter knows, then compare an early and a late point in the same training run. Here a model taught to choose on behalf of characters with hidden preferences states those preferences wrongly at one point ({unfaithful|0.25} agreement with its own choices) and rightly later ({faithful|0.83}), while choosing about equally well. The recipe should transfer to any learned behavior whose ground truth is known."
     see: "#1-train-on-decisions-then-ask-about-them"
-  - title: "Accurate self-report arrives late, and nobody trained it."
-    text: "Faithfulness goes from about {unfaithful|0.25} to {faithful|0.83} after three times as much training on decisions alone. It happened only in the largest model tried."
-  - title: "The faithful model keeps what it learned somewhere else."
-    text: "Its preference information sits 5 to 6 layers earlier. Confining training to the early layers makes a model that never reported faithfully start to (0.74)."
+  - title: "Being good at a task does not mean a model can say how it does it."
+    text: "The model was trained only to make choices. An accurate account of how it chooses appeared on its own, but only after three times as much of the same training, and only in the largest model tried. Skill and self-knowledge arrive separately, so one cannot be read off the other."
+  - title: "Where a model stores what it learned affects whether it can report it."
+    text: "The model that describes itself accurately keeps the learned preferences 5 to 6 layers earlier in the network, and forcing a model to learn in its early layers made an inaccurate one accurate. The suggestion is that knowledge has to sit where the model's existing machinery for putting things into words can reach it. If that holds more widely, it is a lever for building models that can report on themselves."
   - kind: method
-    title: "A test for grounded self-report that never reads the report."
-    text: "Score every weight for how much it matters to deciding and to reporting, and compare the two. {faithful|Faithful} models share more ({faithful|0.34} against {unfaithful|0.08}), and switching weights on and off bears it out. The test would still apply to a report in a language the experimenter cannot read."
+    title: "A way to check a self-report without knowing the right answer."
+    text: "The problem: verifying what a model says about itself normally needs an independent ground truth, which does not exist for claims about its internal reasoning. The approach: check where the statement comes from, not what it says, by measuring how far the parts of the network that produce a behavior are also the parts that produce the description of it. Here that overlap is {faithful|0.34} in accurate models against {unfaithful|0.08} in inaccurate ones, and switching those parts on and off bears it out. Because the test never reads the statement, the idea could extend to self-reports that nobody can check."
     see: "#4-tell-the-two-kinds-of-model-apart-without-reading-the-report"
-  - title: "The same model can describe itself accurately or make it up."
-    text: "From its behavior the two look alike. The paper's case is that the difference is physical and can be found inside the model. So far that holds for simple preferences in lightweight adapters, and between groups of models, not single ones."
+  - title: "One narrow experiment, pointing at a general possibility."
+    text: "Everything here is simple numeric preferences, learned by small add-on modules in one family of models, and the test tells groups of models apart, not single ones. What may carry over is the principle: an accurate self-report and a made-up one differ physically inside the model, so the difference can in principle be found without trusting what the model says."
 questions:
   q: "Is there something inside a model that separates a self-report that reads off the real process from one that only happens to be right?"
   a: "In this setting, yes. {faithful|Faithful} models run deciding and reporting through the same weights and {unfaithful|unfaithful} models do not, and that overlap can be measured without reading the report."
