@@ -19,6 +19,10 @@
   --report: #1c7a35;
   --unfaithful: #c0455a;
   --faithful: #2f6aa8;
+  --link: #36c;
+  --link-hover: #3056a9;
+  --link-visited: #6a60b0;
+  --link-visited-hover: #534fa3;
   --stub: #bf3c2c;
   --stub-hover: #9f3526;
   --stub-visited: #9f5555;
@@ -44,6 +48,10 @@
     --report: #6cc487;
     --unfaithful: #f08a98;
     --faithful: #86b5e6;
+    --link: #88a3e8;
+    --link-hover: #b0c1f0;
+    --link-visited: #a799cd;
+    --link-visited-hover: #c5b9dd;
     --stub: #fd7865;
     --stub-hover: #fea898;
     --stub-visited: #c99391;
@@ -70,6 +78,18 @@ main.wide { max-width: 1040px; }
 a { color: var(--text); text-underline-offset: 2px; }
 a:hover { color: var(--muted); }
 a:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+
+/* Links in a page's content, in Wikipedia's colors: blue, and purple once
+   visited, whether the link stays in the wiki or leaves it (one that leaves
+   also gets an arrow, below). A locator on a paper page is left out: there
+   are hundreds to a page, and each is a control for the paper beside it more
+   than a link. :where() keeps these rules weak, so that the site's own
+   furniture (the nav, the contents rail, a diagram's titles) keeps the colors
+   set for it further down. */
+:where(.page) a:where([href]:not(.cite)) { color: var(--link); }
+:where(.page) a:where([href]:not(.cite)):visited { color: var(--link-visited); }
+:where(.page) a:where([href]:not(.cite)):hover { color: var(--link-hover); }
+:where(.page) a:where([href]:not(.cite)):visited:hover { color: var(--link-visited-hover); }
 
 /* A link that leaves the wiki ends in a small arrow, so a reader can tell
    before following it. Internal links are site-relative, so "starts with http"
@@ -471,7 +491,6 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
 .kicker { font-size: 12px; color: var(--faint); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px; }
 .byline { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
 .links { font-size: 13px; color: var(--faint); margin-bottom: 20px; }
-.links a { color: var(--muted); }
 .lede { font-size: 15px; color: var(--strong); margin-bottom: 20px; }
 .note { font-size: 13px; color: var(--muted); }
 .draft {
