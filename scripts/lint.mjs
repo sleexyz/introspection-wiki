@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Check page frontmatter and internal links without running a build.
 //
-//   node scripts/lint.mjs                  every paper, concept, thread and outline
+//   node scripts/lint.mjs                  every paper, archived page, concept and thread
 //   node scripts/lint.mjs <file> [...]     just these
 //
 // The build is the real authority (it validates against the Astro schema), but
@@ -21,13 +21,13 @@ const ROOT = path.resolve(import.meta.dirname, '..');
 const CONTENT = path.join(ROOT, 'src/content');
 const ids = (dir, ext) =>
   new Set(fs.readdirSync(path.join(CONTENT, dir)).filter((f) => f.endsWith(ext)).map((f) => f.slice(0, -ext.length)));
-const known = { papers: ids('papers', '.md'), concepts: ids('concepts', '.md'), threads: ids('threads', '.json'), outlines: ids('outlines', '.md') };
+const known = { papers: ids('papers', '.md'), archive: ids('archive', '.md'), concepts: ids('concepts', '.md'), threads: ids('threads', '.json') };
 const STATIC_PAGES = new Set(['', 'papers', 'frontier', ...ids('pages', '.md')]);
 const threadLength = (id) => JSON.parse(fs.readFileSync(path.join(CONTENT, 'threads', `${id}.json`), 'utf8')).tweets.length;
 
 const files = process.argv.length > 2
   ? process.argv.slice(2).map((f) => path.resolve(f))
-  : ['papers', 'concepts', 'threads', 'pages', 'outlines'].flatMap((dir) =>
+  : ['papers', 'archive', 'concepts', 'threads', 'pages'].flatMap((dir) =>
       fs.readdirSync(path.join(CONTENT, dir)).map((f) => path.join(CONTENT, dir, f)));
 
 let problems = 0;
@@ -102,15 +102,23 @@ for (const file of files) {
   }
   links(file, body);
   if (!fm.summary) say(file, 'summary is empty');
-  if (kind === 'outlines') {
-    const id = path.basename(file, '.md');
-    if (!known.papers.has(id)) say(file, `is named for paper "${id}", which does not exist`);
-    if (!fm.sources?.length) say(file, 'an outline must list its sources');
-    // The reader beside the outline goes by what scripts/anchor.mjs found. A
+  if (kind === 'archive' && !known.papers.has(path.basename(file, '.md'))) {
+    say(file, 'is an earlier version of a paper page that does not exist');
+  }
+  if (kind !== 'papers') continue;
+
+  if (fm.format === 'outline') {
+    // "At a glance" belongs to the earlier format.
+    for (const f of ['questions', 'terms']) if (fm[f]) say(file, `${f} is not used by a page in the outline format; remove it`);
+    if (!fm.links?.pdf) say(file, 'an outline page needs links.pdf, the file shown beside it');
+    // The paper beside the page goes by what scripts/anchor.mjs found. A
     // quotation or locator added since the last run has no place in the paper.
+    const id = path.basename(file, '.md');
     const placed = path.join(ROOT, 'src/data/anchors', `${id}.json`);
-    if (fs.existsSync(placed)) {
+    if (!fs.existsSync(placed)) say(file, `has no src/data/anchors/${id}.json; run \`just paper ${id} <pdf-url>\` and \`just anchor ${id}\``);
+    else {
       const anchors = JSON.parse(fs.readFileSync(placed, 'utf8'));
+      if (anchors.pdf !== fm.links?.pdf) say(file, `links.pdf has changed since \`just anchor ${id}\` last ran`);
       const stale = body
         .split('\n')
         .filter((line) => !line.startsWith('!['))
@@ -120,8 +128,7 @@ for (const file of files) {
         );
       for (const t of stale) say(file, `${t.text} has no place in the paper yet; run \`just anchor ${id}\``);
     }
-  }
-  if (kind !== 'papers') continue;
+  } else if (fm.format) say(file, `format is "${fm.format}"; the only value is outline`);
 
   oneOf(file, 'tier', fm.tier, TIER_VALUES);
   oneOf(file, 'status', fm.status, STATUS_VALUES);

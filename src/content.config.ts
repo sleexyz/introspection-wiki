@@ -10,59 +10,71 @@ const takeaway = z.object({ title: z.string(), text: z.string(), why: z.string()
 const answered = z.object({ q: z.string(), a: z.string(), see: z.string().optional(), takeaways: z.array(takeaway).default([]) });
 const questions = answered.extend({ sub: z.array(answered.extend({ sub: z.array(answered).default([]) })).default([]) });
 
+const paper = z.object({
+  title: z.string(),
+  authors: z.array(z.string()).min(1),
+  year: z.number().int(),
+  date: z.coerce.date().optional(),
+  venue: z.string().optional(),
+  // seed: the paper the wiki grew from. core: about introspection itself.
+  // adjacent: a neighboring question the core work leans on.
+  tier: z.enum(TIER_VALUES),
+  // stub: metadata and a one-line description. full: written from the full text.
+  status: z.enum(STATUS_VALUES),
+  // Summaries are drafted by an AI model. This flips once a person has
+  // checked the page against the paper.
+  reviewed: z.boolean().default(false),
+  // outline: the page is the paper's outline, with the paper beside it. Absent:
+  // the earlier format, which opens with "At a glance" and the experiments.
+  format: z.enum(['outline']).optional(),
+  summary: z.string(),
+  links: z
+    .object({
+      arxiv: z.string(),
+      doi: z.string(),
+      url: z.string().url(),
+      pdf: z.string().url(),
+      code: z.string().url(),
+      project: z.string().url(),
+      s2: z.string(),
+    })
+    .partial()
+    .default({}),
+  // Ids of other pages. Citation edges found by the crawler are merged in at
+  // build time, so `cites` only needs what the crawler cannot see.
+  cites: z.array(z.string()).default([]),
+  concepts: z.array(z.string()).default([]),
+  threads: z.array(z.string()).default([]),
+  // "At a glance", the block at the top of a page: the takeaways (a new
+  // method is marked as one), the questions the paper asked with their answers, the terms its argument turns on as the paper
+  // itself defines them, and the bare facts of the setup.
+  questions: questions.optional(),
+  terms: z
+    .array(z.object({ term: z.string(), means: z.string(), where: z.string().optional(), concept: z.string().optional() }))
+    .default([]),
+  setup: z
+    .object({
+      reports_on: z.string(),
+      methods: z.array(z.enum(METHOD_VALUES)),
+      models: z.array(z.string()).default([]),
+    })
+    .optional(),
+  // What the page was written from: "full text (arXiv v2)", "author thread".
+  sources: z.array(z.string()).default([]),
+  added: z.coerce.date(),
+  updated: z.coerce.date(),
+});
+
 const papers = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/papers' }),
-  schema: z.object({
-    title: z.string(),
-    authors: z.array(z.string()).min(1),
-    year: z.number().int(),
-    date: z.coerce.date().optional(),
-    venue: z.string().optional(),
-    // seed: the paper the wiki grew from. core: about introspection itself.
-    // adjacent: a neighboring question the core work leans on.
-    tier: z.enum(TIER_VALUES),
-    // stub: metadata and a one-line description. full: written from the full text.
-    status: z.enum(STATUS_VALUES),
-    // Summaries are drafted by an AI model. This flips once a person has
-    // checked the page against the paper.
-    reviewed: z.boolean().default(false),
-    summary: z.string(),
-    links: z
-      .object({
-        arxiv: z.string(),
-        doi: z.string(),
-        url: z.string().url(),
-        pdf: z.string().url(),
-        code: z.string().url(),
-        project: z.string().url(),
-        s2: z.string(),
-      })
-      .partial()
-      .default({}),
-    // Ids of other pages. Citation edges found by the crawler are merged in at
-    // build time, so `cites` only needs what the crawler cannot see.
-    cites: z.array(z.string()).default([]),
-    concepts: z.array(z.string()).default([]),
-    threads: z.array(z.string()).default([]),
-    // "At a glance", the block at the top of a page: the takeaways (a new
-    // method is marked as one), the questions the paper asked with their answers, the terms its argument turns on as the paper
-    // itself defines them, and the bare facts of the setup.
-    questions: questions.optional(),
-    terms: z
-      .array(z.object({ term: z.string(), means: z.string(), where: z.string().optional(), concept: z.string().optional() }))
-      .default([]),
-    setup: z
-      .object({
-        reports_on: z.string(),
-        methods: z.array(z.enum(METHOD_VALUES)),
-        models: z.array(z.string()).default([]),
-      })
-      .optional(),
-    // What the page was written from: "full text (arXiv v2)", "author thread".
-    sources: z.array(z.string()).default([]),
-    added: z.coerce.date(),
-    updated: z.coerce.date(),
-  }),
+  schema: paper,
+});
+
+// A page as it stood before it was rewritten, kept at /archive/<id> and linked
+// from the page that replaced it. The file is named for the paper.
+const archive = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/archive' }),
+  schema: paper,
 });
 
 const concepts = defineCollection({
@@ -113,17 +125,4 @@ const pages = defineCollection({
   schema: z.object({ title: z.string(), summary: z.string(), updated: z.coerce.date() }),
 });
 
-// A trial format: a paper's outline, worked back from the finished paper. The
-// file is named for the paper it outlines and takes its title from that page.
-const outlines = defineCollection({
-  loader: glob({ pattern: '*.md', base: './src/content/outlines' }),
-  schema: z.object({
-    summary: z.string(),
-    reviewed: z.boolean().default(false),
-    sources: z.array(z.string()).default([]),
-    added: z.coerce.date(),
-    updated: z.coerce.date(),
-  }),
-});
-
-export const collections = { papers, concepts, threads, pages, outlines };
+export const collections = { papers, archive, concepts, threads, pages };

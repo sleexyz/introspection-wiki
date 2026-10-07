@@ -19,9 +19,13 @@ The wiki started from that one paper and grows outward along its citation graph.
 
 ## How pages are written
 
-Each paper page is drafted by an AI model (Claude) from the paper's full text. A page opens with the paper's experiments: a map that traces them from the question the paper starts with to its conclusion, showing what each experiment showed and what that prompted next, and then a diagram of how each experiment was run. [Reading the diagrams](/diagrams) explains the notation.
+Each paper page is drafted by an AI model (Claude) from the paper's full text. A page is the paper's outline: what the paper could have been written from. It opens with the paper in brief, then what the paper starts from, then its claims one at a time, each with its evidence, the objections it expects and how strongly the authors make it. After that it goes through how the paper itself is laid out, from the abstract to the appendices.
 
-After the experiments comes the authors' own thread about the paper, where they posted one: each post embedded, with the detail from the paper under it. A thread is usually the authors' densest account of what matters.
+On a wide screen the paper is shown beside the page. Every section number, figure number and quotation on the page is tied to its place in the paper: click one and the paper goes there and marks it.
+
+The text of a page reports what the paper and its authors say. Where the drafting model adds an observation of its own, it is set apart in a dashed box labelled *Note from Claude*.
+
+Most pages are still in the format the wiki started with and are being rewritten one at a time. Those open with "At a glance" and then the paper's experiments, drawn as a map and as diagrams ([Reading the diagrams](/diagrams) explains the notation), followed by the authors' own thread about the paper. When a page is rewritten, the earlier version is kept and linked from the new one.
 
 Every page says what it was written from and whether a person has reviewed it. Until then, treat specifics as a pointer to the paper, not a substitute for it. If you find an error, [open an issue](https://github.com/sleexyz/introspection-wiki/issues).
 
@@ -35,7 +39,7 @@ A page marked *stub* has only bibliographic details and a one-line description. 
 
 ## At a glance
 
-Every full paper page opens with the same short block, so a page can be skimmed and papers can be compared.
+Pages in the earlier format open with the same short block, so a page can be skimmed and papers can be compared.
 
 **Key takeaways.** Three to five boxed points that sit inside the tree of questions, each under the question it answers, so the boxes can be read alone. They are drawn from the abstract, the paper's own list of contributions and the authors' threads. A method the paper introduces is marked *new method*. Each box ends, below a dashed line, with *Why it matters*: a few sentences on what the point would mean beyond the paper if it holds more widely. Above the line is what the paper did and found. Below it is the wiki's reading of the significance, with anything the authors themselves say attributed to them.
 
@@ -62,7 +66,7 @@ The site is built to be read by machines as well as people.
 - [/robots.txt](/robots.txt) allows all crawlers and sets the content signals `search=yes, ai-input=yes, ai-train=yes`.
 - [/sitemap.xml](/sitemap.xml) and an Atom feed at [/feed.xml](/feed.xml).
 
-Pages are static HTML and read without JavaScript. Scripts add three things: X's embeds on thread pages, the marker in a page's contents list, and the paper shown beside an outline. The text of every page is there without them.
+Pages are static HTML and read without JavaScript. Scripts add three things: X's embeds on thread pages, the marker in a page's contents list, and the paper shown beside its page. The text of every page is there without them.
 
 ## Sources and credit
 

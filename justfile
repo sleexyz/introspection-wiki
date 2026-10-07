@@ -23,12 +23,17 @@ deploy: build
 thread *args:
     node scripts/thread.mjs {{args}}
 
-# Cut a figure out of a paper's PDF: just figure page <paper-id> <page>, then
+# Cut a figure out of a paper's PDF: just figure auto <paper-id> <figure-number> <name>,
+# or by hand: just figure page <paper-id> <page>, then
 # just figure crop <paper-id> <page> <x> <y> <w> <h> <name>
 figure *args:
     node scripts/figure.mjs {{args}}
 
-# Find an outline's locators and quotations in the paper's PDF: just anchor <paper-id>
+# Fetch a paper's PDF and list what is in it: just paper <paper-id> <pdf-url>
+paper *args:
+    node scripts/paper.mjs {{args}}
+
+# Find a page's locators and quotations in the paper's PDF, and check the page against it: just anchor <paper-id>
 anchor *args:
     node scripts/anchor.mjs {{args}}
 

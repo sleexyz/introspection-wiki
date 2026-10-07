@@ -1,4 +1,4 @@
-// Where an outline's locators and quotations sit in its paper's PDF, as
+// Where a paper page's locators and quotations sit in the paper's PDF, as
 // written by scripts/anchor.mjs. A paper with no such file gets no reader.
 export type Anchors = {
   pdf: string;

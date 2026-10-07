@@ -1,0 +1,14 @@
+---
+// An earlier version of a paper page, as it stood before it was rewritten.
+import PaperPage from '../../components/PaperPage.astro';
+import { loadWiki, type Archived } from '../../lib/wiki';
+
+export async function getStaticPaths() {
+  const wiki = await loadWiki();
+  return wiki.archive.map((paper) => ({ params: { id: paper.id }, props: { paper } }));
+}
+
+const { paper } = Astro.props as { paper: Archived };
+---
+
+<PaperPage paper={paper} archived />

@@ -13,7 +13,8 @@ export const SITE = {
 export type Paper = CollectionEntry<'papers'>;
 export type Concept = CollectionEntry<'concepts'>;
 export type Thread = CollectionEntry<'threads'>;
-export type Outline = CollectionEntry<'outlines'>;
+/** An earlier version of a paper page. It has the id of the paper and the same fields. */
+export type Archived = CollectionEntry<'archive'>;
 export type Tier = Paper['data']['tier'];
 
 export type Candidate = {
@@ -52,8 +53,8 @@ export type Wiki = {
   papers: Paper[];
   concepts: Concept[];
   threads: Thread[];
-  /** Each has the id of the paper it outlines. */
-  outlines: Outline[];
+  /** Earlier versions of paper pages, each with the id of its paper. */
+  archive: Archived[];
   paper: Map<string, Paper>;
   /** paper id -> ids of the wiki papers it cites */
   cites: Map<string, string[]>;
@@ -69,11 +70,11 @@ export function loadWiki(): Promise<Wiki> {
 }
 
 async function build(): Promise<Wiki> {
-  const [papers, concepts, threads, outlines] = await Promise.all([
+  const [papers, concepts, threads, archive] = await Promise.all([
     getCollection('papers'),
     getCollection('concepts'),
     getCollection('threads'),
-    getCollection('outlines'),
+    getCollection('archive'),
   ]);
   const tierRank = (p: Paper) => TIERS.findIndex((t) => t.tier === p.data.tier);
   papers.sort((a, b) => tierRank(a) - tierRank(b) || a.data.year - b.data.year || a.id.localeCompare(b.id));
@@ -97,7 +98,7 @@ async function build(): Promise<Wiki> {
     for (const id of p.data.threads) need(threadIds.has(id), `papers/${p.id}`, 'thread', id);
   }
   for (const t of threads) for (const id of t.data.papers) need(paper.has(id), `threads/${t.id}`, 'paper', id);
-  for (const o of outlines) need(paper.has(o.id), `outlines/${o.id}`, 'paper', o.id);
+  for (const a of archive) need(paper.has(a.id), `archive/${a.id}`, 'paper', a.id);
   // The crawler's edges are a snapshot; a page renamed since then just drops out.
   for (const [from, to] of crawledEdges as string[][]) if (paper.has(from) && paper.has(to)) pairs.add(`${from} ${to}`);
 
@@ -111,13 +112,13 @@ async function build(): Promise<Wiki> {
   const order = new Map(papers.map((p, i) => [p.id, i]));
   for (const list of [...cites.values(), ...citedBy.values()]) list.sort((a, b) => order.get(a)! - order.get(b)!);
 
-  return { papers, concepts, threads, outlines, paper, cites, citedBy };
+  return { papers, concepts, threads, archive, paper, cites, citedBy };
 }
 
 const lastName = (name: string) => name.trim().split(/\s+/).pop()!;
 
 /** "Lindsey (2025)", "Comsa & Shanahan (2025)", "Binder et al. (2024)". */
-export function citeAs(p: Paper): string {
+export function citeAs(p: Paper | Archived): string {
   const { authors, year } = p.data;
   const who =
     authors.length === 1
@@ -128,7 +129,7 @@ export function citeAs(p: Paper): string {
   return `${who} (${year})`;
 }
 
-export function paperLinks(p: Paper): { label: string; href: string }[] {
+export function paperLinks(p: Paper | Archived): { label: string; href: string }[] {
   const l = p.data.links;
   const host = (u: string) => new URL(u).hostname.replace(/^www\./, '');
   return [
@@ -143,7 +144,7 @@ export function paperLinks(p: Paper): { label: string; href: string }[] {
 }
 
 /** The one link to send a reader to for the paper itself. */
-export function primaryLink(p: Paper): string | undefined {
+export function primaryLink(p: Paper | Archived): string | undefined {
   const l = p.data.links;
   return l.url ?? l.project ?? (l.arxiv ? `https://arxiv.org/abs/${l.arxiv}` : l.doi ? `https://doi.org/${l.doi}` : l.pdf);
 }
@@ -151,13 +152,13 @@ export function primaryLink(p: Paper): string | undefined {
 const NAMES_A_YEAR = /\b(?:19|20)\d{2}\b/;
 
 /** "arXiv 2025", or just "ICLR 2025" when the venue already names its year. */
-export function venueLine(p: Paper): string {
+export function venueLine(p: Paper | Archived): string {
   const { venue, year } = p.data;
   if (!venue) return String(year);
   return NAMES_A_YEAR.test(venue) ? venue : `${venue} ${year}`;
 }
 
-export function statusLine(p: Paper): string {
+export function statusLine(p: Paper | Archived): string {
   if (p.data.status === 'stub') return 'Stub: no summary yet';
   return p.data.reviewed ? 'Summary reviewed by a person' : 'AI-drafted summary, not yet reviewed by a person';
 }
@@ -168,7 +169,7 @@ export const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 export const longDate = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 
-export function bibtex(p: Paper): string {
+export function bibtex(p: Paper | Archived): string {
   const { title, authors, year, venue, links } = p.data;
   const key = p.id.split('-')[0];
   const proceedings = Boolean(venue && NAMES_A_YEAR.test(venue));

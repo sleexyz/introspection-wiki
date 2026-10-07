@@ -11,6 +11,12 @@
 //       public/figures/<paper-id>/<name>.png. Open the result and check the
 //       edges: nothing clipped, no caption or body text included.
 //
+//   node scripts/figure.mjs auto <paper-id> <figure-number> <name>
+//       Finds the figure in the PDF and cuts it: the width of the text block,
+//       from the top of the float to just above its caption. It prints the
+//       box it used. Check the edges the same way, and if a side is off, or
+//       only one panel is wanted, run `crop` with the box adjusted.
+//
 // The PDF is expected at data/raw/papers/<paper-id>/paper.pdf (override with
 // PAPER_PDF=/path/to.pdf). Needs poppler's pdftocairo on the PATH.
 import { execFileSync } from 'node:child_process';
@@ -19,9 +25,11 @@ import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const DPI = 220;
-const [mode, paperId, page, ...rest] = process.argv.slice(2);
+let [mode, paperId, page, ...rest] = process.argv.slice(2);
 const usage = () => {
-  console.error('usage: figure.mjs page <paper-id> <page>\n       figure.mjs crop <paper-id> <page> <x> <y> <width> <height> <name>');
+  console.error(
+    'usage: figure.mjs page <paper-id> <page>\n       figure.mjs crop <paper-id> <page> <x> <y> <width> <height> <name>\n       figure.mjs auto <paper-id> <figure-number> <name>',
+  );
   process.exit(1);
 };
 if (!paperId || !/^\d+$/.test(page ?? '')) usage();
@@ -30,6 +38,20 @@ const pdf = process.env.PAPER_PDF ?? path.join(ROOT, 'data/raw/papers', paperId,
 if (!fs.existsSync(pdf)) {
   console.error(`no PDF at ${pdf}`);
   process.exit(1);
+}
+if (mode === 'auto') {
+  const { readPdf } = await import('./pdf.mjs');
+  const found = readPdf(pdf);
+  const at = found.dests[`fig:${page}`];
+  if (!at) {
+    console.error(`the PDF has no Figure ${page}`);
+    process.exit(1);
+  }
+  const [onPage, top, height] = at;
+  // The float ends at the first line of its caption, which is about 11 points tall.
+  const box = [found.margin - 6, top - 2, found.crop[1] - found.margin + 12, height - 11].map(Math.round);
+  console.log(`Figure ${page}: page ${onPage}, box ${box.join(' ')}`);
+  [mode, page, rest] = ['crop', String(onPage), [...box, rest[0]]];
 }
 const cairo = (args, out) => execFileSync('pdftocairo', ['-png', '-singlefile', '-f', page, '-l', page, ...args, pdf, out]);
 

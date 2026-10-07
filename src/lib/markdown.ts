@@ -14,8 +14,8 @@ import {
   statusLine,
   venueLine,
   type Candidate,
+  type Archived,
   type Concept,
-  type Outline,
   type Paper,
   type Thread,
 } from './wiki';
@@ -69,7 +69,8 @@ const paperLine = (p: Paper) => `- [${citeAs(p)}: ${p.data.title}](/papers/${p.i
 const footer = (path: string) =>
   `---\n\nSource: ${SITE.url}${path} · Part of the [${SITE.name}](/) · Index for agents: [llms.txt](/llms.txt)`;
 
-export async function paperMarkdown(p: Paper): Promise<string> {
+/** The twin of a paper page: the current one, or with `archived` an earlier version from the archive. */
+export async function paperMarkdown(p: Paper | Archived, archived = false): Promise<string> {
   const wiki = await loadWiki();
   const d = p.data;
   const out: string[] = [`# ${d.title}`, '', `> ${d.summary}`, ''];
@@ -80,15 +81,18 @@ export async function paperMarkdown(p: Paper): Promise<string> {
   out.push(`- Tier: ${d.tier}`);
   out.push(`- Page status: ${statusLine(p)}`);
   if (d.sources.length) out.push(`- Written from: ${d.sources.join('; ')}`);
-  if (wiki.outlines.some((o) => o.id === p.id)) out.push(`- Outline: [this paper's outline, reconstructed](/outlines/${p.id}), a trial format`);
+  if (archived) out.push(`- Archived: an earlier version of [the current page](/papers/${p.id}), kept as it was`);
+  else if (wiki.archive.some((a) => a.id === p.id)) out.push(`- Earlier version: [the page as it was](/archive/${p.id}), which goes through the paper experiment by experiment`);
   if (d.concepts.length) {
     const titles = d.concepts.map((id) => wiki.concepts.find((c) => c.id === id)!);
     out.push(`- Concepts: ${titles.map((c) => `[${c.data.title}](/concepts/${c.id})`).join(', ')}`);
   }
   out.push('');
 
-  if (d.questions || d.terms.length || d.setup) out.push('## At a glance', '');
-  if (d.questions) {
+  // "At a glance" belongs to the earlier format. A page in the outline format opens with its own brief.
+  const glance = d.format !== 'outline';
+  if (glance && (d.questions || d.terms.length || d.setup)) out.push('## At a glance', '');
+  if (glance && d.questions) {
     const q = d.questions;
     // A takeaway sits under the question it answers, marked so that a reader
     // scanning for them can find them.
@@ -104,12 +108,12 @@ export async function paperMarkdown(p: Paper): Promise<string> {
     }
     out.push('');
   }
-  if (d.terms.length) {
+  if (glance && d.terms.length) {
     out.push('### Key terms, as the paper uses them', '');
     for (const t of d.terms) out.push(`- **${t.term}**: ${t.means}${t.where ? ` (${t.where})` : ''}`);
     out.push('');
   }
-  if (d.setup) {
+  if (glance && d.setup) {
     const e = d.setup;
     out.push(
       '### The setup',
@@ -137,7 +141,7 @@ export async function paperMarkdown(p: Paper): Promise<string> {
   if (cites.length) out.push('## Cites, within this wiki', '', ...cites.map(paperLine), '');
   if (citedBy.length) out.push('## Cited by, within this wiki', '', ...citedBy.map(paperLine), '');
 
-  out.push('## BibTeX', '', '```bibtex', bibtex(p), '```', '', footer(`/papers/${p.id}`));
+  out.push('## BibTeX', '', '```bibtex', bibtex(p), '```', '', footer(`/${archived ? 'archive' : 'papers'}/${p.id}`));
   return untoned(absolutize(out.join('\n')));
 }
 
@@ -149,27 +153,6 @@ export async function conceptMarkdown(c: Concept): Promise<string> {
   out.push(expandExperiments(c.body?.trim() ?? ''), '');
   if (papers.length) out.push('## Papers tagged with this concept', '', ...papers.map(paperLine), '');
   out.push(footer(`/concepts/${c.id}`));
-  return absolutize(out.join('\n'));
-}
-
-/** A note from the drafting model is already a labelled blockquote in the source, so the body goes through as written. */
-export async function outlineMarkdown(o: Outline): Promise<string> {
-  const wiki = await loadWiki();
-  const p = wiki.paper.get(o.id)!;
-  const d = o.data;
-  const out = [
-    `# Outline: ${p.data.title}`,
-    '',
-    `> ${d.summary}`,
-    '',
-    `- Paper: [${citeAs(p)}: ${p.data.title}](/papers/${p.id})`,
-    `- Page status: ${d.reviewed ? 'Reviewed by a person' : 'AI-drafted, not yet reviewed by a person'}. A trial format.`,
-    ...(d.sources.length ? [`- Written from: ${d.sources.join('; ')}`] : []),
-    '',
-    expandExperiments(expandPosts(o.body?.trim() ?? '', wiki.threads)),
-    '',
-    footer(`/outlines/${o.id}`),
-  ];
   return absolutize(out.join('\n'));
 }
 

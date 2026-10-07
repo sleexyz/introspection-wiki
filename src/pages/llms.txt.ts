@@ -11,7 +11,7 @@ export const GET = async () => {
     '',
     `> ${SITE.description}`,
     '',
-    'A self-report counts as introspection here only if it is faithful (it matches what the model actually does or represents) and grounded (it is caused by the state it describes). Each paper page starts with the experiments the paper ran: what prompted each one, how it was run, and what it showed.',
+    'A self-report counts as introspection here only if it is faithful (it matches what the model actually does or represents) and grounded (it is caused by the state it describes). Each paper page is an outline of the paper: its claims, the evidence for each, and the job of every part, with the place in the paper of everything it reports. Pages not yet rewritten open with the experiments the paper ran instead.',
     '',
     'Every link below is a markdown file. Any page URL on this site also returns markdown when requested with `Accept: text/markdown`, or with `.md` appended. Summaries are drafted by an AI model from the sources each page lists; each page states whether a person has reviewed it.',
     '',

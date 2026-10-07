@@ -43,7 +43,7 @@ import { experimentHtml, parseExperiment } from './experiment.mjs';
  * 5. A link to a paper page that is still a stub gets class="stub", which
  *    colors it red. Templates do the same for their own links with PaperLink.
  *
- * 6. On an outline page, every locator ("§5.1", "Figure 3", "Appendix E") and
+ * 6. On a paper page in the outline format, every locator ("§5.1", "Figure 3", "Appendix E") and
  *    every quotation is tied to its place in the paper's PDF. The places come
  *    from src/data/anchors/<paper-id>.json, written by scripts/anchor.mjs; the
  *    words are found by cite.mjs, with nothing added to the source. A locator
@@ -105,9 +105,9 @@ function claudeNote(node) {
   return { ...node, data: { hName: 'aside', hProperties: { className: ['claude-note'] } } };
 }
 
-/** The places scripts/anchor.mjs found in an outline's paper, or null for any other page. */
+/** The places scripts/anchor.mjs found in a paper's PDF, or null for a page that has none. */
 function anchorsFor(file) {
-  const id = [file?.path, ...(file?.history ?? [])].join(' ').match(/src\/content\/outlines\/([a-z0-9-]+)\.md/)?.[1];
+  const id = [file?.path, ...(file?.history ?? [])].join(' ').match(/src\/content\/papers\/([a-z0-9-]+)\.md/)?.[1];
   const data = id && path.join(ROOT, 'src/data/anchors', `${id}.json`);
   return data && fs.existsSync(data) ? JSON.parse(fs.readFileSync(data, 'utf8')) : null;
 }
@@ -148,7 +148,7 @@ function pngSize(src) {
 }
 
 function figure({ url, alt, title }, anchors) {
-  // On an outline page a figure of the paper points at itself in the paper.
+  // Where the paper is beside the page, a figure of the paper points at itself in it.
   const dest = anchors?.dests[tokenize(title).find((t) => t.type === 'loc' && t.dest.startsWith('fig:'))?.dest];
   const cited = dest ? ` class="cite cite-f" data-at="${dest.join(',')}" data-kind="fig"` : '';
   return (

@@ -20,6 +20,10 @@ export default {
 		const paper = url.pathname.match(/^\/pdf\/([a-z0-9-]+)\.pdf$/);
 		if (paper) return relay(paper[1], request, env);
 
+		// An outline had a page of its own while the format was on trial. It is the paper page now.
+		const outline = url.pathname.match(/^\/outlines\/(.+)$/);
+		if (outline) return Response.redirect(new URL(`/papers/${outline[1]}`, url).href, 301);
+
 		if (url.pathname.endsWith('.md')) {
 			return markdown(await assetAt(markdownAlias(url.pathname) ?? url.pathname, request, env));
 		}
@@ -43,7 +47,7 @@ export default {
 } satisfies ExportedHandler<Env>;
 
 /**
- * The paper beside an outline. The reader on an outline page draws the paper's
+ * The paper beside its page. The reader on a paper page draws the paper's
  * PDF itself, and a browser will not let a page read a file from another site
  * unless that site says it may, which the hosts of most papers do not. So the
  * reader asks here, and this fetches the file from where the paper page links

@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import { unified } from '@astrojs/markdown-remark';
 import remarkWiki from './src/lib/remark-wiki.mjs';
 
-// The reader on an outline page gets the paper's PDF from /pdf/<paper-id>.pdf,
+// The reader on a paper page gets the paper's PDF from /pdf/<paper-id>.pdf,
 // which the Worker relays in production (worker/index.ts). `astro dev` runs no
 // Worker, so the dev server relays the same addresses to the same places.
 const anchored = fs.existsSync('src/data/anchors') ? fs.readdirSync('src/data/anchors') : [];
