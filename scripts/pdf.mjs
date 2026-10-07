@@ -145,11 +145,12 @@ export function readPdf(file) {
   const starts = {};
   const ends = {};
   const sides = {};
-  const set = (key, line, top = line.y0, title = text(line)) => {
+  const across = {}; // how far each heading runs across the page
+  const set = (key, line, top = line.y0, title = text(line), from = line.words[0]) => {
     if (dests[key]) return;
     dests[key] = [line.p, round(top), round(line.y1 - top)];
     titles[key] = title;
-    starts[key] = line.words[0];
+    starts[key] = from;
   };
 
   for (const d of named) {
@@ -166,7 +167,12 @@ export function readPdf(file) {
           Math.abs(l.x0 - margin) < 2 &&
           title(l),
       );
-      if (line) set(`${/^[A-Z]/.test(label) ? 'app' : 'sec'}:${label}`, line, line.y0, text(title(line)));
+      // Beside a figure, the title can come before its number in the stream of words.
+      if (line) {
+        const key = `${/^[A-Z]/.test(label) ? 'app' : 'sec'}:${label}`;
+        if (!dests[key]) across[key] = [line.x0, title(line).x1];
+        set(key, line, line.y0, text(title(line)), Math.min(line.words[0], title(line).words[0]));
+      }
     }
     const note = d.name.match(/^Hfootnote\.(\d+)$/);
     if (note) {
@@ -213,16 +219,29 @@ export function readPdf(file) {
   const typeTop = Math.min(...lines.filter((l) => running(l) && !words[l.words[0]].aside).map((l) => l.y0));
   const own = (cap) => lines.filter((l) => l.block === cap.block);
   const width = (cap) => [Math.min(...own(cap).map((l) => l.x0)), Math.max(...own(cap).map((l) => l.x1))];
-  const under = (cap) => {
+  // `beside` leaves out a heading that does not reach over the float: one may stand next to a raised float.
+  const under = (cap, beside = false) => {
     const [x0, x1] = width(cap);
     const above = (p, y) => p === cap.p && y <= cap.y0 + 1;
-    const across = (l) => l.x0 < x1 && l.x1 > x0 && (outside.has(l.block) || l.words.every((i) => words[i].aside));
+    const over = (l) => l.x0 < x1 && l.x1 > x0 && (outside.has(l.block) || l.words.every((i) => words[i].aside));
+    const heading = (k) => /^(sec|app):/.test(k) && !(beside && (across[k][0] >= x1 || across[k][1] <= x0));
     const last = Math.max(
-      ...lines.filter((l) => above(l.p, l.y1) && across(l)).map((l) => l.y1),
-      ...Object.entries(dests).flatMap(([k, [p, y, h]]) => (/^(sec|app):/.test(k) && above(p, y + h) ? [y + h] : [])),
+      ...lines.filter((l) => above(l.p, l.y1) && over(l)).map((l) => l.y1),
+      ...Object.entries(dests).flatMap(([k, [p, y, h]]) => (heading(k) && above(p, y + h) ? [y + h] : [])),
     );
     // Clear of the descenders of the line above.
     return Number.isFinite(last) ? Math.min(last + 4, cap.y0) : Math.min(typeTop, cap.y0);
+  };
+  // A float set beside the text can be raised above the line it was placed at,
+  // and its destination is at that line. Its own words then reach higher: those
+  // within its sides, above the destination, that belong to nothing else.
+  const raised = (cap, top) => {
+    const [x0, x1] = width(cap);
+    const floor = under(cap, true);
+    const own = lines.filter(
+      (l) => l.p === cap.p && l.y0 >= floor - 4 && l.y0 < top && l.x0 >= x0 - 2 && l.x1 <= x1 + 2 && !outside.has(l.block),
+    );
+    return Math.min(top, ...own.map((l) => l.y0 - 2));
   };
   for (const { key, line } of captions) {
     const top = floats
@@ -233,7 +252,8 @@ export function readPdf(file) {
     // under a float set beside the text, or in one column of two.
     const [x0, x1] = width(line);
     if (!dests[key] && own(line).length > 1 && x1 - x0 < (crop[1] - crop[0]) * 0.6) sides[key] = [round(x0), round(x1)];
-    set(key, line, atTop ? (top ?? line.y0) : under(line));
+    const marked = top ?? line.y0;
+    set(key, line, atTop ? (sides[key] ? raised(line, marked) : marked) : under(line));
   }
 
   // The abstract, under its heading. Where it has none, it is the longest
@@ -316,10 +336,10 @@ export function shares(pdf) {
   // The main text ends where the references, the acknowledgments or the appendices begin.
   const after = starts[top.at(-1)];
   // Set in small capitals, the first letter of a heading comes out as a word by itself: "R EFERENCES".
+  // A statement on ethics, impact, reproducibility or the use of AI can come before either.
+  const BACK = /^(references|bibliography|acknowledge?ments?|(ai|llm)usestatement|(ethics|impact|reproducibility)statement|broaderimpacts?)$/i;
   const heads = (l) => [words[l.words[0]].t, l.words.map((i) => words[i].t).join('')];
-  const back = lines.find(
-    (l) => l.words[0] > after && l.words.length <= 2 && heads(l).some((t) => /^(references|bibliography|acknowledge?ments?)$/i.test(t)),
-  );
+  const back = lines.find((l) => l.words[0] > after && l.words.length <= 6 && heads(l).some((t) => BACK.test(t)));
   const appendix = Math.min(...Object.keys(dests).filter((k) => k.startsWith('app:')).map((k) => starts[k]), Infinity);
   const end = Math.min(back ? back.words[0] : Infinity, appendix, words.length);
   const figures = Object.entries(dests).filter(([k]) => k.startsWith('fig:'));

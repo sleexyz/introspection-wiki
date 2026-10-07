@@ -23,6 +23,8 @@ const ids = (dir, ext) =>
   new Set(fs.readdirSync(path.join(CONTENT, dir)).filter((f) => f.endsWith(ext)).map((f) => f.slice(0, -ext.length)));
 const known = { papers: ids('papers', '.md'), archive: ids('archive', '.md'), concepts: ids('concepts', '.md'), threads: ids('threads', '.json') };
 const STATIC_PAGES = new Set(['', 'papers', 'frontier', ...ids('pages', '.md')]);
+// How many characters the headings of a table can have between them and still fit the page.
+const TABLE_HEADINGS = 90;
 const threadLength = (id) => JSON.parse(fs.readFileSync(path.join(CONTENT, 'threads', `${id}.json`), 'utf8')).tweets.length;
 
 const files = process.argv.length > 2
@@ -127,6 +129,13 @@ for (const file of files) {
           t.type === 'loc' ? !anchors.dests[t.dest] : t.type === 'quote' && t.key.length >= MIN_QUOTE && !anchors.quotes[t.key] && !anchors.elsewhere.includes(t.key),
         );
       for (const t of stale) say(file, `${t.text} has no place in the paper yet; run \`just anchor ${id}\``);
+    }
+    // The headings of a table are not wrapped, so long ones push the table past the page and under the paper.
+    for (const [i, line] of body.split('\n').entries()) {
+      if (!/^\|/.test(line) || !/^\|[\s:|-]+\|$/.test(body.split('\n')[i + 1] ?? '')) continue;
+      const headings = line.split('|').slice(1, -1).map((h) => h.trim());
+      const length = headings.join('').length;
+      if (length > TABLE_HEADINGS) say(file, `the headings of the table "${headings.filter(Boolean)[0]} | …" run to ${length} characters and will not fit; keep them under ${TABLE_HEADINGS} together`);
     }
   } else if (fm.format) say(file, `format is "${fm.format}"; the only value is outline`);
 

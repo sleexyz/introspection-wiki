@@ -102,7 +102,11 @@ each page that has one. `just figure page <paper-id> <page> 200` writes an
 image of the page large enough to read the small print in a figure.
 
 Search the web for the authors' own threads about the paper on X. A thread is the
-authors' own short statement of the paper, which step 3 needs. Import each
+authors' own short statement of the paper, which step 3 needs. A web search
+seldom turns up a post on X. If it finds none, list each author's recent posts
+with `curl -s https://api.fxtwitter.com/2/profile/<handle>/statuses` and look
+for one from the days after the paper was posted; a co-author's repost often
+leads to the lead author's thread. Import each
 with `just thread <post-url> <thread-id> <paper-id>`, then write its `title`
 and `summary` and describe every image in `alt`. If you find none, go on
 without, and say so when you hand over.
@@ -265,6 +269,10 @@ way that can be:
   occur twice in the paper, the nearest locator in the same block decides
   which is meant.
 - Write each paragraph, list item and table row on one line of the source.
+- Keep the headings of a table short, and say what a column holds in the
+  sentence before the table. A heading is not wrapped, so headings that
+  together pass about 90 characters push the table wider than the page.
+  `just lint` flags them.
 
 ### 6. Place the page in the paper, and check it
 
