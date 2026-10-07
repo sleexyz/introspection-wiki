@@ -613,7 +613,6 @@ html.paper-dragging .paper-view { pointer-events: none; }
 .paper-tools { display: inline-flex; align-items: center; gap: 14px; }
 .paper-bar a, .paper-bar button { padding: 0; border: 0; background: none; font: inherit; color: var(--muted); text-decoration: none; cursor: pointer; }
 .paper-bar a:hover, .paper-bar button:hover { color: var(--text); }
-.paper-bar .paper-follow { padding: 1px 8px; border-radius: 999px; color: var(--strong); background: var(--mark-tint); }
 
 /* The scroller is PDF.js's container, which has to be absolutely positioned.
    It never scrolls sideways by hand: the script holds it where the page's

@@ -31,7 +31,7 @@ Cloudflare Worker serves them and returns markdown to clients that ask for it.
 - `src/lib/cite.mjs`: finds the locators and quotations in an outline's text.
   The anchor script, the markdown plugin and the linter all use it.
 - `src/components/PaperPane.astro`: the paper shown beside an outline, and the
-  script that keeps it in step with the outline.
+  script that takes it to whatever the reader clicks in the outline.
 - `src/content/threads/<id>.json`: written by `scripts/thread.mjs`; hand-edit only
   `title`, `summary`, `papers`, `author.name` and each image's `alt`.
 - `src/content/pages/about.md`: the About page, including the public definition of
@@ -301,10 +301,10 @@ Writing the page:
 ### The paper beside the outline
 
 On a screen at least 1100px wide, an outline page shows the paper's PDF in a
-pane on the right. The pane follows the reader down the outline: the passage
-the outline is discussing is scrolled into view and marked, and a click on any
-locator or quotation goes to it. Nothing is added to the outline's source for
-this. `cite.mjs` reads the locators and quotations out of the prose,
+pane on the right. A click on any locator or quotation scrolls the paper to
+that place and marks it. The paper moves only on a click: having it follow the
+outline as the reader scrolled was tried and taken out. Nothing is added to
+the outline's source for this. `cite.mjs` reads the locators and quotations out of the prose,
 `scripts/anchor.mjs` finds each in the PDF, and `remark-wiki.mjs` puts the
 positions on the page. So the prose has to be written in a way that can be
 read back:

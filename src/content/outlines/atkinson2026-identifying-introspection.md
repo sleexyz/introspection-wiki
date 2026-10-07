@@ -22,8 +22,6 @@ The argument is a chain of three claims. Each produces what the next one needs: 
 2. The checkpoint that reports faithfully keeps its preference information earlier in the network.
 3. Faithful models decide and report with more of the same weights, and that can be measured without reading the report.
 
-> **Note from Claude:** The claims are in sequence and not side by side, so the hand-offs matter as much as the claims. The claim that leads is the last one. It is the only one in the title, and by my count its section is about a third of the main text. The table [further down](#the-same-three-claims-at-every-length) shows where each claim appears.
-
 ## What the paper starts from
 
 **Three terms** (§1).

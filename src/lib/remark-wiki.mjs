@@ -48,8 +48,9 @@ import { experimentHtml, parseExperiment } from './experiment.mjs';
  *    from src/data/anchors/<paper-id>.json, written by scripts/anchor.mjs; the
  *    words are found by cite.mjs, with nothing added to the source. A locator
  *    becomes a link to that page of the PDF. A quotation becomes a span that
- *    carries the rectangles its words occupy. The reader beside the outline
- *    (PaperPane.astro) scrolls the paper to either and marks it there.
+ *    carries the rectangles its words occupy. When either is clicked, the
+ *    reader beside the outline (PaperPane.astro) scrolls the paper to it and
+ *    marks it there.
  */
 
 const ROOT = path.resolve(import.meta.dirname, '../..');

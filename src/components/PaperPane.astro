@@ -1,9 +1,8 @@
 ---
 // The paper, beside its outline. On a wide screen the paper's PDF sits in a
-// pane on the right and follows the reader down the outline: whatever passage
-// the outline is discussing is scrolled into view and marked, and a click on
-// any locator or quotation goes to it. The outline is the guide and the paper
-// is the evidence, so the pane only ever moves in answer to the outline.
+// pane on the right, and a click on any locator or quotation in the outline
+// scrolls the paper to that place and marks it there. The paper moves only
+// when the reader asks: it does not follow the outline as it scrolls.
 //
 // The page works without any of this. On a narrow screen, or with scripts
 // off, there is no pane, and each locator is a plain link to that page of the
@@ -29,7 +28,6 @@ const { id, href, crop } = Astro.props;
   <header class="paper-bar">
     <span class="paper-page" aria-live="polite">Loading the paper…</span>
     <span class="paper-tools">
-      <button type="button" class="paper-follow" hidden>Follow the outline</button>
       <a href={href}>PDF</a>
       <button type="button" class="paper-hide">Hide</button>
     </span>
@@ -59,7 +57,6 @@ const { id, href, crop } = Astro.props;
     const scroller = part<HTMLDivElement>('.paper-scroll');
     const marks = part('.paper-marks');
     const where = part('.paper-page');
-    const resume = part<HTMLButtonElement>('.paper-follow');
     const [cropLeft, cropRight] = pane.dataset.crop!.split(',').map(Number);
     const wide = matchMedia('(min-width: 1100px)');
     const still = matchMedia('(prefers-reduced-motion: reduce)');
@@ -80,13 +77,8 @@ const { id, href, crop } = Astro.props;
       } catch {}
     };
 
-    // Every locator and quotation, and the blocks of the outline they sit in.
-    // A block (a paragraph, a list item, a table row, a figure) leads the
-    // paper to one place: its first quotation, or failing that its first
-    // locator. The others in the block are reached by clicking them.
+    // Every locator and quotation in the outline, with its place in the paper.
     const anchors = new Map<Element, Anchor>();
-    const blocks: { el: Element; lead: Anchor }[] = [];
-    const blockOf = new Map<Element, { el: Element; lead: Anchor }>();
     for (const el of document.querySelectorAll<HTMLElement>('article .cite')) {
       let anchor: Anchor;
       if (el.dataset.rects) {
@@ -99,12 +91,6 @@ const { id, href, crop } = Astro.props;
         anchor = { el, kind: el.dataset.kind!, page, y, h, rects: [] };
       }
       anchors.set(el, anchor);
-      const within = el.closest('li, tr, figure, p') ?? el;
-      const block = blockOf.get(within);
-      if (!block) {
-        blockOf.set(within, { el: within, lead: anchor });
-        blocks.push(blockOf.get(within)!);
-      } else if (block.lead.kind !== 'quote' && anchor.kind === 'quote') block.lead = anchor;
     }
 
     let viewer: any = null;
@@ -113,10 +99,6 @@ const { id, href, crop } = Astro.props;
     let unit = 1; // screen pixels to a PDF point
     let keepLeft = 0; // the sideways scroll that hides the page's margins
     let active: Anchor | null = null; // what is marked now
-    let led: Anchor | null = null; // the last place the outline led the paper to
-    let paused = false; // the reader has gone off to read the paper on their own
-    let syncedAt = 0; // where the paper was scrolled to when it last followed
-    let ours = 0; // until when a scroll of the paper is our own doing
 
     async function load() {
       if (started) return;
@@ -146,8 +128,8 @@ const { id, href, crop } = Astro.props;
           ready = true;
           page(1);
           fit();
-          // Wait for the new scale to be laid out before measuring against it.
-          requestAnimationFrame(() => (active ? goTo(active, true) : follow(true)));
+          // A place clicked while the paper was loading is gone to now, once the new scale is laid out.
+          requestAnimationFrame(() => active && goTo(active, true));
         });
         viewer.setDocument(doc);
         linkService.setDocument(doc, null);
@@ -230,7 +212,6 @@ const { id, href, crop } = Astro.props;
       const view = scroller.clientHeight;
       const from = scroller.scrollTop;
       const seen = top >= from + 10 && bottom <= from + view - 10;
-      syncedAt = from;
       if (!seen) {
         // A quotation lands a third of the way down, with what comes before it
         // above. A figure lands whole. A heading lands near the top.
@@ -239,8 +220,6 @@ const { id, href, crop } = Astro.props;
         const far = Math.abs(to - from) > view * 1.5;
         // A tab nobody is looking at runs no animation, so a scroll there would never arrive.
         const cut = far || still.matches || document.hidden;
-        ours = performance.now() + (cut ? 150 : 1000);
-        syncedAt = to;
         if (far) {
           pane.classList.remove('paper-cut');
           void pane.offsetWidth;
@@ -251,94 +230,34 @@ const { id, href, crop } = Astro.props;
       draw(flash || !seen);
     }
 
-    /**
-     * The place the outline is talking about: the lead of the last block above
-     * the reading line. At the top of the page nothing has reached the line
-     * yet, and the first block on screen stands in, so that the two panes are
-     * joined from the start.
-     */
-    function reading() {
-      const line = innerHeight * 0.36;
-      let lead: Anchor | null = null;
-      for (const block of blocks) {
-        const top = block.el.getBoundingClientRect().top;
-        if (top > line && (lead || top > innerHeight)) break;
-        lead = block.lead;
-        if (top > line) break;
-      }
-      return lead;
-    }
-
-    /**
-     * Take the paper to where the outline is. Only a change of block moves it,
-     * so a place the reader clicked stays put until they read on.
-     */
-    function follow(force = false) {
-      if (!isOpen() || !ready || paused) return;
-      const lead = reading();
-      if (!force && lead === led) return;
-      led = lead;
-      if (lead) goTo(lead);
-    }
-
-    // The paper follows once the outline comes to rest, not at every step of a scroll.
-    let settling = 0;
-    addEventListener(
-      'scroll',
-      () => {
-        clearTimeout(settling);
-        settling = window.setTimeout(follow, 140);
-      },
-      { passive: true },
-    );
-
     document.addEventListener('click', (event) => {
       const anchor = anchors.get((event.target as Element).closest?.('.cite') as Element);
       if (!anchor || !isOpen() || !viewer) return;
       // A modified click still opens the PDF itself, and a drag selects text.
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || !getSelection()?.isCollapsed) return;
       event.preventDefault();
-      paused = false;
-      resume.hidden = true;
-      // The click answers for this stretch of the outline, even if a scroll has not yet settled.
-      led = reading();
       goTo(anchor, true);
     });
 
-    // Reading on in the paper a little is still following. Going somewhere else
-    // in it is not, and then the paper stays where the reader took it until
-    // they ask it to follow again or click a place in the outline.
+    // However the paper is scrolled, the page's margins stay the part cut off.
     scroller.addEventListener(
       'scroll',
       () => {
         if (Math.abs(scroller.scrollLeft - keepLeft) > 1) scroller.scrollLeft = keepLeft;
-        if (!ready || paused || performance.now() < ours) return;
-        if (Math.abs(scroller.scrollTop - syncedAt) > scroller.clientHeight * 1.5) {
-          paused = true;
-          resume.hidden = false;
-        }
       },
       { passive: true },
     );
-    resume.addEventListener('click', () => {
-      paused = false;
-      resume.hidden = true;
-      follow(true);
-    });
 
     function show() {
       if (!isOpen()) return;
       layout(saved.width);
       load();
-      requestAnimationFrame(() => {
-        fit();
-        requestAnimationFrame(() => follow(true));
-      });
+      requestAnimationFrame(fit);
     }
     part('.paper-hide').addEventListener('click', () => {
       root.classList.remove('paper-open', 'toc-fits');
       active?.el.classList.remove('is-on');
-      active = led = null;
+      active = null;
       save({ hidden: true });
     });
     document.querySelector('.paper-show')!.addEventListener('click', () => {
