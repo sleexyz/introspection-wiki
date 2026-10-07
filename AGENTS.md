@@ -149,6 +149,11 @@ the box `auto` printed, adjusted:
 
     just figure crop <paper-id> <page> <x> <y> <w> <h> <name>
 
+`auto` cuts the full width of the text. A figure set beside the text comes
+out with that text in the cut: narrow the box to the figure. Where the PDF
+does not record a figure's top, `auto` takes it from the text above, and the
+cut may carry white space to trim.
+
 Place it with an image on its own line, with a caption that says which figure
 of the paper it is:
 
@@ -246,7 +251,9 @@ way that can be:
   them. A quotation is matched to the paper on its letters and digits alone,
   so line breaks, page breaks and hyphenation do not matter, but a changed
   word does. It cannot run across a figure, table or footnote that interrupts
-  the sentence in the PDF.
+  the sentence in the PDF. Nor can it run past the mark of a footnote, whose
+  number is read as part of the text: end the quotation before the mark, or
+  begin it after.
 - Double quotes are for the paper's words and the threads' words only. For
   anything else, your own phrase or a term, use italics. Where the paper's
   sentence has quotation marks of its own, write those as single quotes.
